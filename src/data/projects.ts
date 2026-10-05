@@ -109,6 +109,25 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "review-room",
+    title: "REVIEW ROOM",
+    group: "more",
+    type: "Review & Dailies",
+    tagline: "Production review and dailies, on my own storage.",
+    role: "Design / Development",
+    status: "Demo on Request",
+    year: "2026",
+    stack: ["Svelte", "Convex", "RustFS", "Trigger.dev"],
+    cover: "/images/api.jpg",
+    what: "Client and studio logins, projects and folders, daily playlists, per-artist review, hover-scrub previews, comments, ratings and notifications. Used in production with studios and clients.",
+    flow: [
+      { label: "UPLOAD", sub: "Shots into projects" },
+      { label: "PLAYLIST", sub: "Dailies per artist" },
+      { label: "REVIEW", sub: "Scrub · comment · rate" },
+      { label: "NOTIFY", sub: "Inbox · notifications" },
+    ],
+  },
+  {
     slug: "v1su4-format",
     title: "V1SU4 FORMAT",
     group: "more",
@@ -139,8 +158,8 @@ export interface LabItem {
 
 export const labItems: LabItem[] = [
   {
-    slug: "creative-studio-pro",
-    title: "CREATIVE STUDIO PRO",
+    slug: "trailer-feed",
+    title: "TRAILER FEED",
     kind: "AI TRAILER STUDIO",
     body: "A canvas-first studio for AI short films and trailers: story beats on a board, generated takes on each beat, and cuts you trim and finish. Generation runs only after approval and a cost check.",
     status: "In development",
@@ -151,13 +170,6 @@ export const labItems: LabItem[] = [
     kind: "AGENTIC · LOCAL",
     body: "Takes you from no idea to a developed concept: asks for ideas, writes three loglines, expands them into short pitches, makes a quick concept video, then breaks the story into beats. Runs fully local.",
     status: "In development",
-  },
-  {
-    slug: "review-room",
-    title: "REVIEW ROOM",
-    kind: "REVIEW & DAILIES",
-    body: "A production review and dailies platform: client logins, playlists, per-artist review, hover-scrub previews, comments and notifications, on self-hosted storage. Used in production with studios and clients.",
-    status: "Demo on request",
   },
 ];
 
