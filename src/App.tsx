@@ -165,14 +165,34 @@ function CreditLines({ rows }: { rows: [string, string][] }) {
 }
 
 /*
-  Momentum carousel (greymac-style). Drag, swipe, trackpad, or plain mouse wheel move a target position;
-  the track eases toward it each frame. Speed tilts the cards in 3D, and they flatten as it settles.
-  The wheel only takes over while there are slides left in that direction, then the page scrolls on.
+  Looping momentum carousel (greymac-style).
+  Wheel, drag, flick, trackpad, or arrow keys add velocity; friction bleeds it off so it glides and slows.
+  The slides repeat three times and the position wraps, so it never runs out. Speed tilts the cards in 3D,
+  and each card's image slides against it (parallax). While the pointer is over the carousel the wheel
+  drives it; move the pointer off it (above or below) to scroll the page.
 */
+type Slide = { kicker: string; title: string; sub: string; img: string; pos: string };
+
+function slidesFor(p: Project): Slide[] {
+  const covers = [p.cover, ...projects.filter((x) => x.slug !== p.slug).map((x) => x.cover)];
+  const steps: Slide[] = p.flow.map((s, i) => ({
+    kicker: `${String(i + 1).padStart(2, "0")} / ${String(p.flow.length).padStart(2, "0")}`,
+    title: s.label, sub: s.sub, img: p.cover, pos: `${(i * 25) % 100}% 50%`,
+  }));
+  // Sample slides so the loop has enough cards; replace with real media later.
+  const samples: Slide[] = Array.from({ length: Math.max(0, 8 - steps.length) }, (_, i) => ({
+    kicker: "Sample", title: `Media ${String(i + 1).padStart(2, "0")}`, sub: "Placeholder",
+    img: covers[(i + 1) % covers.length], pos: "50% 50%",
+  }));
+  return [...steps, ...samples];
+}
+
 function HorizontalSteps({ p }: { p: Project }) {
   const wrap = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
+  const base = slidesFor(p);
+  const looped = [...base, ...base, ...base];
 
   useEffect(() => {
     const w = wrap.current, t = track.current;
@@ -180,56 +200,61 @@ function HorizontalSteps({ p }: { p: Project }) {
     const cards = Array.from(t.children) as HTMLElement[];
     const imgs = cards.map((c) => c.querySelector("img"));
     const still = reduceMotion();
+    const n = cards.length / 3;
 
-    // Physics: position + velocity. Wheel and flicks add velocity; friction bleeds it off, so it coasts and slows.
     let pos = 0, vel = 0, raf = 0;
     let drag: { x: number; pos: number; lastX: number; lastT: number; v: number } | null = null;
-    const FRICTION = 0.93;
+    const FRICTION = 0.955;  // closer to 1 = longer glide
+    const WHEEL_GAIN = 0.05; // speed added per wheel step
+    const PARALLAX = 0.28;   // image shift relative to the card's distance from center
+    const IMG_SCALE = 1.6;
 
-    // Far end = the last card centered. (scrollWidth undercounts here because the track's right padding isn't included.)
     const centerOf = (c: HTMLElement) => c.offsetLeft + c.offsetWidth / 2 - w.clientWidth / 2;
-    const maxX = () => Math.max(0, cards.length ? centerOf(cards[cards.length - 1]) : 0);
+    const setWidth = () => (cards[n]?.offsetLeft ?? 0) - (cards[0]?.offsetLeft ?? 0);
+    // Keep the position inside the middle copy; jumping by exactly one set width is invisible.
+    const wrapPos = () => {
+      const sw = setWidth();
+      if (sw <= 0 || !cards[n]) return;
+      const a = centerOf(cards[n]);
+      while (pos < a) { pos += sw; if (drag) drag.pos += sw; }
+      while (pos >= a + sw) { pos -= sw; if (drag) drag.pos -= sw; }
+    };
 
     const tick = () => {
       if (!drag) {
         pos += vel;
         vel *= FRICTION;
-        // Soft edges: past either end, ease back instead of stopping dead.
-        const max = maxX();
-        if (pos < 0) { pos += (0 - pos) * 0.18; vel *= 0.5; }
-        if (pos > max) { pos += (max - pos) * 0.18; vel *= 0.5; }
         if (Math.abs(vel) < 0.01) vel = 0;
       }
+      wrapPos();
       t.style.transform = `translate3d(${-pos}px,0,0)`;
       const tilt = still ? 0 : Math.max(-22, Math.min(22, vel * -1.1));
       cards.forEach((c, i) => {
         c.style.transform = `rotateY(${tilt}deg)`;
-        // Parallax: each card's image slides against the card's distance from center.
         const img = imgs[i];
         if (img && !still) {
           const dist = c.offsetLeft + c.offsetWidth / 2 - pos - w.clientWidth / 2;
-          img.style.transform = `translate3d(${dist * -0.12}px,0,0) scale(1.35)`;
+          const room = ((IMG_SCALE - 1) * c.offsetWidth) / 2;
+          const shift = Math.max(-room, Math.min(room, dist * -PARALLAX));
+          img.style.transform = `translate3d(${shift}px,0,0) scale(${IMG_SCALE})`;
         }
       });
       raf = requestAnimationFrame(tick);
     };
-    // Start with the middle card centered so the row reads as centered, with room to slide both ways.
-    const startAtMiddle = () => {
-      const mid = cards[Math.floor((cards.length - 1) / 2)];
-      if (mid) { pos = Math.min(maxX(), Math.max(0, centerOf(mid))); vel = 0; }
+    const start = () => {
+      const mid = cards[n + Math.floor((n - 1) / 2)];
+      if (mid) { pos = centerOf(mid); vel = 0; }
     };
-    startAtMiddle();
-    requestAnimationFrame(startAtMiddle); // again after fonts and layout settle
+    start();
+    requestAnimationFrame(start); // again after fonts and layout settle
     raf = requestAnimationFrame(tick);
 
     const onWheel = (e: WheelEvent) => {
-      const horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
-      const d = horizontal ? e.deltaX : e.deltaY;
-      const canMove = (d > 0 && pos < maxX() - 1) || (d < 0 && pos > 1);
-      if (!canMove) return; // let the page scroll on
+      const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (!d) return;
       e.preventDefault();
-      vel += d * (still ? 1 : 0.09); // faster scrolling builds more speed
-      if (still) { pos = Math.min(maxX(), Math.max(0, pos + vel)); vel = 0; }
+      if (still) { pos += d; return; }
+      vel += d * WHEEL_GAIN;
     };
     const onDown = (e: PointerEvent) => {
       drag = { x: e.clientX, pos, lastX: e.clientX, lastT: performance.now(), v: 0 };
@@ -250,14 +275,14 @@ function HorizontalSteps({ p }: { p: Project }) {
     };
     const onUp = () => {
       if (!drag) return;
-      vel = still ? 0 : drag.v; // flick keeps gliding
+      vel = still ? 0 : drag.v; // a flick keeps gliding
       drag = null;
       setDragging(false);
     };
     const onKey = (e: KeyboardEvent) => {
       const step = (cards[1]?.offsetLeft ?? 0) - (cards[0]?.offsetLeft ?? 0);
-      if (e.key === "ArrowRight") { vel += step * 0.07; e.preventDefault(); }
-      if (e.key === "ArrowLeft") { vel -= step * 0.07; e.preventDefault(); }
+      if (e.key === "ArrowRight") { vel += step * 0.045; e.preventDefault(); }
+      if (e.key === "ArrowLeft") { vel -= step * 0.045; e.preventDefault(); }
     };
 
     w.addEventListener("wheel", onWheel, { passive: false });
@@ -284,22 +309,22 @@ function HorizontalSteps({ p }: { p: Project }) {
         ref={wrap}
         tabIndex={0}
         aria-label="How it works slides. Drag, scroll, or use the arrow keys."
-        className={`overflow-hidden [perspective:1200px] [touch-action:pan-y] ${dragging ? "cursor-grabbing select-none" : "cursor-grab"}`}
+        className={`overflow-hidden py-6 [perspective:1400px] [touch-action:pan-y] ${dragging ? "cursor-grabbing select-none" : "cursor-grab"}`}
       >
-        <div ref={track} className="flex gap-4 will-change-transform" style={{ paddingInline: "calc(50% - min(31vw, 130px))" }}>
-        {p.flow.map((s, i) => (
-          <div key={s.label} className="still relative flex aspect-[3/4] w-[62vw] max-w-[260px] shrink-0 flex-col justify-end p-4 will-change-transform">
-            <img src={p.cover} alt="" draggable={false} className="still-img pointer-events-none absolute inset-0 h-full w-full object-cover opacity-35" style={{ objectPosition: `${(i * 25) % 100}% 50%` }} />
-            <div className="relative font-mono uppercase">
-              <p className="text-[11px] font-medium text-accent/60">{String(i + 1).padStart(2, "0")} / {String(p.flow.length).padStart(2, "0")}</p>
-              <p className="mt-1 text-[14px] font-bold">{s.label}</p>
-              <p className="mt-1 text-[11px] font-medium text-accent/75">{s.sub}</p>
+        <div ref={track} className="flex gap-5 will-change-transform">
+          {looped.map((s, i) => (
+            <div key={i} aria-hidden={i < base.length || i >= base.length * 2} className="still relative flex aspect-video w-[78vw] max-w-[520px] shrink-0 flex-col justify-end p-5 will-change-transform">
+              <img src={s.img} alt="" draggable={false} className="still-img pointer-events-none absolute inset-0 h-full w-full object-cover opacity-45" style={{ objectPosition: s.pos }} />
+              <div className="relative font-mono uppercase">
+                <p className="text-[11px] font-medium text-accent/60">{s.kicker}</p>
+                <p className="mt-1 text-[14px] font-bold">{s.title}</p>
+                <p className="mt-1 text-[11px] font-medium text-accent/75">{s.sub}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
         </div>
       </div>
-      <p className={`${COL} mt-3 text-center font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-accent/50`}>← Drag or scroll →</p>
+      <p className={`${COL} mt-1 text-center font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-accent/50`}>Drag or scroll · move off the slides to scroll the page</p>
     </section>
   );
 }
@@ -465,14 +490,6 @@ export default function App() {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
-  useEffect(() => {
-    const base = `${site.name} · ${site.label}`;
-    document.title =
-      route.view === "project" ? `${projects.find((p) => p.slug === route.slug)?.title ?? "Work"} · ${base}`
-      : route.view === "lab" ? `Lab · ${base}`
-      : route.view === "about" ? `About · ${base}`
-      : `${base} · Creative Technologist`;
-  }, [route]);
 
   const key = route.view + (route.slug ?? "");
   return (
