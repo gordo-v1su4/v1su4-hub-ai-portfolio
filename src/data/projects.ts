@@ -168,7 +168,7 @@ export const skillGroups = [
 
 export const site = {
   name: "Gordo",
-  label: "V1SU4 Format",
+  label: "V1SU4",
   role: "Creative Technologist",
   focus: "Generative AI for commercials, TV & live shows",
   base: "Miami",

@@ -16,70 +16,36 @@ function parseHash(): Route {
 const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const COL = "mx-auto w-full max-w-[520px] px-4";
 
-/* Page transition: an orange circle grows from the click point, the route changes underneath, then it fades. */
-let wipeEl: HTMLDivElement | null = null;
-function go(path: string, e?: { clientX: number; clientY: number; detail?: number }) {
-  const set = () => { window.location.hash = path; window.scrollTo(0, 0); };
-  if (!wipeEl || reduceMotion()) return set();
-  const fromPointer = e && e.detail !== 0;
-  const x = fromPointer ? e!.clientX : window.innerWidth / 2;
-  const y = fromPointer ? e!.clientY : window.innerHeight / 2;
-  const el = wipeEl;
-  gsap.killTweensOf(el);
-  gsap.set(el, { display: "block", opacity: 1, clipPath: `circle(0px at ${x}px ${y}px)` });
-  gsap.to(el, {
-    clipPath: `circle(150vmax at ${x}px ${y}px)`, duration: 0.5, ease: "power3.in",
-    onComplete: () => {
-      set();
-      gsap.to(el, { opacity: 0, duration: 0.45, delay: 0.08, ease: "power2.out", onComplete: () => { gsap.set(el, { display: "none" }); } });
-    },
-  });
+/* In-site navigation. Each move adds a history entry, so the browser's back button and [BACK] both work. */
+let inSiteMoves = 0;
+function go(path: string, _e?: unknown) {
+  inSiteMoves += 1;
+  window.location.hash = path;
+  window.scrollTo(0, 0);
+}
+function back() {
+  if (inSiteMoves > 0) { inSiteMoves -= 1; window.history.back(); }
+  else { window.location.hash = "/"; window.scrollTo(0, 0); }
 }
 
-function Wipe() {
-  return <div ref={(n) => { wipeEl = n; }} aria-hidden="true" className="pointer-events-none fixed inset-0 z-[100] hidden bg-accent" />;
-}
-
-function Header({ onMenu }: { onMenu: () => void }) {
+function Header({ onMenu, showBack }: { onMenu: () => void; showBack: boolean }) {
   return (
     <header className="sticky top-0 z-40 bg-ink/90 backdrop-blur-md">
       <div className={`${COL} flex items-center justify-between py-4`}>
-        <button onClick={(e) => go("/", e)} className="select-none leading-none" aria-label={`${site.name}, home`}>
+        <button onClick={() => go("/")} className="select-none leading-none" aria-label={`${site.name}, home`}>
           <span className="font-display text-[1.9rem] font-semibold uppercase leading-none tracking-[-0.03em] text-accent">{site.name}</span>
         </button>
-        <button onClick={onMenu} className="font-mono text-[13px] font-medium tracking-[0.06em] text-accent">[MENU]</button>
+        <div className="flex items-center gap-4 font-mono text-[13px] font-medium tracking-[0.06em] text-accent">
+          {showBack && <button onClick={back}>[BACK]</button>}
+          <button onClick={onMenu}>[MENU]</button>
+        </div>
       </div>
     </header>
   );
 }
 
-/* Four-point star from the V1SU4 Format marks. */
-function Star({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
-      <path fill="currentColor" d="M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0Z" />
-    </svg>
-  );
-}
-
 function Footer() {
-  return (
-    <footer className={`${COL} pb-10 pt-20`}>
-      <div className="flex items-end justify-between border-t border-accent/20 pt-6">
-        <div>
-          <p className="flex items-start gap-1.5 font-condensed text-[1.9rem] uppercase leading-none tracking-[0.01em] text-accent">
-            V1SU4 Format <Star className="mt-0.5 h-3.5 w-3.5" />
-          </p>
-          <p className="mt-2 font-mono text-[10px] font-medium uppercase leading-[1.5] tracking-[0.12em] text-accent/55">
-            Visuals / Ideas / Systems<br />For tomorrow
-          </p>
-        </div>
-        <p className="text-right font-mono text-[10px] font-medium uppercase leading-[1.5] tracking-[0.12em] text-accent/55">
-          {site.name}<br />Same idea.<br />Different format.
-        </p>
-      </div>
-    </footer>
-  );
+  return <div className="h-16" aria-hidden="true" />;
 }
 
 function Menu({ open, onClose, onContact }: { open: boolean; onClose: () => void; onContact: () => void }) {
@@ -132,7 +98,7 @@ function Caption({ name, sub, align = "center", size = "sm" }: { name: string; s
 }
 
 /* Rounded still with slow scroll parallax on the image inside. */
-function Still({ src, dot, dotAlways }: { src: string; dot?: boolean; dotAlways?: boolean }) {
+function Still({ src, on }: { src: string; on?: boolean }) {
   const box = useRef<HTMLDivElement>(null);
   const img = useRef<HTMLImageElement>(null);
   useEffect(() => {
@@ -145,8 +111,7 @@ function Still({ src, dot, dotAlways }: { src: string; dot?: boolean; dotAlways?
   }, []);
   return (
     <div ref={box} className="still relative aspect-[4/3]">
-      <img ref={img} src={src} alt="" loading="lazy" className={`still-img absolute inset-x-0 -top-[8%] h-[116%] w-full object-cover ${dotAlways ? "is-on" : ""}`} />
-      {(dot || dotAlways) && <span className={`absolute inset-0 m-auto h-11 w-11 rounded-full bg-accent ${dotAlways ? "" : "dot"}`} />}
+      <img ref={img} src={src} alt="" loading="lazy" className={`still-img absolute inset-x-0 -top-[8%] h-[116%] w-full object-cover ${on ? "is-on" : ""}`} />
     </div>
   );
 }
@@ -169,7 +134,7 @@ function Card({ p }: { p: Project }) {
   const ref = useReveal<HTMLButtonElement>();
   return (
     <button ref={ref} onClick={(e) => go(`/work/${p.slug}`, e)} className="group block w-full text-left" aria-label={`${p.title}, ${p.type}`}>
-      <Still src={p.cover} dot />
+      <Still src={p.cover} />
       <Caption name={p.title} sub={p.type} />
     </button>
   );
@@ -245,7 +210,7 @@ function ProjectPage({ slug }: { slug: string }) {
   return (
     <>
       <div ref={hero} className={`${COL} pt-2`}>
-        <Still src={p.cover} dotAlways />
+        <Still src={p.cover} on />
         <Caption name={p.title} sub={p.type} align="left" size="lg" />
         <h2 className="mt-10 font-mono text-[16px] font-semibold uppercase tracking-[0.03em]">Credits</h2>
         <div className="mt-3">
@@ -278,7 +243,7 @@ function ProjectPage({ slug }: { slug: string }) {
             : <span className="text-accent/60">[{p.status}]</span>}
         </p>
         <button onClick={(e) => go(`/work/${next.slug}`, e)} className="group mt-16 block w-full text-left">
-          <Still src={next.cover} dot />
+          <Still src={next.cover} />
           <Caption name={next.title} sub="Next" />
         </button>
       </div>
@@ -372,7 +337,7 @@ export default function App() {
   const key = route.view + (route.slug ?? "");
   return (
     <div className="min-h-svh bg-ink text-accent">
-      <Header onMenu={() => setMenu(true)} />
+      <Header onMenu={() => setMenu(true)} showBack={route.view !== "home"} />
       <main key={key}>
         {route.view === "home" && <HomePage />}
         {route.view === "lab" && <LabPage />}
@@ -382,7 +347,6 @@ export default function App() {
       <Footer />
       <Menu open={menu} onClose={() => setMenu(false)} onContact={() => setContact(true)} />
       <Contact open={contact} onClose={() => setContact(false)} />
-      <Wipe />
     </div>
   );
 }
