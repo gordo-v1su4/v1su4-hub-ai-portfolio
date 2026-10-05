@@ -30,7 +30,7 @@ function back() {
 
 function Header({ onMenu, showBack }: { onMenu: () => void; showBack: boolean }) {
   return (
-    <header className="sticky top-0 z-40 bg-ink/90 backdrop-blur-md">
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-white/5 bg-ink/25 backdrop-blur-xl backdrop-saturate-150">
       <div className={`${COL} flex items-center justify-between py-4`}>
         <button onClick={() => go("/")} className="select-none leading-none" aria-label={`${site.name}, home`}>
           <span className="font-display text-[1.9rem] font-semibold uppercase leading-none tracking-[-0.03em] text-accent">{site.name}</span>
@@ -164,39 +164,100 @@ function CreditLines({ rows }: { rows: [string, string][] }) {
   );
 }
 
-/* Slides you drag (mouse) or swipe (touch) sideways. The first slide starts centered and each one snaps to center. */
+/*
+  Momentum carousel (greymac-style). Drag, swipe, trackpad, or plain mouse wheel move a target position;
+  the track eases toward it each frame. Speed tilts the cards in 3D, and they flatten as it settles.
+  The wheel only takes over while there are slides left in that direction, then the page scrolls on.
+*/
 function HorizontalSteps({ p }: { p: Project }) {
+  const wrap = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
-  const drag = useRef<{ x: number; left: number } | null>(null);
   const [dragging, setDragging] = useState(false);
-  useEffect(() => { if (track.current) track.current.scrollLeft = 0; }, [p.slug]);
 
-  const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType !== "mouse" || !track.current) return;
-    drag.current = { x: e.clientX, left: track.current.scrollLeft };
-    setDragging(true);
-    track.current.setPointerCapture(e.pointerId);
-  };
-  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!drag.current || !track.current) return;
-    track.current.scrollLeft = drag.current.left - (e.clientX - drag.current.x);
-  };
-  const onUp = () => { drag.current = null; setDragging(false); };
+  useEffect(() => {
+    const w = wrap.current, t = track.current;
+    if (!w || !t) return;
+    const cards = Array.from(t.children) as HTMLElement[];
+    const still = reduceMotion();
+    let target = 0, current = 0, drag: { x: number; start: number } | null = null;
+    let snapTimer = 0;
+
+    const maxX = () => Math.max(0, t.scrollWidth - w.clientWidth);
+    const clamp = (v: number) => Math.min(maxX(), Math.max(0, v));
+    const snapPoints = () => cards.map((c) => clamp(c.offsetLeft + c.offsetWidth / 2 - w.clientWidth / 2));
+    const snap = () => {
+      const pts = snapPoints();
+      target = pts.reduce((best, pt) => (Math.abs(pt - target) < Math.abs(best - target) ? pt : best), pts[0] ?? 0);
+    };
+    const scheduleSnap = () => { window.clearTimeout(snapTimer); snapTimer = window.setTimeout(snap, 140); };
+
+    const tick = () => {
+      current += (target - current) * (still ? 1 : 0.085);
+      const vel = target - current;
+      t.style.transform = `translate3d(${-current}px,0,0)`;
+      const tilt = still ? 0 : Math.max(-22, Math.min(22, vel * -0.07));
+      const squash = still ? 1 : Math.max(0.9, 1 - Math.abs(vel) * 0.0006);
+      for (const c of cards) c.style.transform = `rotateY(${tilt}deg) scale(${squash})`;
+    };
+    gsap.ticker.add(tick);
+
+    const onWheel = (e: WheelEvent) => {
+      const horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+      const d = horizontal ? e.deltaX : e.deltaY;
+      const canMove = (d > 0 && target < maxX() - 1) || (d < 0 && target > 1);
+      if (!canMove) return; // let the page scroll on
+      e.preventDefault();
+      target = clamp(target + d);
+      scheduleSnap();
+    };
+    const onDown = (e: PointerEvent) => {
+      drag = { x: e.clientX, start: target };
+      setDragging(true);
+      w.setPointerCapture(e.pointerId);
+      window.clearTimeout(snapTimer);
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!drag) return;
+      target = clamp(drag.start - (e.clientX - drag.x) * 1.15);
+    };
+    const onUp = () => { if (!drag) return; drag = null; setDragging(false); snap(); };
+    const onKey = (e: KeyboardEvent) => {
+      const pts = snapPoints();
+      const i = pts.findIndex((pt) => Math.abs(pt - target) < 2);
+      if (e.key === "ArrowRight") { target = pts[Math.min(pts.length - 1, (i < 0 ? 0 : i) + 1)]; e.preventDefault(); }
+      if (e.key === "ArrowLeft") { target = pts[Math.max(0, (i < 0 ? 0 : i) - 1)]; e.preventDefault(); }
+    };
+
+    w.addEventListener("wheel", onWheel, { passive: false });
+    w.addEventListener("pointerdown", onDown);
+    w.addEventListener("pointermove", onMove);
+    w.addEventListener("pointerup", onUp);
+    w.addEventListener("pointercancel", onUp);
+    w.addEventListener("keydown", onKey);
+    return () => {
+      gsap.ticker.remove(tick);
+      window.clearTimeout(snapTimer);
+      w.removeEventListener("wheel", onWheel);
+      w.removeEventListener("pointerdown", onDown);
+      w.removeEventListener("pointermove", onMove);
+      w.removeEventListener("pointerup", onUp);
+      w.removeEventListener("pointercancel", onUp);
+      w.removeEventListener("keydown", onKey);
+    };
+  }, [p.slug]);
 
   return (
     <section className="py-10">
-      <h2 className="mx-auto mb-4 w-full max-w-[1200px] px-4 font-mono text-[16px] font-semibold uppercase tracking-[0.03em] md:px-8">How it works</h2>
+      <h2 className="mx-auto mb-4 w-full max-w-[640px] px-4 font-mono text-[16px] font-semibold uppercase tracking-[0.03em]">How it works</h2>
       <div
-        ref={track}
-        onPointerDown={onDown}
-        onPointerMove={onMove}
-        onPointerUp={onUp}
-        onPointerCancel={onUp}
-        className={`no-scrollbar flex gap-4 overflow-x-auto ${dragging ? "cursor-grabbing select-none" : "cursor-grab snap-x snap-mandatory scroll-smooth"}`}
-        style={{ paddingInline: "calc(50% - min(31vw, 130px))" }}
+        ref={wrap}
+        tabIndex={0}
+        aria-label="How it works slides. Drag, scroll, or use the arrow keys."
+        className={`overflow-hidden [perspective:1200px] [touch-action:pan-y] ${dragging ? "cursor-grabbing select-none" : "cursor-grab"}`}
       >
+        <div ref={track} className="flex gap-4 will-change-transform" style={{ paddingInline: "calc(50% - min(31vw, 130px))" }}>
         {p.flow.map((s, i) => (
-          <div key={s.label} className="still relative flex aspect-[3/4] w-[62vw] max-w-[260px] shrink-0 snap-center flex-col justify-end p-4">
+          <div key={s.label} className="still relative flex aspect-[3/4] w-[62vw] max-w-[260px] shrink-0 flex-col justify-end p-4 will-change-transform">
             <img src={p.cover} alt="" draggable={false} className="still-img pointer-events-none absolute inset-0 h-full w-full object-cover opacity-35" style={{ objectPosition: `${(i * 25) % 100}% 50%` }} />
             <div className="relative font-mono uppercase">
               <p className="text-[11px] font-medium text-accent/60">{String(i + 1).padStart(2, "0")} / {String(p.flow.length).padStart(2, "0")}</p>
@@ -205,8 +266,9 @@ function HorizontalSteps({ p }: { p: Project }) {
             </div>
           </div>
         ))}
+        </div>
       </div>
-      <p className={`${COL} mt-3 text-center font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-accent/50`}>← Drag →</p>
+      <p className={`${COL} mt-3 text-center font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-accent/50`}>← Drag or scroll →</p>
     </section>
   );
 }
@@ -223,38 +285,47 @@ function ProjectPage({ slug }: { slug: string }) {
   }, [slug]);
 
   const WIDE = "mx-auto w-full max-w-[1200px] px-4 md:px-8";
+  // Real media when added in data; otherwise two empty slots (one above the carousel, one below).
+  const media: (string | undefined)[] = p.media?.length ? p.media : [undefined, undefined];
   return (
     <>
       {/* Full-bleed hero, then a small centered title block (milledollars-style case study). */}
-      <Still src={p.cover} on className="h-[62svh] w-full md:h-[86svh]" />
-      <div ref={hero} className={WIDE}>
-        <div className="py-12 text-center font-mono uppercase">
-          <p className="text-[15px] font-bold tracking-[0.03em]">{p.title}</p>
-          <p className="mt-1 text-[12px] font-medium text-accent/60">‘{p.type}’ · {p.year}</p>
-        </div>
+      <Still src={p.cover} on className="h-[72svh] w-full md:h-[92svh]" />
+      <div ref={hero} className="mx-auto w-full max-w-[640px] px-4">
+        <p className="pt-12 text-center font-mono text-[15px] font-bold uppercase tracking-[0.03em]">
+          {p.title} <span>‘{p.type}’</span>
+        </p>
 
-        <div className="grid gap-8 border-t border-accent/20 pt-8 md:grid-cols-[1fr_2fr] md:gap-16">
+        <p className="mt-10 font-mono text-[14px] font-bold uppercase leading-[1.45] tracking-[0.02em]">{p.tagline}</p>
+        <p className="mt-4 font-mono text-[12px] font-medium uppercase leading-[1.6] text-accent/70">{p.what}</p>
+
+        <h2 className="mt-10 font-mono text-[16px] font-semibold uppercase tracking-[0.03em]">Credits</h2>
+        <div className="mt-3">
           <CreditLines rows={[
             ["Role", p.role],
             ["Stack", p.stack.join(", ")],
             ["Status", p.status],
+            ["Year", p.year],
           ]} />
-          <div>
-            <p className="font-mono text-[15px] font-bold uppercase leading-[1.4] tracking-[0.02em]">{p.tagline}</p>
-            <p className="mt-4 max-w-[62ch] font-mono text-[12px] font-medium uppercase leading-[1.6] text-accent/70">{p.what}</p>
-            <p className="mt-6 font-mono text-[13px] font-semibold uppercase tracking-[0.03em]">
-              {p.link
-                ? <a href={p.link} target="_blank" rel="noopener" className="hover:opacity-70">[Open app ↗]</a>
-                : <span className="text-accent/60">[{p.status}]</span>}
-            </p>
-          </div>
+        </div>
+        <p className="mt-6 font-mono text-[13px] font-semibold uppercase tracking-[0.03em]">
+          {p.link
+            ? <a href={p.link} target="_blank" rel="noopener" className="hover:opacity-70">[Open app ↗]</a>
+            : <span className="text-accent/60">[{p.status}]</span>}
+        </p>
+      </div>
+
+      {/* One centered image or video between the text and the carousel. */}
+      <div className={`${WIDE} mt-16`}>
+        <div className="mx-auto w-full max-w-[900px]">
+          {media[0] ? <Still src={media[0]} /> : <MediaSlot n={1} />}
         </div>
       </div>
 
       {p.horizontal ? (
         <div className="mt-12"><HorizontalSteps p={p} /></div>
       ) : (
-        <div className={`${WIDE} mt-16`}>
+        <div className="mx-auto mt-16 w-full max-w-[640px] px-4">
           <h2 className="font-mono text-[16px] font-semibold uppercase tracking-[0.03em]">How it works</h2>
           <div className="mt-3">
             <CreditLines rows={p.flow.map((s, i) => [`${String(i + 1).padStart(2, "0")} ${s.label}`, s.sub])} />
@@ -262,18 +333,13 @@ function ProjectPage({ slug }: { slug: string }) {
         </div>
       )}
 
-      {/* Editorial media blocks, offset left and right. Empty slots show where screenshots or clips go. */}
-      <div className={`${WIDE} mt-16 flex flex-col gap-20 md:gap-28`}>
-        {(p.media?.length ? p.media : [undefined, undefined, undefined]).map((src, i) => {
-          const layout = ["md:w-[66%]", "md:ml-auto md:w-[46%]", "md:mx-auto md:w-[58%]"][i % 3];
-          const note = p.flow[i]?.sub;
-          return (
-            <div key={i} className={`flex flex-col gap-4 ${layout}`}>
-              {src ? <Still src={src} /> : <MediaSlot n={i + 1} />}
-              {note && <p className="max-w-[46ch] font-mono text-[11.5px] font-medium uppercase leading-[1.55] text-accent/60">{String(i + 1).padStart(2, "0")} · {note}</p>}
-            </div>
-          );
-        })}
+      {/* The rest of the media, stacked and centered. */}
+      <div className={`${WIDE} mt-12 flex flex-col items-center gap-12`}>
+        {media.slice(1).map((src, i) => (
+          <div key={i} className="w-full max-w-[900px]">
+            {src ? <Still src={src} /> : <MediaSlot n={i + 2} />}
+          </div>
+        ))}
       </div>
 
       <div className={`${COL} mt-24`}>
@@ -381,7 +447,7 @@ export default function App() {
   return (
     <div className="min-h-svh bg-ink text-accent">
       <Header onMenu={() => setMenu(true)} showBack={route.view !== "home"} />
-      <main key={key}>
+      <main key={key} className={route.view === "project" ? "" : "pt-[68px]"}>
         {route.view === "home" && <HomePage />}
         {route.view === "lab" && <LabPage />}
         {route.view === "about" && <AboutPage />}
