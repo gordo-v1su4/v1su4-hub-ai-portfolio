@@ -107,6 +107,26 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "trailer-feed",
+    title: "TRAILER FEED",
+    group: "more",
+    type: "Video Portfolio",
+    tagline: "Finished AI video projects, with every version, prompt and model kept together.",
+    role: "Design / Development",
+    status: "Live",
+    year: "2026",
+    stack: ["SvelteKit", "Python", "SQLite", "RustFS"],
+    cover: "/images/agents.jpg",
+    link: "https://trailer-feed.vercel.app",
+    what: "A video portfolio for importing finished projects, watching versions, comparing takes, and keeping prompts and model metadata alongside the videos. Prompts and sources are kept as a reference library.",
+    flow: [
+      { label: "IMPORT", sub: "Finished videos in" },
+      { label: "VERSIONS", sub: "Play · compare takes" },
+      { label: "METADATA", sub: "Prompt · model per cut" },
+      { label: "LIBRARY", sub: "Prompts · sources" },
+    ],
+  },
+  {
     slug: "project-stack-structure",
     title: "PROJECT STACK STRUCTURE",
     group: "more",
@@ -158,8 +178,8 @@ export interface LabItem {
 
 export const labItems: LabItem[] = [
   {
-    slug: "trailer-feed",
-    title: "TRAILER FEED",
+    slug: "creative-studio-pro",
+    title: "CREATIVE STUDIO PRO",
     kind: "AI TRAILER STUDIO",
     body: "A canvas-first studio for AI short films and trailers: story beats on a board, generated takes on each beat, and cuts you trim and finish. Generation runs only after approval and a cost check.",
     status: "In development",
