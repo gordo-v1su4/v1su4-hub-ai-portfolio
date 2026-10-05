@@ -235,7 +235,8 @@ function HorizontalSteps({ p }: { p: Project }) {
         if (img && !still) {
           const dist = c.offsetLeft + c.offsetWidth / 2 - pos - w.clientWidth / 2;
           const room = ((IMG_SCALE - 1) * c.offsetWidth) / 2;
-          const shift = Math.max(-room, Math.min(room, dist * -PARALLAX));
+          // Ease into the edge (tanh) instead of clamping hard, so there's no hitch as cards move outward.
+          const shift = room * Math.tanh((dist * -PARALLAX) / room);
           img.style.transform = `translate3d(${shift}px,0,0) scale(${IMG_SCALE})`;
         }
       });
