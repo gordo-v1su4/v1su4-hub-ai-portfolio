@@ -2,7 +2,7 @@
   /*
     Looping momentum carousel (greymac-style).
     Wheel, drag, flick, trackpad, or arrow keys add velocity; friction bleeds it off so it glides and slows.
-    The slides repeat three times and the position wraps, so it never runs out. Speed tilts the cards in 3D.
+    The slides repeat three times and the position wraps, so it never runs out. Cards stay flat.
     While the pointer is over the carousel the wheel drives it; move off it (above or below) to scroll the page.
   */
   import { onMount } from "svelte";
@@ -39,7 +39,7 @@
     const still = reduceMotion();
     const n = cards.length / 3;
 
-    let pos = 0, vel = 0, raf = 0, tilt = 0;
+    let pos = 0, vel = 0, raf = 0;
     let drag: { x: number; pos: number; lastX: number; lastT: number; v: number } | null = null;
     const FRICTION = 0.955;  // closer to 1 = longer glide
     const WHEEL_GAIN = 0.05; // speed added per wheel step
@@ -70,10 +70,6 @@
       }
       wrapPos();
       t.style.transform = `translate3d(${-pos}px,0,0)`;
-      // Ease the tilt toward its target so quick back-and-forth changes don't flip the cards abruptly.
-      const tiltTarget = still ? 0 : Math.max(-22, Math.min(22, vel * -1.1));
-      tilt += (tiltTarget - tilt) * 0.12;
-      for (const c of cards) c.style.transform = `rotateY(${tilt}deg)`;
       raf = requestAnimationFrame(frame);
     };
     const start = () => {
@@ -115,7 +111,6 @@
       drag.lastX = e.clientX;
       drag.lastT = now;
       pos = drag.pos - (e.clientX - drag.x);
-      vel = drag.v; // keeps the tilt live while dragging
     };
     const onUp = () => {
       if (!drag) return;
@@ -157,11 +152,11 @@
     tabindex="0"
     role="region"
     aria-label="How it works slides. Drag, scroll, or use the arrow keys."
-    class="overflow-hidden py-6 [perspective:1400px] [touch-action:pan-y] {dragging ? 'cursor-grabbing select-none' : 'cursor-grab'}"
+    class="overflow-hidden py-6 [touch-action:pan-y] {dragging ? 'cursor-grabbing select-none' : 'cursor-grab'}"
   >
     <div bind:this={track} class="flex gap-5 will-change-transform">
       {#each looped as s, i (i)}
-        <div aria-hidden={i < base.length || i >= base.length * 2} class="still relative flex aspect-video w-[78vw] max-w-[520px] shrink-0 flex-col justify-end p-5 will-change-transform">
+        <div aria-hidden={i < base.length || i >= base.length * 2} class="still relative flex aspect-video w-[78vw] max-w-[520px] shrink-0 flex-col justify-end p-5">
           <img src={s.img} alt="" draggable="false" class="still-img pointer-events-none absolute inset-0 h-full w-full object-cover opacity-45" style="object-position: {s.pos}" />
           <div class="relative font-mono uppercase">
             <p class="text-[11px] font-medium text-accent/60">{s.kicker}</p>
