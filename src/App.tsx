@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { X, ArrowUpRight } from "lucide-react";
+import { X } from "lucide-react";
 import { projects, labItems, skillGroups, site, type Project } from "./data/projects";
 import { gsap, ScrollTrigger } from "./hooks/gsap";
 
@@ -14,6 +14,7 @@ function parseHash(): Route {
 }
 
 const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const COL = "mx-auto w-full max-w-[520px] px-4";
 
 /* Page transition: an orange circle grows from the click point, the route changes underneath, then it fades. */
 let wipeEl: HTMLDivElement | null = null;
@@ -27,7 +28,7 @@ function go(path: string, e?: { clientX: number; clientY: number; detail?: numbe
   gsap.killTweensOf(el);
   gsap.set(el, { display: "block", opacity: 1, clipPath: `circle(0px at ${x}px ${y}px)` });
   gsap.to(el, {
-    clipPath: `circle(150vmax at ${x}px ${y}px)`, duration: 0.55, ease: "power3.in",
+    clipPath: `circle(150vmax at ${x}px ${y}px)`, duration: 0.5, ease: "power3.in",
     onComplete: () => {
       set();
       gsap.to(el, { opacity: 0, duration: 0.45, delay: 0.08, ease: "power2.out", onComplete: () => { gsap.set(el, { display: "none" }); } });
@@ -39,41 +40,23 @@ function Wipe() {
   return <div ref={(n) => { wipeEl = n; }} aria-hidden="true" className="pointer-events-none fixed inset-0 z-[100] hidden bg-accent" />;
 }
 
-function Wordmark() {
-  return (
-    <button onClick={(e) => go("/", e)} className="group flex items-baseline gap-3 select-none text-left leading-none" aria-label={`${site.name}, home`}>
-      <span className="font-display text-[1.55rem] font-semibold uppercase tracking-[-0.02em] text-accent md:text-[2.1rem]">Gordo</span>
-      <span className="hidden font-mono text-[10px] tracking-[0.3em] text-accent/60 sm:inline">{site.label}</span>
-    </button>
-  );
-}
-
 function Header({ onMenu }: { onMenu: () => void }) {
   return (
     <header className="sticky top-0 z-40 bg-ink/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-[1100px] items-center justify-between px-5 py-4 md:px-8 md:py-5">
-        <Wordmark />
-        <button onClick={onMenu} className="font-mono text-[12px] tracking-[0.18em] text-accent">[MENU]</button>
+      <div className={`${COL} flex items-center justify-between py-4`}>
+        <button onClick={(e) => go("/", e)} className="select-none leading-none" aria-label={`${site.name}, home`}>
+          <span className="font-display text-[1.9rem] font-semibold uppercase leading-none tracking-[-0.03em] text-accent">{site.name}</span>
+        </button>
+        <button onClick={onMenu} className="font-mono text-[13px] font-medium tracking-[0.06em] text-accent">[MENU]</button>
       </div>
     </header>
   );
 }
 
-function Footer({ onContact }: { onContact: () => void }) {
+function Footer() {
   return (
-    <footer className="mt-24 border-t border-accent/20">
-      <div className="mx-auto flex max-w-[1100px] flex-col gap-6 px-5 py-10 md:flex-row md:items-end md:justify-between md:px-8">
-        <div>
-          <p className="font-display text-[1.2rem] font-semibold uppercase tracking-[-0.02em]">Gordo</p>
-          <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-accent/60">{site.name} · {site.label} · {site.base}</p>
-        </div>
-        <nav className="flex flex-wrap gap-x-5 gap-y-2 font-mono text-[11px] tracking-[0.16em]">
-          {site.links.map((l) => (
-            <a key={l.label} href={l.href} target="_blank" rel="noopener" className="text-accent/75 hover:text-accent">{l.label}</a>
-          ))}
-          <button onClick={onContact} className="text-accent/75 hover:text-accent">CONTACT</button>
-        </nav>
-      </div>
+    <footer className={`${COL} pb-10 pt-16 text-center font-mono text-[11px] font-medium uppercase tracking-[0.06em] text-accent/55`}>
+      {site.name} · {site.label}
     </footer>
   );
 }
@@ -83,7 +66,7 @@ function Menu({ open, onClose, onContact }: { open: boolean; onClose: () => void
   useEffect(() => {
     if (!open || !ref.current || reduceMotion()) return;
     gsap.fromTo(ref.current, { opacity: 0 }, { opacity: 1, duration: 0.25 });
-    gsap.fromTo(".menu-link", { y: 16, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.05, duration: 0.4, ease: "power3.out" });
+    gsap.fromTo(".menu-link", { y: 12, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.04, duration: 0.4, ease: "power3.out" });
   }, [open]);
   useEffect(() => {
     if (!open) return;
@@ -93,24 +76,57 @@ function Menu({ open, onClose, onContact }: { open: boolean; onClose: () => void
   }, [open, onClose]);
   if (!open) return null;
   const nav = (p: string) => (e: React.MouseEvent) => { onClose(); go(p, e); };
+  const row = "menu-link block w-full py-1.5 text-left font-mono text-[13px] font-semibold uppercase tracking-[0.03em] text-accent hover:opacity-70";
   return (
-    <div ref={ref} role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/95 backdrop-blur-sm">
-      <button onClick={onClose} className="absolute right-5 top-5 font-mono text-[12px] tracking-[0.18em] text-accent md:right-8">[CLOSE]</button>
-      <nav className="flex flex-col items-center gap-5">
-        <button onClick={nav("/")} className="menu-link font-mono text-[22px] tracking-[0.22em] text-accent">WORK</button>
-        <button onClick={nav("/lab")} className="menu-link font-mono text-[22px] tracking-[0.22em] text-accent">LAB</button>
-        <button onClick={nav("/about")} className="menu-link font-mono text-[22px] tracking-[0.22em] text-accent">ABOUT</button>
-        <button onClick={() => { onClose(); onContact(); }} className="menu-link font-mono text-[22px] tracking-[0.22em] text-accent">CONTACT</button>
+    <div ref={ref} role="dialog" aria-modal="true" aria-label="Menu" className="no-scrollbar fixed inset-0 z-[80] overflow-y-auto bg-ink">
+      <div className={`${COL} flex items-center justify-between py-4`}>
+        <span className="font-display text-[1.9rem] font-semibold uppercase leading-none tracking-[-0.03em]">{site.name}</span>
+        <button onClick={onClose} className="font-mono text-[13px] font-medium tracking-[0.06em]">[CLOSE]</button>
+      </div>
+      <nav className={`${COL} pt-6`}>
+        <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.06em] text-accent/50">Work</p>
+        {projects.map((p) => (
+          <button key={p.slug} onClick={nav(`/work/${p.slug}`)} className={row}>
+            {p.title} <span className="font-medium opacity-80">‘{p.type}’</span>
+          </button>
+        ))}
+        <p className="mb-2 mt-8 font-mono text-[11px] uppercase tracking-[0.06em] text-accent/50">More</p>
+        <button onClick={nav("/lab")} className={row}>Lab <span className="font-medium opacity-80">‘In development’</span></button>
+        <button onClick={nav("/about")} className={row}>About</button>
+        <button onClick={() => { onClose(); onContact(); }} className={row}>Contact</button>
+        <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[11px] uppercase tracking-[0.06em] text-accent/60">
+          {site.links.map((l) => <a key={l.label} href={l.href} target="_blank" rel="noopener" className="hover:text-accent">{l.label}</a>)}
+        </div>
       </nav>
     </div>
   );
 }
 
-function Caption({ name, sub, align = "center" }: { name: string; sub: string; align?: "center" | "left" }) {
+function Caption({ name, sub, align = "center", size = "sm" }: { name: string; sub: string; align?: "center" | "left"; size?: "sm" | "lg" }) {
   return (
-    <p className={`mt-3 font-mono text-[12px] uppercase tracking-[0.04em] text-accent ${align === "center" ? "text-center" : ""}`}>
-      {name} <span className="opacity-90">‘{sub}’</span>
+    <p className={`mt-3 font-mono font-semibold uppercase tracking-[0.03em] text-accent ${align === "center" ? "text-center" : ""} ${size === "lg" ? "text-[15px]" : "text-[13px]"}`}>
+      {name} <span>‘{sub}’</span>
     </p>
+  );
+}
+
+/* Rounded still with slow scroll parallax on the image inside. */
+function Still({ src, dot, dotAlways }: { src: string; dot?: boolean; dotAlways?: boolean }) {
+  const box = useRef<HTMLDivElement>(null);
+  const img = useRef<HTMLImageElement>(null);
+  useEffect(() => {
+    if (!box.current || !img.current || reduceMotion()) return;
+    const t = gsap.fromTo(img.current, { yPercent: -7 }, {
+      yPercent: 7, ease: "none",
+      scrollTrigger: { trigger: box.current, start: "top bottom", end: "bottom top", scrub: true },
+    });
+    return () => { t.scrollTrigger?.kill(); t.kill(); };
+  }, []);
+  return (
+    <div ref={box} className="still relative aspect-[4/3]">
+      <img ref={img} src={src} alt="" loading="lazy" className={`still-img absolute inset-x-0 -top-[8%] h-[116%] w-full object-cover ${dotAlways ? "is-on" : ""}`} />
+      {(dot || dotAlways) && <span className={`absolute inset-0 m-auto h-11 w-11 rounded-full bg-accent ${dotAlways ? "" : "dot"}`} />}
+    </div>
   );
 }
 
@@ -119,7 +135,7 @@ function useReveal<T extends HTMLElement>() {
   useEffect(() => {
     const el = ref.current;
     if (!el || reduceMotion()) return;
-    const t = gsap.fromTo(el, { opacity: 0, y: 28 }, {
+    const t = gsap.fromTo(el, { opacity: 0, y: 24 }, {
       opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
       scrollTrigger: { trigger: el, start: "top 92%" },
     });
@@ -128,70 +144,29 @@ function useReveal<T extends HTMLElement>() {
   return ref;
 }
 
-/* Home card: tap the still to flip it; the back has the description and links. */
-function FlipCard({ p }: { p: Project }) {
-  const wrap = useReveal<HTMLDivElement>();
-  const inner = useRef<HTMLDivElement>(null);
-  const [flipped, setFlipped] = useState(false);
-  const flip = (to: boolean) => {
-    setFlipped(to);
-    if (reduceMotion()) gsap.set(inner.current, { rotateY: to ? 180 : 0 });
-    else gsap.to(inner.current, { rotateY: to ? 180 : 0, duration: 0.75, ease: "power3.inOut" });
-  };
+function Card({ p }: { p: Project }) {
+  const ref = useReveal<HTMLButtonElement>();
   return (
-    <div ref={wrap}>
-      <div className="[perspective:1600px]">
-        <div ref={inner} className="relative aspect-[16/10.5] [transform-style:preserve-3d]">
-          <button
-            onClick={() => flip(true)}
-            inert={flipped}
-            aria-label={`${p.title}: show details`}
-            className="face still group absolute inset-0 block w-full text-left"
-          >
-            <img src={p.cover} alt="" loading="lazy" className="still-img h-full w-full object-cover" />
-            <span className="dot absolute inset-0 m-auto h-11 w-11 rounded-full bg-accent" />
-            {p.status !== "Live" && (
-              <span className="absolute left-3 top-3 rounded-full bg-ink/80 px-2.5 py-1 font-mono text-[10px] tracking-[0.14em] text-accent">{p.status.toUpperCase()}</span>
-            )}
-          </button>
-          <div inert={!flipped} className="face still absolute inset-0 flex flex-col justify-between bg-[#181818] p-5 [transform:rotateY(180deg)] md:p-6">
-            <div>
-              <p className="font-mono text-[12px] uppercase tracking-[0.06em] text-accent">{p.tagline}</p>
-              <p className="mt-3 line-clamp-4 font-mono text-[11px] leading-relaxed text-accent/70 md:line-clamp-5">{p.what}</p>
-            </div>
-            <div className="flex items-center justify-between gap-3 font-mono text-[11px] tracking-[0.16em]">
-              <button onClick={() => flip(false)} className="text-accent/60 hover:text-accent">[BACK]</button>
-              <div className="flex gap-4">
-                <button onClick={(e) => go(`/work/${p.slug}`, e)} className="text-accent hover:underline">PROJECT →</button>
-                {p.link && <a href={p.link} target="_blank" rel="noopener" className="text-accent hover:underline">OPEN ↗</a>}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <button ref={ref} onClick={(e) => go(`/work/${p.slug}`, e)} className="group block w-full text-left" aria-label={`${p.title}, ${p.type}`}>
+      <Still src={p.cover} dot />
       <Caption name={p.title} sub={p.type} />
-    </div>
+    </button>
   );
 }
 
 function HomePage() {
   return (
-    <div className="mx-auto max-w-[1100px] px-5 pt-4 md:px-8">
-      <p className="mb-10 text-center font-mono text-[11px] uppercase tracking-[0.12em] text-accent/70">
-        Creative technologist <span className="opacity-90">‘generative AI for commercials, TV &amp; live shows’</span>
-      </p>
-      <div className="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-2">
-        {projects.map((p) => <FlipCard key={p.slug} p={p} />)}
-      </div>
+    <div className={`${COL} flex flex-col gap-10 pt-2`}>
+      {projects.map((p) => <Card key={p.slug} p={p} />)}
     </div>
   );
 }
 
 function CreditLines({ rows }: { rows: [string, string][] }) {
   return (
-    <div className="font-mono text-[11.5px] uppercase leading-[1.7] text-accent">
+    <div className="font-mono text-[11.5px] uppercase leading-[1.55] tracking-[0.01em]">
       {rows.map(([k, v]) => (
-        <p key={k}><span className="text-accent/50">{k}:</span> {v}</p>
+        <p key={k}><span className="font-medium text-accent/55">{k}:</span> <span className="font-bold text-accent">{v}</span></p>
       ))}
     </div>
   );
@@ -218,15 +193,15 @@ function HorizontalSteps({ p }: { p: Project }) {
   }, [native, p.slug]);
   return (
     <section ref={section} className={`relative flex flex-col justify-center py-10 ${native ? "" : "h-svh overflow-hidden"}`}>
-      <div className="mx-auto mb-6 w-full max-w-[1100px] px-5 font-mono text-[13px] tracking-[0.12em] md:px-8">HOW IT WORKS →</div>
-      <div ref={track} className={`flex w-max gap-5 px-5 md:gap-8 md:px-8 ${native ? "max-w-full snap-x overflow-x-auto" : ""}`}>
+      <h2 className={`${COL} mb-4 font-mono text-[16px] font-semibold uppercase tracking-[0.03em]`}>How it works →</h2>
+      <div ref={track} className={`no-scrollbar flex w-max gap-4 px-[max(1rem,calc((100vw-520px)/2+1rem))] ${native ? "max-w-full snap-x overflow-x-auto" : ""}`}>
         {p.flow.map((s, i) => (
-          <div key={s.label} className="still relative flex aspect-[4/5] w-[72vw] shrink-0 snap-start flex-col justify-end p-5 sm:w-[46vw] md:w-[30vw] lg:w-[24vw]">
-            <img src={p.cover} alt="" className="still-img absolute inset-0 h-full w-full object-cover opacity-40" style={{ objectPosition: `${(i * 25) % 100}% 50%` }} />
-            <div className="relative">
-              <p className="font-display text-[2.4rem] font-semibold leading-none">{String(i + 1).padStart(2, "0")}</p>
-              <p className="mt-3 font-mono text-[13px] tracking-[0.1em]">{s.label}</p>
-              <p className="mt-1 font-mono text-[11px] text-accent/75">{s.sub}</p>
+          <div key={s.label} className="still relative flex aspect-[3/4] w-[62vw] max-w-[260px] shrink-0 snap-start flex-col justify-end p-4">
+            <img src={p.cover} alt="" className="still-img absolute inset-0 h-full w-full object-cover opacity-35" style={{ objectPosition: `${(i * 25) % 100}% 50%` }} />
+            <div className="relative font-mono uppercase">
+              <p className="text-[11px] font-medium text-accent/60">{String(i + 1).padStart(2, "0")}</p>
+              <p className="mt-1 text-[14px] font-bold">{s.label}</p>
+              <p className="mt-1 text-[11px] font-medium text-accent/75">{s.sub}</p>
             </div>
           </div>
         ))}
@@ -243,57 +218,46 @@ function ProjectPage({ slug }: { slug: string }) {
 
   useEffect(() => {
     if (!hero.current || reduceMotion()) return;
-    gsap.fromTo(hero.current.children, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.08, ease: "power3.out", delay: 0.15 });
+    gsap.fromTo(hero.current.children, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.07, ease: "power3.out", delay: 0.15 });
   }, [slug]);
 
   return (
     <>
-      <div ref={hero} className="mx-auto max-w-[760px] px-5 pt-2 md:px-8">
-        <div className="still relative aspect-[16/10.5]">
-          <img src={p.cover} alt="" className="still-img is-on h-full w-full object-cover" />
-          <span className="absolute inset-0 m-auto h-12 w-12 rounded-full bg-accent" />
-        </div>
-        <Caption name={p.title} sub={p.type} align="left" />
-        <p className="mt-6 max-w-[60ch] font-mono text-[13px] leading-relaxed">{p.tagline}</p>
-        <p className="mt-3 max-w-[60ch] font-mono text-[12px] leading-relaxed text-accent/75">{p.what}</p>
-
-        <h2 className="mt-12 font-mono text-[15px] tracking-[0.08em]">CREDITS</h2>
-        <div className="mt-4">
+      <div ref={hero} className={`${COL} pt-2`}>
+        <Still src={p.cover} dotAlways />
+        <Caption name={p.title} sub={p.type} align="left" size="lg" />
+        <h2 className="mt-10 font-mono text-[16px] font-semibold uppercase tracking-[0.03em]">Credits</h2>
+        <div className="mt-3">
           <CreditLines rows={[
-            ["Type", p.type],
+            ["Project", p.tagline],
             ["Role", p.role],
+            ["Stack", p.stack.join(", ")],
             ["Status", p.status],
             ["Year", p.year],
-            ["Stack", p.stack.join(", ")],
           ]} />
         </div>
+        <p className="mt-6 font-mono text-[11.5px] font-medium uppercase leading-[1.55] text-accent/70">{p.what}</p>
       </div>
 
       {p.horizontal ? (
-        <div className="mt-12"><HorizontalSteps p={p} /></div>
+        <div className="mt-8"><HorizontalSteps p={p} /></div>
       ) : (
-        <div className="mx-auto mt-12 max-w-[760px] px-5 md:px-8">
-          <h2 className="font-mono text-[15px] tracking-[0.08em]">HOW IT WORKS</h2>
-          <div className="mt-4">
+        <div className={`${COL} mt-10`}>
+          <h2 className="font-mono text-[16px] font-semibold uppercase tracking-[0.03em]">How it works</h2>
+          <div className="mt-3">
             <CreditLines rows={p.flow.map((s, i) => [`${String(i + 1).padStart(2, "0")} ${s.label}`, s.sub])} />
           </div>
         </div>
       )}
 
-      <div className="mx-auto max-w-[760px] px-5 md:px-8">
-        {p.link ? (
-          <a href={p.link} target="_blank" rel="noopener" className="mt-12 flex w-full items-center justify-center gap-2 border border-accent py-3 font-mono text-[12px] tracking-[0.2em] text-accent transition-colors hover:bg-accent hover:text-ink">
-            OPEN APP <ArrowUpRight size={14} />
-          </a>
-        ) : (
-          <p className="mt-12 border border-accent/30 py-3 text-center font-mono text-[12px] tracking-[0.2em] text-accent/70">{p.status.toUpperCase()}</p>
-        )}
-
+      <div className={COL}>
+        <p className="mt-8 font-mono text-[13px] font-semibold uppercase tracking-[0.03em]">
+          {p.link
+            ? <a href={p.link} target="_blank" rel="noopener" className="hover:opacity-70">[Open app ↗]</a>
+            : <span className="text-accent/60">[{p.status}]</span>}
+        </p>
         <button onClick={(e) => go(`/work/${next.slug}`, e)} className="group mt-16 block w-full text-left">
-          <div className="still relative aspect-[16/10.5]">
-            <img src={next.cover} alt="" loading="lazy" className="still-img h-full w-full object-cover" />
-            <span className="dot absolute inset-0 m-auto h-11 w-11 rounded-full bg-accent" />
-          </div>
+          <Still src={next.cover} dot />
           <Caption name={next.title} sub="Next" />
         </button>
       </div>
@@ -302,21 +266,14 @@ function ProjectPage({ slug }: { slug: string }) {
 }
 
 function LabPage() {
-  const [open, setOpen] = useState<string | null>(null);
   return (
-    <div className="mx-auto max-w-[760px] px-5 pt-4 md:px-8">
-      <p className="mb-10 text-center font-mono text-[12px] tracking-[0.16em]">LAB <span className="opacity-80">‘IN DEVELOPMENT’</span></p>
+    <div className={`${COL} pt-2`}>
+      <Caption name="Lab" sub="In development" align="left" size="lg" />
       {labItems.map((l) => (
-        <div key={l.slug} className="mb-6 border-b border-accent/20 pb-6">
-          <button onClick={() => setOpen(open === l.slug ? null : l.slug)} aria-expanded={open === l.slug} className="block w-full">
-            <Caption name={l.title} sub={l.kind} />
-          </button>
-          {open === l.slug && (
-            <div className="mx-auto mt-3 max-w-[60ch] text-center font-mono text-[12px] leading-relaxed text-accent/80">
-              <p>{l.body}</p>
-              <p className="mt-2 uppercase tracking-[0.12em] opacity-90">{l.status}</p>
-            </div>
-          )}
+        <div key={l.slug} className="mt-10">
+          <h2 className="font-mono text-[14px] font-bold uppercase tracking-[0.03em]">{l.title} <span>‘{l.kind}’</span></h2>
+          <p className="mt-2 font-mono text-[11.5px] font-medium uppercase leading-[1.55] text-accent/70">{l.body}</p>
+          <p className="mt-2 font-mono text-[11.5px] uppercase"><span className="font-medium text-accent/55">Status:</span> <span className="font-bold">{l.status}</span></p>
         </div>
       ))}
     </div>
@@ -325,13 +282,13 @@ function LabPage() {
 
 function AboutPage() {
   return (
-    <div className="mx-auto max-w-[760px] px-5 pt-4 md:px-8">
-      <Caption name={site.name} sub={site.role} align="left" />
-      <p className="mt-6 max-w-[60ch] font-mono text-[12.5px] leading-relaxed text-accent/85">
+    <div className={`${COL} pt-2`}>
+      <Caption name={site.name} sub={site.role} align="left" size="lg" />
+      <p className="mt-6 font-mono text-[11.5px] font-medium uppercase leading-[1.55] text-accent/75">
         I build custom AI production tools around ComfyUI, choosing the right image, video, audio and music models for each project and connecting them in one pipeline. Before AI, I spent 12+ years as an FX artist at ILM, DNEG, Sony Imageworks, MPC and Luma Pictures.
       </p>
-      <h2 className="mt-12 font-mono text-[15px] tracking-[0.08em]">CREDITS</h2>
-      <div className="mt-4">
+      <h2 className="mt-10 font-mono text-[16px] font-semibold uppercase tracking-[0.03em]">Credits</h2>
+      <div className="mt-3">
         <CreditLines rows={[
           ["Role", site.role],
           ["Focus", site.focus],
@@ -353,24 +310,19 @@ function Contact({ open, onClose }: { open: boolean; onClose: () => void }) {
   };
   return (
     <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/60 md:items-center" onClick={onClose}>
-      <div role="dialog" aria-modal="true" aria-label="Contact" onClick={(e) => e.stopPropagation()} className="w-full max-w-[430px] rounded-t-2xl bg-ink p-6 text-accent md:rounded-2xl">
-        <div className="mb-5 flex items-center justify-between">
-          <span className="font-mono text-[12px] tracking-[0.2em]">CONTACT</span>
+      <div role="dialog" aria-modal="true" aria-label="Contact" onClick={(e) => e.stopPropagation()} className="w-full max-w-[520px] rounded-t-2xl bg-ink p-6 text-accent md:rounded-2xl">
+        <div className="mb-5 flex items-center justify-between font-mono text-[13px] font-semibold uppercase">
+          <span>Contact</span>
           <button onClick={onClose} aria-label="Close"><X size={16} /></button>
         </div>
         {site.email ? (
           <>
-            <p className="select-all text-center font-mono text-[14px]">{site.email}</p>
-            <button onClick={copy} className="mt-4 w-full bg-accent py-3 font-mono text-[12px] tracking-[0.18em] text-ink">{copied ? "COPIED" : "COPY EMAIL"}</button>
+            <p className="select-all text-center font-mono text-[14px] font-bold">{site.email}</p>
+            <button onClick={copy} className="mt-4 w-full bg-accent py-3 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-ink">{copied ? "Copied" : "Copy email"}</button>
           </>
         ) : (
-          <p className="text-center font-mono text-[12px] opacity-80">Email coming soon. Reach me on LinkedIn for now.</p>
+          <p className="text-center font-mono text-[12px] font-medium uppercase opacity-80">Email coming soon. Reach me on LinkedIn for now.</p>
         )}
-        <div className="mt-5 flex justify-center gap-6">
-          {site.links.slice(0, 3).map((l) => (
-            <a key={l.label} href={l.href} target="_blank" rel="noopener" className="font-mono text-[11px] tracking-[0.16em] text-accent/80">{l.label}</a>
-          ))}
-        </div>
       </div>
     </div>
   );
@@ -406,7 +358,7 @@ export default function App() {
         {route.view === "about" && <AboutPage />}
         {route.view === "project" && <ProjectPage slug={route.slug ?? projects[0].slug} />}
       </main>
-      <Footer onContact={() => setContact(true)} />
+      <Footer />
       <Menu open={menu} onClose={() => setMenu(false)} onContact={() => setContact(true)} />
       <Contact open={contact} onClose={() => setContact(false)} />
       <Wipe />
