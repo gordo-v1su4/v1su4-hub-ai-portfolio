@@ -206,8 +206,7 @@ function HorizontalSteps({ p }: { p: Project }) {
     let drag: { x: number; pos: number; lastX: number; lastT: number; v: number } | null = null;
     const FRICTION = 0.955;  // closer to 1 = longer glide
     const WHEEL_GAIN = 0.05; // speed added per wheel step
-    const PARALLAX = 0.28;   // image shift relative to the card's distance from center
-    const IMG_SCALE = 1.6;
+    const IMG_SCALE = 1.45;  // image is larger than its card so it has room to travel
 
     const centerOf = (c: HTMLElement) => c.offsetLeft + c.offsetWidth / 2 - w.clientWidth / 2;
     const setWidth = () => (cards[n]?.offsetLeft ?? 0) - (cards[0]?.offsetLeft ?? 0);
@@ -234,9 +233,11 @@ function HorizontalSteps({ p }: { p: Project }) {
         const img = imgs[i];
         if (img && !still) {
           const dist = c.offsetLeft + c.offsetWidth / 2 - pos - w.clientWidth / 2;
+          // Parallax across the whole trip: the image sits at one edge as the card enters on the right,
+          // slides evenly while the card crosses, and reaches the other edge as the card leaves on the left.
           const room = ((IMG_SCALE - 1) * c.offsetWidth) / 2;
-          // Ease into the edge (tanh) instead of clamping hard, so there's no hitch as cards move outward.
-          const shift = room * Math.tanh((dist * -PARALLAX) / room);
+          const trip = w.clientWidth / 2 + c.offsetWidth / 2;
+          const shift = -room * Math.max(-1, Math.min(1, dist / trip));
           img.style.transform = `translate3d(${shift}px,0,0) scale(${IMG_SCALE})`;
         }
       });
