@@ -4,8 +4,10 @@
   --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --font-display: "Unbounded", "Arial Black", sans-serif;
-  --color-ink: #111111;
-  --color-accent: #e07a3d;
+  --font-condensed: "Anton", "Arial Narrow", sans-serif;
+  /* Muted, slightly warm orange on near-black, closer to the reference. */
+  --color-ink: #0d0d0d;
+  --color-accent: #cf7b54;
 }
 
 html, body {
@@ -28,7 +30,7 @@ html::-webkit-scrollbar, .no-scrollbar::-webkit-scrollbar { display: none; }
 }
 
 /* Stills sit slightly muted and come to full color on hover, like the reference's toned film stills. */
-.still-img { filter: grayscale(0.45) contrast(1.05) brightness(0.92); transition: filter 0.6s ease; }
+.still-img { filter: grayscale(0.65) sepia(0.12) contrast(1.05) brightness(0.88); transition: filter 0.6s ease; }
 .group:hover .still-img, .group:focus-visible .still-img, .still-img.is-on { filter: none; }
 .dot { opacity: 0; transform: scale(0.6); transition: opacity 0.35s ease, transform 0.35s ease; }
 .group:hover .dot, .group:focus-visible .dot { opacity: 1; transform: scale(1); }

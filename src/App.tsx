@@ -53,10 +53,31 @@ function Header({ onMenu }: { onMenu: () => void }) {
   );
 }
 
+/* Four-point star from the V1SU4 Format marks. */
+function Star({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+      <path fill="currentColor" d="M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0Z" />
+    </svg>
+  );
+}
+
 function Footer() {
   return (
-    <footer className={`${COL} pb-10 pt-16 text-center font-mono text-[11px] font-medium uppercase tracking-[0.06em] text-accent/55`}>
-      {site.name} · {site.label}
+    <footer className={`${COL} pb-10 pt-20`}>
+      <div className="flex items-end justify-between border-t border-accent/20 pt-6">
+        <div>
+          <p className="flex items-start gap-1.5 font-condensed text-[1.9rem] uppercase leading-none tracking-[0.01em] text-accent">
+            V1SU4 Format <Star className="mt-0.5 h-3.5 w-3.5" />
+          </p>
+          <p className="mt-2 font-mono text-[10px] font-medium uppercase leading-[1.5] tracking-[0.12em] text-accent/55">
+            Visuals / Ideas / Systems<br />For tomorrow
+          </p>
+        </div>
+        <p className="text-right font-mono text-[10px] font-medium uppercase leading-[1.5] tracking-[0.12em] text-accent/55">
+          {site.name}<br />Same idea.<br />Different format.
+        </p>
+      </div>
     </footer>
   );
 }
