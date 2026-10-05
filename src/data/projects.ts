@@ -18,6 +18,8 @@ export interface Project {
   flow: { label: string; sub: string }[];
   // Show "How it works" as a pinned horizontal slide section on the project page.
   horizontal?: boolean;
+  // Screenshots or clips for the case-study page (files in public/images/). Empty slots show until added.
+  media?: string[];
 }
 
 export const projects: Project[] = [

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { projects, labItems, skillGroups, site, type Project } from "./data/projects";
-import { gsap, ScrollTrigger } from "./hooks/gsap";
+import { gsap } from "./hooks/gsap";
 
 type Route = { view: "home" | "lab" | "about" | "project"; slug?: string };
 function parseHash(): Route {
@@ -48,43 +48,49 @@ function Footer() {
   return <div className="h-16" aria-hidden="true" />;
 }
 
+/* Simple centered menu first; WORK opens the project list inside the menu, with a way back. */
 function Menu({ open, onClose, onContact }: { open: boolean; onClose: () => void; onContact: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
+  const [level, setLevel] = useState<"main" | "work">("main");
+  useEffect(() => { if (open) setLevel("main"); }, [open]);
   useEffect(() => {
     if (!open || !ref.current || reduceMotion()) return;
-    gsap.fromTo(ref.current, { opacity: 0 }, { opacity: 1, duration: 0.25 });
-    gsap.fromTo(".menu-link", { y: 12, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.04, duration: 0.4, ease: "power3.out" });
-  }, [open]);
+    gsap.fromTo(".menu-link", { y: 12, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.05, duration: 0.4, ease: "power3.out" });
+  }, [open, level]);
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      if (level === "work") setLevel("main"); else onClose();
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+  }, [open, onClose, level]);
   if (!open) return null;
-  const nav = (p: string) => (e: React.MouseEvent) => { onClose(); go(p, e); };
-  const row = "menu-link block w-full py-1.5 text-left font-mono text-[13px] font-semibold uppercase tracking-[0.03em] text-accent hover:opacity-70";
+  const nav = (p: string) => () => { onClose(); go(p); };
+  const big = "menu-link font-mono text-[22px] tracking-[0.22em] text-accent hover:opacity-70";
   return (
-    <div ref={ref} role="dialog" aria-modal="true" aria-label="Menu" className="no-scrollbar fixed inset-0 z-[80] overflow-y-auto bg-ink">
-      <div className={`${COL} flex items-center justify-between py-4`}>
-        <span className="font-display text-[1.9rem] font-semibold uppercase leading-none tracking-[-0.03em]">{site.name}</span>
-        <button onClick={onClose} className="font-mono text-[13px] font-medium tracking-[0.06em]">[CLOSE]</button>
+    <div ref={ref} role="dialog" aria-modal="true" aria-label="Menu" className="no-scrollbar fixed inset-0 z-[80] overflow-y-auto bg-ink/95 backdrop-blur-sm">
+      <div className={`${COL} flex justify-end gap-4 py-4 font-mono text-[13px] font-medium tracking-[0.06em]`}>
+        {level === "work" && <button onClick={() => setLevel("main")}>[BACK]</button>}
+        <button onClick={onClose}>[CLOSE]</button>
       </div>
-      <nav className={`${COL} pt-6`}>
-        <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.06em] text-accent/50">Work</p>
-        {projects.map((p) => (
-          <button key={p.slug} onClick={nav(`/work/${p.slug}`)} className={row}>
-            {p.title} <span className="font-medium opacity-80">‘{p.type}’</span>
-          </button>
-        ))}
-        <p className="mb-2 mt-8 font-mono text-[11px] uppercase tracking-[0.06em] text-accent/50">More</p>
-        <button onClick={nav("/lab")} className={row}>Lab <span className="font-medium opacity-80">‘In development’</span></button>
-        <button onClick={nav("/about")} className={row}>About</button>
-        <button onClick={() => { onClose(); onContact(); }} className={row}>Contact</button>
-        <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[11px] uppercase tracking-[0.06em] text-accent/60">
-          {site.links.map((l) => <a key={l.label} href={l.href} target="_blank" rel="noopener" className="hover:text-accent">{l.label}</a>)}
-        </div>
-      </nav>
+      {level === "main" ? (
+        <nav className="flex min-h-[70svh] flex-col items-center justify-center gap-6">
+          <button onClick={() => setLevel("work")} className={big}>WORK</button>
+          <button onClick={nav("/lab")} className={big}>LAB</button>
+          <button onClick={nav("/about")} className={big}>ABOUT</button>
+          <button onClick={() => { onClose(); onContact(); }} className={big}>CONTACT</button>
+        </nav>
+      ) : (
+        <nav className="flex min-h-[70svh] flex-col items-center justify-center gap-4 px-4 text-center">
+          {projects.map((p) => (
+            <button key={p.slug} onClick={nav(`/work/${p.slug}`)} className="menu-link font-mono text-[14px] font-semibold uppercase tracking-[0.04em] text-accent hover:opacity-70">
+              {p.title} <span className="font-medium opacity-80">‘{p.type}’</span>
+            </button>
+          ))}
+        </nav>
+      )}
     </div>
   );
 }
@@ -98,7 +104,7 @@ function Caption({ name, sub, align = "center", size = "sm" }: { name: string; s
 }
 
 /* Rounded still with slow scroll parallax on the image inside. */
-function Still({ src, on }: { src: string; on?: boolean }) {
+function Still({ src, on, className = "still aspect-[4/3]" }: { src: string; on?: boolean; className?: string }) {
   const box = useRef<HTMLDivElement>(null);
   const img = useRef<HTMLImageElement>(null);
   useEffect(() => {
@@ -110,7 +116,7 @@ function Still({ src, on }: { src: string; on?: boolean }) {
     return () => { t.scrollTrigger?.kill(); t.kill(); };
   }, []);
   return (
-    <div ref={box} className="still relative aspect-[4/3]">
+    <div ref={box} className={`relative overflow-hidden ${className}`}>
       <img ref={img} src={src} alt="" loading="lazy" className={`still-img absolute inset-x-0 -top-[8%] h-[116%] w-full object-cover ${on ? "is-on" : ""}`} />
     </div>
   );
@@ -158,40 +164,49 @@ function CreditLines({ rows }: { rows: [string, string][] }) {
   );
 }
 
-/* Pinned section that scrolls sideways through a project's steps, then releases back to vertical scroll. */
+/* Slides you drag (mouse) or swipe (touch) sideways. The first slide starts centered and each one snaps to center. */
 function HorizontalSteps({ p }: { p: Project }) {
-  const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
-  const [native] = useState(reduceMotion);
-  useEffect(() => {
-    if (native || !section.current || !track.current) return;
-    const s = section.current, t = track.current;
-    const ctx = gsap.context(() => {
-      const dist = () => Math.max(0, t.scrollWidth - window.innerWidth);
-      gsap.to(t, {
-        x: () => -dist(), ease: "none",
-        scrollTrigger: { trigger: s, pin: true, scrub: 0.8, start: "top top", end: () => `+=${dist()}`, invalidateOnRefresh: true },
-      });
-    }, s);
-    const refresh = () => ScrollTrigger.refresh();
-    window.addEventListener("load", refresh);
-    return () => { window.removeEventListener("load", refresh); ctx.revert(); };
-  }, [native, p.slug]);
+  const drag = useRef<{ x: number; left: number } | null>(null);
+  const [dragging, setDragging] = useState(false);
+  useEffect(() => { if (track.current) track.current.scrollLeft = 0; }, [p.slug]);
+
+  const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse" || !track.current) return;
+    drag.current = { x: e.clientX, left: track.current.scrollLeft };
+    setDragging(true);
+    track.current.setPointerCapture(e.pointerId);
+  };
+  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag.current || !track.current) return;
+    track.current.scrollLeft = drag.current.left - (e.clientX - drag.current.x);
+  };
+  const onUp = () => { drag.current = null; setDragging(false); };
+
   return (
-    <section ref={section} className={`relative flex flex-col justify-center py-10 ${native ? "" : "h-svh overflow-hidden"}`}>
-      <h2 className={`${COL} mb-4 font-mono text-[16px] font-semibold uppercase tracking-[0.03em]`}>How it works →</h2>
-      <div ref={track} className={`no-scrollbar flex w-max gap-4 px-[max(1rem,calc((100vw-520px)/2+1rem))] ${native ? "max-w-full snap-x overflow-x-auto" : ""}`}>
+    <section className="py-10">
+      <h2 className="mx-auto mb-4 w-full max-w-[1200px] px-4 font-mono text-[16px] font-semibold uppercase tracking-[0.03em] md:px-8">How it works</h2>
+      <div
+        ref={track}
+        onPointerDown={onDown}
+        onPointerMove={onMove}
+        onPointerUp={onUp}
+        onPointerCancel={onUp}
+        className={`no-scrollbar flex gap-4 overflow-x-auto ${dragging ? "cursor-grabbing select-none" : "cursor-grab snap-x snap-mandatory scroll-smooth"}`}
+        style={{ paddingInline: "calc(50% - min(31vw, 130px))" }}
+      >
         {p.flow.map((s, i) => (
-          <div key={s.label} className="still relative flex aspect-[3/4] w-[62vw] max-w-[260px] shrink-0 snap-start flex-col justify-end p-4">
-            <img src={p.cover} alt="" className="still-img absolute inset-0 h-full w-full object-cover opacity-35" style={{ objectPosition: `${(i * 25) % 100}% 50%` }} />
+          <div key={s.label} className="still relative flex aspect-[3/4] w-[62vw] max-w-[260px] shrink-0 snap-center flex-col justify-end p-4">
+            <img src={p.cover} alt="" draggable={false} className="still-img pointer-events-none absolute inset-0 h-full w-full object-cover opacity-35" style={{ objectPosition: `${(i * 25) % 100}% 50%` }} />
             <div className="relative font-mono uppercase">
-              <p className="text-[11px] font-medium text-accent/60">{String(i + 1).padStart(2, "0")}</p>
+              <p className="text-[11px] font-medium text-accent/60">{String(i + 1).padStart(2, "0")} / {String(p.flow.length).padStart(2, "0")}</p>
               <p className="mt-1 text-[14px] font-bold">{s.label}</p>
               <p className="mt-1 text-[11px] font-medium text-accent/75">{s.sub}</p>
             </div>
           </div>
         ))}
       </div>
+      <p className={`${COL} mt-3 text-center font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-accent/50`}>← Drag →</p>
     </section>
   );
 }
@@ -207,28 +222,39 @@ function ProjectPage({ slug }: { slug: string }) {
     gsap.fromTo(hero.current.children, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.07, ease: "power3.out", delay: 0.15 });
   }, [slug]);
 
+  const WIDE = "mx-auto w-full max-w-[1200px] px-4 md:px-8";
   return (
     <>
-      <div ref={hero} className={`${COL} pt-2`}>
-        <Still src={p.cover} on />
-        <Caption name={p.title} sub={p.type} align="left" size="lg" />
-        <h2 className="mt-10 font-mono text-[16px] font-semibold uppercase tracking-[0.03em]">Credits</h2>
-        <div className="mt-3">
+      {/* Full-bleed hero, then a small centered title block (milledollars-style case study). */}
+      <Still src={p.cover} on className="h-[62svh] w-full md:h-[86svh]" />
+      <div ref={hero} className={WIDE}>
+        <div className="py-12 text-center font-mono uppercase">
+          <p className="text-[15px] font-bold tracking-[0.03em]">{p.title}</p>
+          <p className="mt-1 text-[12px] font-medium text-accent/60">‘{p.type}’ · {p.year}</p>
+        </div>
+
+        <div className="grid gap-8 border-t border-accent/20 pt-8 md:grid-cols-[1fr_2fr] md:gap-16">
           <CreditLines rows={[
-            ["Project", p.tagline],
             ["Role", p.role],
             ["Stack", p.stack.join(", ")],
             ["Status", p.status],
-            ["Year", p.year],
           ]} />
+          <div>
+            <p className="font-mono text-[15px] font-bold uppercase leading-[1.4] tracking-[0.02em]">{p.tagline}</p>
+            <p className="mt-4 max-w-[62ch] font-mono text-[12px] font-medium uppercase leading-[1.6] text-accent/70">{p.what}</p>
+            <p className="mt-6 font-mono text-[13px] font-semibold uppercase tracking-[0.03em]">
+              {p.link
+                ? <a href={p.link} target="_blank" rel="noopener" className="hover:opacity-70">[Open app ↗]</a>
+                : <span className="text-accent/60">[{p.status}]</span>}
+            </p>
+          </div>
         </div>
-        <p className="mt-6 font-mono text-[11.5px] font-medium uppercase leading-[1.55] text-accent/70">{p.what}</p>
       </div>
 
       {p.horizontal ? (
-        <div className="mt-8"><HorizontalSteps p={p} /></div>
+        <div className="mt-12"><HorizontalSteps p={p} /></div>
       ) : (
-        <div className={`${COL} mt-10`}>
+        <div className={`${WIDE} mt-16`}>
           <h2 className="font-mono text-[16px] font-semibold uppercase tracking-[0.03em]">How it works</h2>
           <div className="mt-3">
             <CreditLines rows={p.flow.map((s, i) => [`${String(i + 1).padStart(2, "0")} ${s.label}`, s.sub])} />
@@ -236,18 +262,35 @@ function ProjectPage({ slug }: { slug: string }) {
         </div>
       )}
 
-      <div className={COL}>
-        <p className="mt-8 font-mono text-[13px] font-semibold uppercase tracking-[0.03em]">
-          {p.link
-            ? <a href={p.link} target="_blank" rel="noopener" className="hover:opacity-70">[Open app ↗]</a>
-            : <span className="text-accent/60">[{p.status}]</span>}
-        </p>
-        <button onClick={(e) => go(`/work/${next.slug}`, e)} className="group mt-16 block w-full text-left">
+      {/* Editorial media blocks, offset left and right. Empty slots show where screenshots or clips go. */}
+      <div className={`${WIDE} mt-16 flex flex-col gap-20 md:gap-28`}>
+        {(p.media?.length ? p.media : [undefined, undefined, undefined]).map((src, i) => {
+          const layout = ["md:w-[66%]", "md:ml-auto md:w-[46%]", "md:mx-auto md:w-[58%]"][i % 3];
+          const note = p.flow[i]?.sub;
+          return (
+            <div key={i} className={`flex flex-col gap-4 ${layout}`}>
+              {src ? <Still src={src} /> : <MediaSlot n={i + 1} />}
+              {note && <p className="max-w-[46ch] font-mono text-[11.5px] font-medium uppercase leading-[1.55] text-accent/60">{String(i + 1).padStart(2, "0")} · {note}</p>}
+            </div>
+          );
+        })}
+      </div>
+
+      <div className={`${COL} mt-24`}>
+        <button onClick={() => go(`/work/${next.slug}`)} className="group block w-full text-left">
           <Still src={next.cover} />
           <Caption name={next.title} sub="Next" />
         </button>
       </div>
     </>
+  );
+}
+
+function MediaSlot({ n }: { n: number }) {
+  return (
+    <div className="flex aspect-[16/10] items-center justify-center rounded-[0.85rem] border border-dashed border-accent/30 font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-accent/45">
+      Media {String(n).padStart(2, "0")} · add a screenshot or clip
+    </div>
   );
 }
 
