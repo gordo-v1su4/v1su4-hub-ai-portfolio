@@ -28,7 +28,7 @@ export const projects: Project[] = [
     title: "BEATSMAXXER PRO",
     group: "featured",
     horizontal: true,
-    type: "Audio-Reactive Automated Editor",
+    type: "Audio-Reactive Editor",
     tagline: "Audio-reactive video FX rack for live visuals and music videos.",
     role: "Design / Development",
     status: "Live",
