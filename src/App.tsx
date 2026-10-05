@@ -208,13 +208,22 @@ function HorizontalSteps({ p }: { p: Project }) {
     const WHEEL_GAIN = 0.05; // speed added per wheel step
     const IMG_SCALE = 1.45;  // image is larger than its card so it has room to travel
 
-    const centerOf = (c: HTMLElement) => c.offsetLeft + c.offsetWidth / 2 - w.clientWidth / 2;
-    const setWidth = () => (cards[n]?.offsetLeft ?? 0) - (cards[0]?.offsetLeft ?? 0);
+    // Measure once (and on resize) instead of every frame; per-frame layout reads cause stutter.
+    let lefts: number[] = [], widths: number[] = [], viewW = 0;
+    const measure = () => {
+      lefts = cards.map((c) => c.offsetLeft);
+      widths = cards.map((c) => c.offsetWidth);
+      viewW = w.clientWidth;
+    };
+    measure();
+
+    const centerAt = (i: number) => lefts[i] + widths[i] / 2 - viewW / 2;
+    const setWidth = () => (lefts[n] ?? 0) - (lefts[0] ?? 0);
     // Keep the position inside the middle copy; jumping by exactly one set width is invisible.
     const wrapPos = () => {
       const sw = setWidth();
-      if (sw <= 0 || !cards[n]) return;
-      const a = centerOf(cards[n]);
+      if (sw <= 0 || lefts[n] == null) return;
+      const a = centerAt(n);
       while (pos < a) { pos += sw; if (drag) drag.pos += sw; }
       while (pos >= a + sw) { pos -= sw; if (drag) drag.pos -= sw; }
     };
@@ -228,27 +237,35 @@ function HorizontalSteps({ p }: { p: Project }) {
       wrapPos();
       t.style.transform = `translate3d(${-pos}px,0,0)`;
       const tilt = still ? 0 : Math.max(-22, Math.min(22, vel * -1.1));
-      cards.forEach((c, i) => {
-        c.style.transform = `rotateY(${tilt}deg)`;
+      for (let i = 0; i < cards.length; i++) {
+        cards[i].style.transform = `rotateY(${tilt}deg)`;
         const img = imgs[i];
-        if (img && !still) {
-          const dist = c.offsetLeft + c.offsetWidth / 2 - pos - w.clientWidth / 2;
-          // Parallax across the whole trip: the image sits at one edge as the card enters on the right,
-          // slides evenly while the card crosses, and reaches the other edge as the card leaves on the left.
-          const room = ((IMG_SCALE - 1) * c.offsetWidth) / 2;
-          const trip = w.clientWidth / 2 + c.offsetWidth / 2;
-          const shift = -room * Math.max(-1, Math.min(1, dist / trip));
-          img.style.transform = `translate3d(${shift}px,0,0) scale(${IMG_SCALE})`;
-        }
-      });
+        if (!img || still) continue;
+        const dist = lefts[i] + widths[i] / 2 - pos - viewW / 2;
+        // Parallax across the whole trip: the image sits at one edge as the card enters on the right,
+        // slides evenly while the card crosses, and reaches the other edge as the card leaves on the left.
+        const room = ((IMG_SCALE - 1) * widths[i]) / 2;
+        const trip = viewW / 2 + widths[i] / 2;
+        const shift = -room * Math.max(-1, Math.min(1, dist / trip));
+        img.style.transform = `translate3d(${shift}px,0,0) scale(${IMG_SCALE})`;
+      }
       raf = requestAnimationFrame(tick);
     };
     const start = () => {
-      const mid = cards[n + Math.floor((n - 1) / 2)];
-      if (mid) { pos = centerOf(mid); vel = 0; }
+      measure();
+      const mid = n + Math.floor((n - 1) / 2);
+      if (lefts[mid] != null) { pos = centerAt(mid); vel = 0; }
     };
     start();
     requestAnimationFrame(start); // again after fonts and layout settle
+    const ro = new ResizeObserver(() => {
+      // Keep the same card centered across a resize.
+      const before = setWidth();
+      const frac = before > 0 ? (pos - centerAt(n)) / before : 0;
+      measure();
+      pos = centerAt(n) + frac * setWidth();
+    });
+    ro.observe(w);
     raf = requestAnimationFrame(tick);
 
     const onWheel = (e: WheelEvent) => {
@@ -282,7 +299,7 @@ function HorizontalSteps({ p }: { p: Project }) {
       setDragging(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      const step = (cards[1]?.offsetLeft ?? 0) - (cards[0]?.offsetLeft ?? 0);
+      const step = (lefts[1] ?? 0) - (lefts[0] ?? 0);
       if (e.key === "ArrowRight") { vel += step * 0.045; e.preventDefault(); }
       if (e.key === "ArrowLeft") { vel -= step * 0.045; e.preventDefault(); }
     };
@@ -295,6 +312,7 @@ function HorizontalSteps({ p }: { p: Project }) {
     w.addEventListener("keydown", onKey);
     return () => {
       cancelAnimationFrame(raf);
+      ro.disconnect();
       w.removeEventListener("wheel", onWheel);
       w.removeEventListener("pointerdown", onDown);
       w.removeEventListener("pointermove", onMove);
@@ -315,7 +333,7 @@ function HorizontalSteps({ p }: { p: Project }) {
       >
         <div ref={track} className="flex gap-5 will-change-transform">
           {looped.map((s, i) => (
-            <div key={i} aria-hidden={i < base.length || i >= base.length * 2} className="still relative flex aspect-video w-[78vw] max-w-[520px] shrink-0 flex-col justify-end p-5 will-change-transform">
+            <div key={i} aria-hidden={i < base.length || i >= base.length * 2} className="still relative flex aspect-video w-[70vw] max-w-[380px] shrink-0 flex-col justify-end p-4 will-change-transform">
               <img src={s.img} alt="" draggable={false} className="still-img pointer-events-none absolute inset-0 h-full w-full object-cover opacity-45" style={{ objectPosition: s.pos }} />
               <div className="relative font-mono uppercase">
                 <p className="text-[11px] font-medium text-accent/60">{s.kicker}</p>
