@@ -182,24 +182,44 @@ function HorizontalSteps({ p }: { p: Project }) {
     let target = 0, current = 0, drag: { x: number; start: number } | null = null;
     let snapTimer = 0;
 
-    const maxX = () => Math.max(0, t.scrollWidth - w.clientWidth);
+    // Far end = the last card centered. (scrollWidth undercounts here because the track's right padding isn't included.)
+    const centerOf = (c: HTMLElement) => c.offsetLeft + c.offsetWidth / 2 - w.clientWidth / 2;
+    const maxX = () => Math.max(0, cards.length ? centerOf(cards[cards.length - 1]) : 0);
     const clamp = (v: number) => Math.min(maxX(), Math.max(0, v));
-    const snapPoints = () => cards.map((c) => clamp(c.offsetLeft + c.offsetWidth / 2 - w.clientWidth / 2));
+    const snapPoints = () => cards.map((c) => clamp(centerOf(c)));
     const snap = () => {
       const pts = snapPoints();
       target = pts.reduce((best, pt) => (Math.abs(pt - target) < Math.abs(best - target) ? pt : best), pts[0] ?? 0);
     };
     const scheduleSnap = () => { window.clearTimeout(snapTimer); snapTimer = window.setTimeout(snap, 140); };
 
+    const imgs = cards.map((c) => c.querySelector("img"));
+    let raf = 0;
     const tick = () => {
       current += (target - current) * (still ? 1 : 0.085);
       const vel = target - current;
       t.style.transform = `translate3d(${-current}px,0,0)`;
       const tilt = still ? 0 : Math.max(-22, Math.min(22, vel * -0.07));
       const squash = still ? 1 : Math.max(0.9, 1 - Math.abs(vel) * 0.0006);
-      for (const c of cards) c.style.transform = `rotateY(${tilt}deg) scale(${squash})`;
+      cards.forEach((c, i) => {
+        c.style.transform = `rotateY(${tilt}deg) scale(${squash})`;
+        // Parallax: each card's image slides against the card's distance from center.
+        const img = imgs[i];
+        if (img && !still) {
+          const dist = c.offsetLeft + c.offsetWidth / 2 - current - w.clientWidth / 2;
+          img.style.transform = `translate3d(${dist * -0.12}px,0,0) scale(1.35)`;
+        }
+      });
+      raf = requestAnimationFrame(tick);
     };
-    gsap.ticker.add(tick);
+    // Start with the middle card centered so the row reads as centered, with room to slide both ways.
+    const startAtMiddle = () => {
+      const mid = cards[Math.floor((cards.length - 1) / 2)];
+      if (mid) target = current = clamp(centerOf(mid));
+    };
+    startAtMiddle();
+    requestAnimationFrame(startAtMiddle); // again after fonts and layout settle
+    raf = requestAnimationFrame(tick);
 
     const onWheel = (e: WheelEvent) => {
       const horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
@@ -213,7 +233,7 @@ function HorizontalSteps({ p }: { p: Project }) {
     const onDown = (e: PointerEvent) => {
       drag = { x: e.clientX, start: target };
       setDragging(true);
-      w.setPointerCapture(e.pointerId);
+      try { w.setPointerCapture(e.pointerId); } catch { /* pointer already released */ }
       window.clearTimeout(snapTimer);
     };
     const onMove = (e: PointerEvent) => {
@@ -235,7 +255,7 @@ function HorizontalSteps({ p }: { p: Project }) {
     w.addEventListener("pointercancel", onUp);
     w.addEventListener("keydown", onKey);
     return () => {
-      gsap.ticker.remove(tick);
+      cancelAnimationFrame(raf);
       window.clearTimeout(snapTimer);
       w.removeEventListener("wheel", onWheel);
       w.removeEventListener("pointerdown", onDown);
