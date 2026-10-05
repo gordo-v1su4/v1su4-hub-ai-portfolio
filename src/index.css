@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Unbounded", "Arial Black", sans-serif;
+  --color-ink: #111111;
+  --color-accent: #e07a3d;
+}
+
+html, body {
+  background: var(--color-ink);
+  color: var(--color-accent);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+::selection { background: var(--color-accent); color: var(--color-ink); }
+
+.still {
+  border-radius: 0.85rem;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+/* Stills sit slightly muted and come to full color on hover, like the reference's toned film stills. */
+.still-img { filter: grayscale(0.45) contrast(1.05) brightness(0.92); transition: filter 0.6s ease, transform 0.8s ease; }
+.group:hover .still-img, .group:focus-visible .still-img, .still-img.is-on { filter: none; }
+.group:hover .still-img { transform: scale(1.03); }
+.dot { opacity: 0; transform: scale(0.6); transition: opacity 0.35s ease, transform 0.35s ease; }
+.group:hover .dot, .group:focus-visible .dot { opacity: 1; transform: scale(1); }
+@media (hover: none) { .dot { opacity: 1; transform: scale(1); } }
+
+.face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+
+.credit-row {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 0.4rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  line-height: 1.55;
+}
+
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
