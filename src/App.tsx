@@ -202,7 +202,7 @@ function HorizontalSteps({ p }: { p: Project }) {
     const still = reduceMotion();
     const n = cards.length / 3;
 
-    let pos = 0, vel = 0, raf = 0;
+    let pos = 0, vel = 0, raf = 0, tilt = 0;
     let drag: { x: number; pos: number; lastX: number; lastT: number; v: number } | null = null;
     const FRICTION = 0.955;  // closer to 1 = longer glide
     const WHEEL_GAIN = 0.05; // speed added per wheel step
@@ -236,7 +236,9 @@ function HorizontalSteps({ p }: { p: Project }) {
       }
       wrapPos();
       t.style.transform = `translate3d(${-pos}px,0,0)`;
-      const tilt = still ? 0 : Math.max(-22, Math.min(22, vel * -1.1));
+      // Ease the tilt toward its target so quick back-and-forth changes don't flip the cards abruptly.
+      const tiltTarget = still ? 0 : Math.max(-22, Math.min(22, vel * -1.1));
+      tilt += (tiltTarget - tilt) * 0.12;
       for (let i = 0; i < cards.length; i++) {
         cards[i].style.transform = `rotateY(${tilt}deg)`;
         const img = imgs[i];
@@ -333,7 +335,7 @@ function HorizontalSteps({ p }: { p: Project }) {
       >
         <div ref={track} className="flex gap-5 will-change-transform">
           {looped.map((s, i) => (
-            <div key={i} aria-hidden={i < base.length || i >= base.length * 2} className="still relative flex aspect-video w-[70vw] max-w-[380px] shrink-0 flex-col justify-end p-4 will-change-transform">
+            <div key={i} aria-hidden={i < base.length || i >= base.length * 2} className="still relative flex aspect-video w-[78vw] max-w-[520px] shrink-0 flex-col justify-end p-5 will-change-transform">
               <img src={s.img} alt="" draggable={false} className="still-img pointer-events-none absolute inset-0 h-full w-full object-cover opacity-45" style={{ objectPosition: s.pos }} />
               <div className="relative font-mono uppercase">
                 <p className="text-[11px] font-medium text-accent/60">{s.kicker}</p>
