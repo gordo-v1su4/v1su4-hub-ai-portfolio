@@ -178,35 +178,36 @@ function HorizontalSteps({ p }: { p: Project }) {
     const w = wrap.current, t = track.current;
     if (!w || !t) return;
     const cards = Array.from(t.children) as HTMLElement[];
+    const imgs = cards.map((c) => c.querySelector("img"));
     const still = reduceMotion();
-    let target = 0, current = 0, drag: { x: number; start: number } | null = null;
-    let snapTimer = 0;
+
+    // Physics: position + velocity. Wheel and flicks add velocity; friction bleeds it off, so it coasts and slows.
+    let pos = 0, vel = 0, raf = 0;
+    let drag: { x: number; pos: number; lastX: number; lastT: number; v: number } | null = null;
+    const FRICTION = 0.93;
 
     // Far end = the last card centered. (scrollWidth undercounts here because the track's right padding isn't included.)
     const centerOf = (c: HTMLElement) => c.offsetLeft + c.offsetWidth / 2 - w.clientWidth / 2;
     const maxX = () => Math.max(0, cards.length ? centerOf(cards[cards.length - 1]) : 0);
-    const clamp = (v: number) => Math.min(maxX(), Math.max(0, v));
-    const snapPoints = () => cards.map((c) => clamp(centerOf(c)));
-    const snap = () => {
-      const pts = snapPoints();
-      target = pts.reduce((best, pt) => (Math.abs(pt - target) < Math.abs(best - target) ? pt : best), pts[0] ?? 0);
-    };
-    const scheduleSnap = () => { window.clearTimeout(snapTimer); snapTimer = window.setTimeout(snap, 140); };
 
-    const imgs = cards.map((c) => c.querySelector("img"));
-    let raf = 0;
     const tick = () => {
-      current += (target - current) * (still ? 1 : 0.085);
-      const vel = target - current;
-      t.style.transform = `translate3d(${-current}px,0,0)`;
-      const tilt = still ? 0 : Math.max(-22, Math.min(22, vel * -0.07));
-      const squash = still ? 1 : Math.max(0.9, 1 - Math.abs(vel) * 0.0006);
+      if (!drag) {
+        pos += vel;
+        vel *= FRICTION;
+        // Soft edges: past either end, ease back instead of stopping dead.
+        const max = maxX();
+        if (pos < 0) { pos += (0 - pos) * 0.18; vel *= 0.5; }
+        if (pos > max) { pos += (max - pos) * 0.18; vel *= 0.5; }
+        if (Math.abs(vel) < 0.01) vel = 0;
+      }
+      t.style.transform = `translate3d(${-pos}px,0,0)`;
+      const tilt = still ? 0 : Math.max(-22, Math.min(22, vel * -1.1));
       cards.forEach((c, i) => {
-        c.style.transform = `rotateY(${tilt}deg) scale(${squash})`;
+        c.style.transform = `rotateY(${tilt}deg)`;
         // Parallax: each card's image slides against the card's distance from center.
         const img = imgs[i];
         if (img && !still) {
-          const dist = c.offsetLeft + c.offsetWidth / 2 - current - w.clientWidth / 2;
+          const dist = c.offsetLeft + c.offsetWidth / 2 - pos - w.clientWidth / 2;
           img.style.transform = `translate3d(${dist * -0.12}px,0,0) scale(1.35)`;
         }
       });
@@ -215,7 +216,7 @@ function HorizontalSteps({ p }: { p: Project }) {
     // Start with the middle card centered so the row reads as centered, with room to slide both ways.
     const startAtMiddle = () => {
       const mid = cards[Math.floor((cards.length - 1) / 2)];
-      if (mid) target = current = clamp(centerOf(mid));
+      if (mid) { pos = Math.min(maxX(), Math.max(0, centerOf(mid))); vel = 0; }
     };
     startAtMiddle();
     requestAnimationFrame(startAtMiddle); // again after fonts and layout settle
@@ -224,28 +225,39 @@ function HorizontalSteps({ p }: { p: Project }) {
     const onWheel = (e: WheelEvent) => {
       const horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY);
       const d = horizontal ? e.deltaX : e.deltaY;
-      const canMove = (d > 0 && target < maxX() - 1) || (d < 0 && target > 1);
+      const canMove = (d > 0 && pos < maxX() - 1) || (d < 0 && pos > 1);
       if (!canMove) return; // let the page scroll on
       e.preventDefault();
-      target = clamp(target + d);
-      scheduleSnap();
+      vel += d * (still ? 1 : 0.09); // faster scrolling builds more speed
+      if (still) { pos = Math.min(maxX(), Math.max(0, pos + vel)); vel = 0; }
     };
     const onDown = (e: PointerEvent) => {
-      drag = { x: e.clientX, start: target };
+      drag = { x: e.clientX, pos, lastX: e.clientX, lastT: performance.now(), v: 0 };
+      vel = 0;
       setDragging(true);
       try { w.setPointerCapture(e.pointerId); } catch { /* pointer already released */ }
-      window.clearTimeout(snapTimer);
     };
     const onMove = (e: PointerEvent) => {
       if (!drag) return;
-      target = clamp(drag.start - (e.clientX - drag.x) * 1.15);
+      const now = performance.now();
+      const dx = e.clientX - drag.lastX;
+      const dt = Math.max(1, now - drag.lastT);
+      drag.v = drag.v * 0.6 + (-dx / dt) * 16 * 0.4; // px per frame, smoothed
+      drag.lastX = e.clientX;
+      drag.lastT = now;
+      pos = drag.pos - (e.clientX - drag.x);
+      vel = drag.v; // keeps the tilt live while dragging
     };
-    const onUp = () => { if (!drag) return; drag = null; setDragging(false); snap(); };
+    const onUp = () => {
+      if (!drag) return;
+      vel = still ? 0 : drag.v; // flick keeps gliding
+      drag = null;
+      setDragging(false);
+    };
     const onKey = (e: KeyboardEvent) => {
-      const pts = snapPoints();
-      const i = pts.findIndex((pt) => Math.abs(pt - target) < 2);
-      if (e.key === "ArrowRight") { target = pts[Math.min(pts.length - 1, (i < 0 ? 0 : i) + 1)]; e.preventDefault(); }
-      if (e.key === "ArrowLeft") { target = pts[Math.max(0, (i < 0 ? 0 : i) - 1)]; e.preventDefault(); }
+      const step = (cards[1]?.offsetLeft ?? 0) - (cards[0]?.offsetLeft ?? 0);
+      if (e.key === "ArrowRight") { vel += step * 0.07; e.preventDefault(); }
+      if (e.key === "ArrowLeft") { vel -= step * 0.07; e.preventDefault(); }
     };
 
     w.addEventListener("wheel", onWheel, { passive: false });
@@ -256,7 +268,6 @@ function HorizontalSteps({ p }: { p: Project }) {
     w.addEventListener("keydown", onKey);
     return () => {
       cancelAnimationFrame(raf);
-      window.clearTimeout(snapTimer);
       w.removeEventListener("wheel", onWheel);
       w.removeEventListener("pointerdown", onDown);
       w.removeEventListener("pointermove", onMove);
