@@ -8,6 +8,7 @@
   import Home from "./pages/Home.svelte";
   import Lab from "./pages/Lab.svelte";
   import Project from "./pages/Project.svelte";
+  import WowPreview from "./variations/wow/WowPreview.svelte";
 
   let menu = $state(false);
   let contact = $state(false);
@@ -16,6 +17,9 @@
 </script>
 
 <div class="min-h-svh bg-ink text-accent">
+  {#if route.view === "wow" || route.view === "wow-project"}
+    <WowPreview slug={route.view === "wow-project" ? (route.slug ?? projects[0].slug) : undefined} />
+  {:else}
   <Header onmenu={() => (menu = true)} showBack={route.view !== "home"} />
   {#key key}
     <main class={route.view === "project" ? "" : "pt-[68px]"}>
@@ -28,4 +32,5 @@
   <div class="h-16" aria-hidden="true"></div>
   <Menu open={menu} onclose={() => (menu = false)} oncontact={() => (contact = true)} />
   <Contact open={contact} onclose={() => (contact = false)} />
+  {/if}
 </div>

@@ -138,6 +138,7 @@ export const projects: Project[] = [
     year: "2026",
     stack: ["Next.js", "Trigger.dev", "Essentia", "ComfyUI"],
     cover: "/images/cinema.jpg",
+    link: "https://project-stack-structure.vercel.app",
     what: "Real footage drives the edit. The song is analyzed for beats and sections, clips are scene-detected and captioned, moments are matched to the story, and AI generation fills only the gaps, using cloud models or local ComfyUI.",
     flow: [
       { label: "ANALYZE", sub: "Beats · sections" },
