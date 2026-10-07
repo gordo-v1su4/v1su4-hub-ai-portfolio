@@ -16,15 +16,15 @@
 <p class="label mt-3 text-zinc-500" aria-live="polite">{selected + 1} / {images.length} — {selected === 0 ? 'Benchmark results' : 'Playback view'}</p>
 
 <style>
-  .image-viewer { position: relative; margin-inline: 20px; }
+  .image-viewer { position: relative; }
   .image-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
-    width: 40px; height: 44px; border: 0;
+    width: 24px; height: 44px; border: 0;
     background: transparent; color: #a1a1aa; cursor: pointer;
     font-family: var(--font-mono); font-size: 16px; display: grid; place-items: center;
   }
-  .previous { left: -40px; }
-  .next { right: -40px; }
+  .previous { left: -24px; }
+  .next { right: -24px; }
   .image-arrow span { width: 9px; height: 9px; border-top: 1px solid currentColor; border-right: 1px solid currentColor; }
   .previous span { transform: rotate(-135deg); }
   .next span { transform: rotate(45deg); }
