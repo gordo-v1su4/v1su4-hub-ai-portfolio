@@ -30,4 +30,9 @@
   .next span { transform: rotate(45deg); }
   .image-arrow:hover { color: #d4d4d8; }
   .image-arrow:focus-visible { outline: 2px solid #d4d4d8; outline-offset: 3px; }
+  @media (max-width: 639px) {
+    .image-arrow { width: 16px; }
+    .previous { left: -16px; }
+    .next { right: -16px; }
+  }
 </style>
