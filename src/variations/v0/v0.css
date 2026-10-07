@@ -279,7 +279,7 @@
 }
 .v0-project-body,
 .v0-about {
-  font-family: "Geist", sans-serif;
+  font-family: "Geist Mono", monospace;
 }
 .v0-project-body .v0-label,
 .v0-project-body .v0-tags span,
@@ -325,8 +325,8 @@
 .v0-lab-body > p,
 .v0-about > p {
   color: #9ca3af;
-  font-family: "Geist", sans-serif;
-  font-size: 14px;
+  font-family: "Geist Mono", monospace;
+  font-size: 12px;
   line-height: 1.75;
   font-weight: 400;
 }
@@ -430,7 +430,7 @@
 }
 .v0-about > p {
   max-width: 850px;
-  font-size: 14px;
+  font-size: 13px;
   margin-bottom: 80px;
 }
 .v0-footer {
@@ -559,7 +559,7 @@
     gap: 20px;
   }
   .v0-about > p {
-    font-size: 13px;
+    font-size: 12px;
   }
   .v0-number {
     font-size: 9px;
