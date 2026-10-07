@@ -74,8 +74,8 @@
       <div class="flex items-center justify-between pb-3"><p class="label text-zinc-500">{active.category}</p><p class="label text-zinc-600">{String(selected+1).padStart(2,'0')} / {String(items.length).padStart(2,'0')}</p></div>
       <div bind:this={layers} class="relative aspect-[16/10] overflow-hidden bg-ink-2 ring-1 ring-white/10">
         {#each items as p, i (p.slug)}
-          <div data-layer style:opacity={i === selected ? 1 : 0} style:z-index={i === selected ? 2 : 1} class="absolute inset-0" style:background-color={p.slug === 'frame-lab' ? '#0a0a0a' : undefined}>
-          {#if p.imageFit === 'contain' && p.slug !== 'frame-lab'}<img src={p.previewImage ?? p.image} alt="" aria-hidden="true" decoding="async" class="mirrored-image-fill absolute inset-0 h-full w-full object-cover" />{/if}
+          <div data-layer style:opacity={i === selected ? 1 : 0} style:z-index={i === selected ? 2 : 1} class="absolute inset-0" style:background-color={p.slug === 'review-room' ? '#080e0d' : p.slug === 'frame-lab' ? '#0a0a0a' : undefined}>
+          {#if p.imageFit === 'contain' && !['frame-lab', 'review-room'].includes(p.slug)}<img src={p.previewImage ?? p.image} alt="" aria-hidden="true" decoding="async" class="mirrored-image-fill absolute inset-0 h-full w-full object-cover" />{/if}
           <img src={p.previewImage ?? p.image} alt={i === selected ? `${p.title} project preview` : ''} aria-hidden={i !== selected}
             loading={i === 0 ? 'eager' : 'lazy'} decoding="async" draggable="false"
             class="absolute inset-0 h-full w-full object-contain" />
