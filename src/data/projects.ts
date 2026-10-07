@@ -7,6 +7,7 @@ export interface Project {
   type: string;
   group: Group;
   tagline: string;
+  rationale?: string;
   role: string;
   status: ProjectStatus;
   year: string;
@@ -97,6 +98,7 @@ export const projects: Project[] = [
     group: "more",
     type: "Playback Benchmark",
     tagline: "Which browser playback strategy shows the right frame on the beat?",
+    rationale: "Beat-synced editing needs the right frame to appear on time, even across multiple videos, rapid cuts and speed changes. I needed to find out which browser playback approach could actually keep up, so I built a benchmark to compare timing, reliability and memory use on the same workloads.",
     role: "Research / Development",
     status: "Live",
     year: "2026",
