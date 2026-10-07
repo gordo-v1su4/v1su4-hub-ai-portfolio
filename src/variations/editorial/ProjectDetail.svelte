@@ -2,6 +2,7 @@
   import { all, work, lab, href, type Entry } from './data';
   import { reveal, press } from './motion';
   import Frame from './Frame.svelte';
+  import ImageViewer from './ImageViewer.svelte';
   let { slug }: {slug: string} = $props();
   const p = $derived(all.find(p=>p.slug === slug));
   const next = $derived.by(() => { if (!p) return undefined; const list = p.experimental ? lab : work; return list[(list.indexOf(p)+1)%list.length]; });
@@ -21,11 +22,16 @@
       </div>
     </div>
   </header>
+  {#if p.slug === 'frame-lab'}
+    <div data-scroll-reveal class="mt-6"><ImageViewer images={[p.image, ...p.media]} title={p.title} /></div>
+  {/if}
   <section class="mt-8 grid gap-5 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] lg:gap-10"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">The project</h2><div data-scroll-reveal><p class="max-w-2xl font-narrow text-[19px] leading-[1.55] text-zinc-200 sm:text-[22px]">{p.line}</p><dl class="mt-6 grid grid-cols-2 gap-6"><div><dt class="label text-zinc-600">Role</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.role}</dd></div><div><dt class="label text-zinc-600">Status</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.status}</dd></div></dl></div></section>
 
   {#if p.flow.length}<section class="mt-8"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">How it works</h2><ol class="mt-4 grid gap-x-10 gap-y-5 sm:grid-cols-2">{#each p.flow as step, i (step.label)}<li data-scroll-reveal class="min-w-0"><div class="flex items-baseline gap-3"><span class="label text-zinc-400">{String(i+1).padStart(2,'0')}</span><h3 class="font-narrow text-[19px] font-semibold text-zinc-100">{step.label}</h3></div><p class="mt-3 font-mono text-[13px] leading-relaxed text-zinc-400">{step.sub}</p></li>{/each}</ol></section>{/if}
-  <div data-scroll-reveal class="mt-6"><Frame src={p.image} alt={`${p.title} main image`} eager natural={p.imageFit === 'contain'} cropSides={p.slug === 'frame-lab' ? 0.2 : 0} /><p class="label mt-3 text-zinc-600">{p.title} — {p.year}</p></div>
+  {#if p.slug !== 'frame-lab'}
+  <div data-scroll-reveal class="mt-6"><Frame src={p.image} alt={`${p.title} main image`} eager natural={p.imageFit === 'contain'} /><p class="label mt-3 text-zinc-600">{p.title} — {p.year}</p></div>
   {#each p.media as image, i (`${image}-${i}`)}<div data-scroll-reveal class="mt-6"><Frame src={image} alt={`${p.title} screenshot ${i+1}`} natural monochrome={p.slug === 'frame-lab'} /></div>{/each}
+  {/if}
   {#if p.stack.length}<section class="mt-8"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Stack & build</h2><ul data-scroll-reveal class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{#each p.stack as item (item)}<li class="border border-white/8 bg-white/[0.015] p-5 font-mono text-[13px] text-zinc-300">{item}</li>{/each}</ul></section>{/if}
   {#if next}<section class="mt-10"><p data-scroll-reveal class="label text-zinc-600">Next {p.experimental ? 'experiment' : 'project'}</p><a href={href(next)} data-scroll-reveal onpointerdown={press} class="group mt-4 flex items-end justify-between gap-4 pb-2"><span class="display-title text-[clamp(2.6rem,9vw,7rem)] text-zinc-500 group-hover:text-zinc-50">{next.title}</span><span class="text-zinc-400">→</span></a></section>{/if}
 {:else}
