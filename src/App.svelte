@@ -7,6 +7,7 @@
   import About from "./pages/About.svelte";
   import Home from "./pages/Home.svelte";
   import Lab from "./pages/Lab.svelte";
+  import LabProject from "./pages/LabProject.svelte";
   import Project from "./pages/Project.svelte";
   import WowPreview from "./variations/wow/WowPreview.svelte";
 
@@ -25,6 +26,7 @@
     <main class={route.view === "project" ? "" : "pt-[68px]"}>
       {#if route.view === "home"}<Home />
       {:else if route.view === "lab"}<Lab />
+      {:else if route.view === "lab-project"}<LabProject slug={route.slug ?? ""} />
       {:else if route.view === "about"}<About />
       {:else}<Project slug={route.slug ?? projects[0].slug} />{/if}
     </main>

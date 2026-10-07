@@ -25,7 +25,9 @@
 </script>
 
 <!-- Full-bleed hero under the glass header, then a centered text column. -->
-<Still src={p.cover} on class="h-[72svh] w-full md:h-[92svh]" />
+<div class={p.imageFit === "contain" ? "pt-[68px]" : ""}>
+  <Still src={p.cover} fit={p.imageFit} on class="h-[72svh] w-full md:h-[92svh]" />
+</div>
 <div bind:this={hero} class="mx-auto w-full max-w-[640px] px-4">
   <p class="pt-12 text-center font-mono text-[15px] font-bold uppercase tracking-[0.03em]">
     {p.title} <span>‘{p.type}’</span>
@@ -49,7 +51,7 @@
 <!-- One centered image or video between the text and the carousel. -->
 <div class="{WIDE} mt-16">
   <div class="mx-auto w-full max-w-[900px]">
-    {#if media[0]}<Still src={media[0]} />{:else}<MediaSlot n={1} />{/if}
+    {#if media[0]}<Still src={media[0]} fit={p.imageFit} />{:else}<MediaSlot n={1} />{/if}
   </div>
 </div>
 
@@ -68,14 +70,14 @@
 <div class="{WIDE} mt-12 flex flex-col items-center gap-12">
   {#each media.slice(1) as src, i (i)}
     <div class="w-full max-w-[900px]">
-      {#if src}<Still {src} />{:else}<MediaSlot n={i + 2} />{/if}
+      {#if src}<Still {src} fit={p.imageFit} />{:else}<MediaSlot n={i + 2} />{/if}
     </div>
   {/each}
 </div>
 
 <div class="{COL} mt-24">
   <button onclick={() => go(`/work/${next.slug}`)} class="group block w-full text-left">
-    <Still src={next.cover} />
+    <Still src={next.cover} fit={next.imageFit} />
     <Caption name={next.title} sub="Next" />
   </button>
 </div>

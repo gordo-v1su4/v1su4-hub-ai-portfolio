@@ -13,6 +13,7 @@ export interface Project {
   stack: string[];
   // Placeholder stills from the Arena draft. Replace each with a real screenshot or capture of the project.
   cover: string;
+  imageFit?: "cover" | "contain";
   link?: string;
   what: string;
   flow: { label: string; sub: string }[];
@@ -33,7 +34,10 @@ export const projects: Project[] = [
     status: "Demo on Request",
     year: "2026",
     stack: ["Svelte", "Convex", "RustFS", "Trigger.dev"],
-    cover: "/images/api.jpg",
+    cover: "/images/review-room-main.webp",
+    imageFit: "contain",
+    link: "https://review.v1su4.dev",
+    media: ["/images/review-room.webp", "/images/review-room.webp"],
     what: "Client and studio logins, projects and folders, daily playlists, per-artist review, hover-scrub previews, comments, ratings and notifications. Used in production with studios and clients.",
     flow: [
       { label: "UPLOAD", sub: "Shots into projects" },
@@ -54,7 +58,7 @@ export const projects: Project[] = [
     year: "2025",
     stack: ["React", "Convex", "Trigger.dev", "RustFS"],
     cover: "/images/pindeck.jpg",
-    link: "https://pindeck.dev",
+    link: "https://www.pindeck.dev",
     what: "One workspace for image curation. Images come in from Discord, Pinterest or upload, get tagged and color-analyzed automatically, branch into AI variations with full lineage, and end up on boards, storyboards and pitch decks.",
     flow: [
       { label: "INGEST", sub: "Discord · Pinterest · upload" },
@@ -76,7 +80,7 @@ export const projects: Project[] = [
     year: "2026",
     stack: ["SvelteKit", "WebGPU", "Essentia", "Tauri"],
     cover: "/images/beats.jpg",
-    link: "https://beatsmaxxing.com",
+    link: "https://www.beatsmaxxing.com",
     what: "Eight clip slots, a program monitor that cuts on the beat, and 19 WebGPU shader effects. Song sections land on a timeline; ramps, stutters and jump cuts lock to the beat grid. Runs in the browser, on phones, and as a Windows app.",
     flow: [
       { label: "TRACK", sub: "Song in" },
@@ -117,7 +121,7 @@ export const projects: Project[] = [
     year: "2026",
     stack: ["SvelteKit", "Python", "SQLite", "RustFS"],
     cover: "/images/agents.jpg",
-    link: "https://trailer-feed.vercel.app",
+    link: "https://trailerfeed.video",
     what: "A video portfolio for importing finished projects, watching versions, comparing takes, and keeping prompts and model metadata alongside the videos. Prompts and sources are kept as a reference library.",
     flow: [
       { label: "IMPORT", sub: "Finished videos in" },
@@ -206,7 +210,7 @@ export const site = {
   label: "V1SU4",
   role: "Creative Technologist",
   focus: "Generative AI for commercials, TV & live shows",
-  base: "Miami",
+  base: "Miami / LA",
   // TODO: add a contact email before publishing.
   email: "",
   links: [

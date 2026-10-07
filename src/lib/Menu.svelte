@@ -12,8 +12,9 @@
   type Level = "main" | "work" | "lab" | "about";
   let level = $state<Level>("main");
   let openLab = $state<string | null>(null);
+  let openWork = $state<string | null>(null);
 
-  $effect(() => { if (open) { level = "main"; openLab = null; } });
+  $effect(() => { if (open) { level = "main"; openLab = null; openWork = null; } });
   $effect(() => {
     if (!open || reduceMotion()) return;
     void level;
@@ -21,6 +22,43 @@
       gsap.fromTo(".menu-link", { y: 12, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.05, duration: 0.4, ease: "power3.out" });
     });
   });
+
+  let accordionTween: ReturnType<typeof gsap.to> | undefined;
+  $effect(() => {
+    void open;
+    void level;
+    return () => accordionTween?.kill();
+  });
+
+  function toggleDescription(event: MouseEvent, section: "work" | "lab", slug: string) {
+    const button = event.currentTarget as HTMLButtonElement;
+    const list = button.closest<HTMLElement>("[data-accordion]");
+    if (!list) return;
+    accordionTween?.kill();
+    const anchorTop = button.getBoundingClientRect().top;
+    const panels = Array.from(list.querySelectorAll<HTMLElement>("[data-description]"));
+    const current = section === "work" ? openWork : openLab;
+    const next = current === slug ? null : slug;
+    if (section === "work") openWork = next; else openLab = next;
+
+    // Keep the selected title anchored as descriptions change the list's height.
+    const keepTitleInPlace = () => {
+      const displacement = anchorTop - button.getBoundingClientRect().top;
+      gsap.set(list, { y: Number(gsap.getProperty(list, "y")) + displacement });
+    };
+    accordionTween = gsap.to(panels, {
+      height: (_index, panel: HTMLElement) => panel.dataset.description === next ? panel.scrollHeight : 0,
+      opacity: (_index, panel: HTMLElement) => panel.dataset.description === next ? 1 : 0,
+      duration: reduceMotion() ? 0 : 0.3,
+      ease: "power2.inOut",
+      onUpdate: keepTitleInPlace,
+      onComplete: () => {
+        const expanded = panels.find(panel => panel.dataset.description === next);
+        if (expanded) gsap.set(expanded, { height: "auto" });
+        keepTitleInPlace();
+      },
+    });
+  }
 
   function onkeydown(e: KeyboardEvent) {
     if (!open || e.key !== "Escape") return;
@@ -55,26 +93,33 @@
       </nav>
 
     {:else if level === "work"}
-      <nav class="flex min-h-[70svh] flex-col items-center justify-center gap-4 px-4 text-center">
+      <nav data-accordion class="flex min-h-[70svh] flex-col items-center justify-center gap-4 px-4 text-center">
         {#each projects as p (p.slug)}
-          <button onclick={nav(`/work/${p.slug}`)} class="{item} hover:opacity-70">
-            {p.title} <span class="font-medium opacity-80">‘{p.type}’</span>
-          </button>
+          <div class="menu-link max-w-[46ch]">
+            <button onclick={(event) => toggleDescription(event, "work", p.slug)} aria-expanded={openWork === p.slug} aria-controls="work-description-{p.slug}" class="{item} hover:opacity-70">
+              {p.title} <span class="font-medium opacity-80">‘{p.type}’</span>
+            </button>
+              <div id="work-description-{p.slug}" data-description={p.slug} inert={openWork !== p.slug} aria-hidden={openWork !== p.slug} class="flow-root overflow-hidden" style="height: 0; opacity: 0;">
+                <p class="mt-2 font-mono text-[11.5px] font-medium uppercase leading-[1.55] text-accent/70">{p.what}</p>
+                <a href="#/work/{p.slug}" onclick={(event) => { event.preventDefault(); nav(`/work/${p.slug}`)(); }} class="mt-3 inline-block font-mono text-[11px] font-semibold uppercase hover:opacity-70">[View project ↗]</a>
+              </div>
+          </div>
         {/each}
       </nav>
 
     {:else if level === "lab"}
       <!-- Lab items open in place: tap a title to show what it is. -->
-      <div class="flex min-h-[70svh] flex-col items-center justify-center gap-4 px-4 text-center">
+      <div data-accordion class="flex min-h-[70svh] flex-col items-center justify-center gap-4 px-4 text-center">
         {#each labItems as l (l.slug)}
           <div class="menu-link max-w-[46ch]">
-            <button onclick={() => (openLab = openLab === l.slug ? null : l.slug)} aria-expanded={openLab === l.slug} class="{item} hover:opacity-70">
+            <button onclick={(event) => toggleDescription(event, "lab", l.slug)} aria-expanded={openLab === l.slug} aria-controls="lab-description-{l.slug}" class="{item} hover:opacity-70">
               {l.title} <span class="font-medium opacity-80">‘{l.kind}’</span>
             </button>
-            {#if openLab === l.slug}
+            <div id="lab-description-{l.slug}" data-description={l.slug} inert={openLab !== l.slug} aria-hidden={openLab !== l.slug} class="flow-root overflow-hidden" style="height: 0; opacity: 0;">
               <p class="mt-2 font-mono text-[11.5px] font-medium uppercase leading-[1.55] text-accent/70">{l.body}</p>
               <p class="mt-1 font-mono text-[11px] uppercase text-accent/55">{l.status}</p>
-            {/if}
+              <a href="#/lab/{l.slug}" onclick={(event) => { event.preventDefault(); nav(`/lab/${l.slug}`)(); }} class="mt-3 inline-block font-mono text-[11px] font-semibold uppercase hover:opacity-70">[View project ↗]</a>
+            </div>
           </div>
         {/each}
       </div>

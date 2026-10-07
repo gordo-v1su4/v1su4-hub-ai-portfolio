@@ -9,9 +9,10 @@
   <p class="font-mono text-[15px] font-bold uppercase tracking-[0.03em]">Lab <span>‘In development’</span></p>
   {#each labItems as l (l.slug)}
     <div class="max-w-[46ch]">
-      <h2 class="font-mono text-[14px] font-bold uppercase tracking-[0.03em]">{l.title} <span class="font-medium opacity-80">‘{l.kind}’</span></h2>
+      <h2 class="font-mono text-[14px] font-bold uppercase tracking-[0.03em]"><a href="#/lab/{l.slug}" class="hover:opacity-70">{l.title} <span class="font-medium opacity-80">‘{l.kind}’</span></a></h2>
       <p class="mt-2 font-mono text-[11.5px] font-medium uppercase leading-[1.55] text-accent/70">{l.body}</p>
       <p class="mt-2 font-mono text-[11.5px] uppercase"><span class="font-medium text-accent/55">Status:</span> <span class="font-bold">{l.status}</span></p>
+      <a href="#/lab/{l.slug}" class="mt-3 inline-block font-mono text-[11px] font-semibold uppercase hover:opacity-70">[View project ↗]</a>
     </div>
   {/each}
 </div>

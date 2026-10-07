@@ -1,7 +1,10 @@
-export type Route = { view: "home" | "lab" | "about" | "project" | "wow" | "wow-project"; slug?: string };
+export type Route = { view: "home" | "lab" | "lab-project" | "about" | "project" | "wow" | "wow-project"; slug?: string };
 
 function parseHash(): Route {
   const h = window.location.hash.replace(/^#/, "") || "/";
+  const lab = h.match(/^\/lab\/([\w-]+)/);
+  if (lab) return { view: "lab-project", slug: lab[1] };
+  if (h === "/lab") return { view: "lab" };
   if (h.startsWith("/wow/work/")) {
     const m = h.match(/^\/wow\/work\/([\w-]+)/);
     if (m) return { view: "wow-project", slug: m[1] };
