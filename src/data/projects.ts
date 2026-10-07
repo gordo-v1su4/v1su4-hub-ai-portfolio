@@ -100,7 +100,9 @@ export const projects: Project[] = [
     status: "Live",
     year: "2026",
     stack: ["TypeScript", "WebCodecs", "WebGPU"],
-    cover: "/images/chroma.jpg",
+    cover: "/images/frame-lab-results.png",
+    imageFit: "contain",
+    media: ["/images/frame-lab-playback.png"],
     link: "https://frame-lab-gamma.vercel.app/benchmark",
     what: "A public benchmark comparing HTML video pools, WebCodecs frame caches and preloaded WebGPU textures under musical cuts, seeks, stutters and speed ramps. Built to choose the playback engine for beat-synced editing.",
     flow: [
