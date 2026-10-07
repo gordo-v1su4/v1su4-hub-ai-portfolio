@@ -78,7 +78,7 @@
           {#if p.imageFit === 'contain' && !['frame-lab', 'review-room'].includes(p.slug)}<img src={p.previewImage ?? p.image} alt="" aria-hidden="true" decoding="async" class="mirrored-image-fill absolute inset-0 h-full w-full object-cover" />{/if}
           <img src={p.previewImage ?? p.image} alt={i === selected ? `${p.title} project preview` : ''} aria-hidden={i !== selected}
             loading={i === 0 ? 'eager' : 'lazy'} decoding="async" draggable="false"
-            class={`absolute inset-0 h-full w-full ${p.slug === 'frame-lab' ? 'object-cover object-top' : 'object-contain'}`} />
+            class={`absolute inset-0 h-full w-full ${['frame-lab', 'review-room'].includes(p.slug) ? 'object-cover object-top' : 'object-contain'}`} />
           </div>
         {/each}
         <div aria-hidden="true" class="pointer-events-none absolute bottom-3 left-3 z-10 flex gap-1.5">{#each items as p, i (p.slug)}<span class={`h-[2px] transition-all duration-300 ${i === selected ? 'w-6 bg-accent-2' : 'w-2.5 bg-white/25'}`}></span>{/each}</div>
