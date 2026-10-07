@@ -110,7 +110,7 @@ export const projects: Project[] = [
       { title: "Infra", items: ["Vercel", "FFmpeg · media preparation & recording"] },
     ],
     cover: "/images/frame-lab-results.png",
-    previewImage: "/images/frame-lab-playback.png",
+    previewImage: "/images/frame-lab-results.png",
     imageFit: "contain",
     media: ["/images/frame-lab-playback.png"],
     link: "https://frame-lab-gamma.vercel.app/benchmark",
