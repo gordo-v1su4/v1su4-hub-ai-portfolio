@@ -37,7 +37,7 @@ export const projects: Project[] = [
     cover: "/images/review-room-main.webp",
     imageFit: "contain",
     link: "https://review.v1su4.dev",
-    media: ["/images/review-room.webp", "/images/review-room.webp"],
+    media: ["/images/review-room-main.webp", "/images/review-room-main.webp"],
     what: "Client and studio logins, projects and folders, daily playlists, per-artist review, hover-scrub previews, comments, ratings and notifications. Used in production with studios and clients.",
     flow: [
       { label: "UPLOAD", sub: "Shots into projects" },
