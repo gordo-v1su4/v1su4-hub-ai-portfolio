@@ -569,36 +569,9 @@
     height: 64px;
   }
 }
-/* Red foil: light moves through the letters only while the title is hovered. */
-@keyframes v0-red-foil {
-  from { background-position: 0% 50%; }
-  to { background-position: 100% 50%; }
-}
-@media (hover: hover) {
-  .v0-project-toggle:hover .v0-project-title,
-  .v0-hero-line:hover {
-    color: #ff778a;
-    filter: drop-shadow(0 0 10px rgba(255, 42, 66, 0.18));
-  }
-  @supports (background-clip: text) {
-    .v0-project-toggle:hover .v0-project-title,
-    .v0-hero-line:hover {
-      color: transparent;
-      background-image: linear-gradient(115deg,
-        #ffced3 0%, #ff3b54 18%, #ff778a 28%, #fff2dd 34%,
-        #ff3349 40%, #e994b4 49%, #ffbbc0 55%, #ff2a2a 68%,
-        #ffe0dd 80%, #ff4d70 100%);
-      background-size: 240% 100%;
-      background-clip: text;
-      -webkit-background-clip: text;
-      animation: v0-red-foil 3s ease-in-out infinite alternate;
-    }
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   .v0-site * {
     scroll-behavior: auto !important;
     transition: none !important;
-    animation: none !important;
   }
 }
