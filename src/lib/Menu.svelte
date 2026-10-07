@@ -35,27 +35,19 @@
     const list = button.closest<HTMLElement>("[data-accordion]");
     if (!list) return;
     accordionTween?.kill();
-    const anchorTop = button.getBoundingClientRect().top;
     const panels = Array.from(list.querySelectorAll<HTMLElement>("[data-description]"));
     const current = section === "work" ? openWork : openLab;
     const next = current === slug ? null : slug;
     if (section === "work") openWork = next; else openLab = next;
 
-    // Keep the selected title anchored as descriptions change the list's height.
-    const keepTitleInPlace = () => {
-      const displacement = anchorTop - button.getBoundingClientRect().top;
-      gsap.set(list, { y: Number(gsap.getProperty(list, "y")) + displacement });
-    };
     accordionTween = gsap.to(panels, {
       height: (_index, panel: HTMLElement) => panel.dataset.description === next ? panel.scrollHeight : 0,
       opacity: (_index, panel: HTMLElement) => panel.dataset.description === next ? 1 : 0,
       duration: reduceMotion() ? 0 : 0.3,
       ease: "power2.inOut",
-      onUpdate: keepTitleInPlace,
       onComplete: () => {
         const expanded = panels.find(panel => panel.dataset.description === next);
         if (expanded) gsap.set(expanded, { height: "auto" });
-        keepTitleInPlace();
       },
     });
   }
@@ -93,7 +85,7 @@
       </nav>
 
     {:else if level === "work"}
-      <nav data-accordion class="flex min-h-[70svh] flex-col items-center justify-center gap-4 px-4 text-center">
+      <nav data-accordion class="flex min-h-[70svh] flex-col items-center justify-start gap-4 px-4 pb-24 pt-[18svh] text-center">
         {#each projects as p (p.slug)}
           <div class="menu-link max-w-[46ch]">
             <button onclick={(event) => toggleDescription(event, "work", p.slug)} aria-expanded={openWork === p.slug} aria-controls="work-description-{p.slug}" class="{item} hover:opacity-70">
@@ -109,7 +101,7 @@
 
     {:else if level === "lab"}
       <!-- Lab items open in place: tap a title to show what it is. -->
-      <div data-accordion class="flex min-h-[70svh] flex-col items-center justify-center gap-4 px-4 text-center">
+      <div data-accordion class="flex min-h-[70svh] flex-col items-center justify-start gap-4 px-4 pb-24 pt-[18svh] text-center">
         {#each labItems as l (l.slug)}
           <div class="menu-link max-w-[46ch]">
             <button onclick={(event) => toggleDescription(event, "lab", l.slug)} aria-expanded={openLab === l.slug} aria-controls="lab-description-{l.slug}" class="{item} hover:opacity-70">
