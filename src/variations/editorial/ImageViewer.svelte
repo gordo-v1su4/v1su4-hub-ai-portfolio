@@ -9,7 +9,7 @@
 </script>
 
 <div class="image-viewer" role="region" aria-label={`${title} images`} aria-roledescription="carousel">
-  <Frame src={images[selected]} alt={`${title} — ${selected === 0 ? 'benchmark results' : 'playback view'}`} eager natural cropSides={selected === 0 ? 0.2 : 0} monochrome={selected !== 0} />
+  <Frame src={images[selected]} alt={`${title} — ${selected === 0 ? 'benchmark results' : 'playback view'}`} eager natural monochrome={selected !== 0} />
   <button class="image-arrow previous" aria-label="Previous image" onclick={() => advance(-1)}><span aria-hidden="true"></span></button>
   <button class="image-arrow next" aria-label="Next image" onclick={() => advance(1)}><span aria-hidden="true"></span></button>
 </div>
