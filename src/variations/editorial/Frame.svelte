@@ -9,9 +9,18 @@
     style:width={natural && cropSides ? `${100 / (1 - 2 * cropSides)}%` : undefined}
     style:max-width={natural && cropSides ? 'none' : undefined}
     style:margin-left={natural && cropSides ? `${-100 * cropSides / (1 - 2 * cropSides)}%` : undefined}
-    style:filter={monochrome ? 'grayscale(1)' : undefined}
-    class={natural ? 'block h-auto w-full' : 'absolute inset-0 h-full w-full select-none object-contain'} />
+    class={[natural ? 'block h-auto w-full' : 'absolute inset-0 h-full w-full select-none object-contain', { monochrome }]} />
   </div>
   <span aria-hidden="true" class="pointer-events-none absolute -bottom-px -right-px h-3 w-3 border-b border-r border-accent"></span>
   <span aria-hidden="true" class="pointer-events-none absolute -left-px -top-px h-3 w-3 border-l border-t border-white/20"></span>
 </figure>
+
+<style>
+  .monochrome { filter: grayscale(1); transition: filter 300ms ease; }
+  @media (hover: hover) {
+    .monochrome:hover { filter: grayscale(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .monochrome { transition: none; }
+  }
+</style>
