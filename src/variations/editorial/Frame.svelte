@@ -16,9 +16,9 @@
 </figure>
 
 <style>
-  .monochrome { filter: grayscale(1); transition: filter 300ms ease; }
+  .monochrome { filter: grayscale(1); transition: filter 1100ms ease-out; }
   @media (hover: hover) {
-    .monochrome:hover { filter: grayscale(0); }
+    .monochrome:hover { filter: grayscale(0); transition-duration: 300ms; }
   }
   @media (prefers-reduced-motion: reduce) {
     .monochrome { transition: none; }
