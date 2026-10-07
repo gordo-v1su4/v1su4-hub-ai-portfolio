@@ -10,8 +10,8 @@
 
 <div class="image-viewer" role="region" aria-label={`${title} images`} aria-roledescription="carousel">
   <Frame src={images[selected]} alt={`${title} — ${selected === 0 ? 'benchmark results' : 'playback view'}`} eager natural cropSides={selected === 0 ? 0.2 : 0} monochrome={selected !== 0} />
-  <button class="image-arrow previous" aria-label="Previous image" onclick={() => advance(-1)}><span aria-hidden="true">&lt;</span></button>
-  <button class="image-arrow next" aria-label="Next image" onclick={() => advance(1)}><span aria-hidden="true">&gt;</span></button>
+  <button class="image-arrow previous" aria-label="Previous image" onclick={() => advance(-1)}><span aria-hidden="true"></span></button>
+  <button class="image-arrow next" aria-label="Next image" onclick={() => advance(1)}><span aria-hidden="true"></span></button>
 </div>
 <p class="label mt-3 text-zinc-500" aria-live="polite">{selected + 1} / {images.length} — {selected === 0 ? 'Benchmark results' : 'Playback view'}</p>
 
@@ -25,6 +25,9 @@
   }
   .previous { left: -40px; }
   .next { right: -40px; }
+  .image-arrow span { width: 9px; height: 9px; border-top: 1px solid currentColor; border-right: 1px solid currentColor; }
+  .previous span { transform: rotate(-135deg); }
+  .next span { transform: rotate(45deg); }
   .image-arrow:hover { color: #d4d4d8; }
   .image-arrow:focus-visible { outline: 2px solid #d4d4d8; outline-offset: 3px; }
 </style>
