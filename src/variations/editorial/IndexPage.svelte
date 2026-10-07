@@ -10,7 +10,7 @@
 <div use:reveal>
   <header class="border-b border-white/8 pb-10 pt-24 sm:pb-14 sm:pt-32 lg:pt-36">
     <div class="page-width">
-      <p data-reveal class="kicker">V1SU4 · {experimental ? 'Lab — work in progress' : 'Portfolio — creative production & software'}</p>
+      <p data-reveal class={`kicker ${experimental ? '' : 'portfolio-heading-line'}`}>{experimental ? 'V1SU4 · Lab — work in progress' : 'Gordo Portfolio Creative Production and Software'}</p>
       <h1 class="mt-5"><span data-reveal class="display-title block text-[clamp(3.4rem,13vw,10rem)] text-zinc-50">{experimental ? 'The' : 'Selected'}</span>
         <span data-reveal class="display-title block text-[clamp(3.4rem,13vw,10rem)] text-zinc-600">{experimental ? 'Lab' : 'Work'}<span class="ml-3 align-super text-[0.18em] tracking-[0.2em] text-accent-2">{String(items.length).padStart(2,'0')}</span></span></h1>
       <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
