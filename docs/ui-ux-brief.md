@@ -17,7 +17,7 @@ Studio collaborators, prospective clients, and technical peers exploring the wor
 - **Media:** Store screenshots in this repository, preserve their proportions, and avoid cropped interfaces or gray letterboxing. Keep existing URLs usable.
 - **Design and motion:** Must have a very contemporary, modern UI look and feel, with intentional typography, confident spacing, and polished interactions. GSAP animations are required for coordinated entrances, project preview transitions, and interaction feedback. Motion must feel fluid on desktop and mobile, preserve reading and scroll position, and respect reduced-motion preferences.
 - **Mobile performance:** Must feel very snappy: immediate tap feedback, fast navigation, and smooth scrolling. Keep transitions short and interruptible; never make visitors wait for an animation to finish. Optimize images, load secondary media on demand, and avoid heavy effects. Verify responsiveness on a real phone with a typical mobile connection.
-- **Dark palette:** Use zinc or neutral grays for backgrounds, surfaces, borders, and muted text. No slate, blue tones, or blue-tinted gradients or glass. Retain restrained red accents and clear text contrast.
+- **Dark palette:** Use only zinc or neutral grays, black, and white for backgrounds, surfaces, borders, text, and interaction states. No red accents, slate, blue tones, or colored gradients or glass. Use contrast, weight, and motion to communicate hierarchy and selection.
 
 ## Current layout
 
@@ -29,7 +29,7 @@ Use an **editorial project index with a selected project preview**. On desktop, 
 
 On mobile, use a single-column index with a short summary or thumbnail per project. Tap through to the detail page instead of expanding a long accordion. Back navigation restores the visitor’s position. Use the same structure for Lab, distinguished by its experimental status.
 
-Retain a zinc or neutral dark textured backdrop, restrained red accents, oversized condensed titles, and lightly frosted neutral navigation. Remove blue tones from the backdrop and effects. Keep Bebas Neue titles and Space Mono menu lettering; use Archivo Narrow for detail headings and Geist Mono for descriptions/labels. Use GSAP motion to reinforce hierarchy and selection without delaying navigation. **No red foil or shimmering title effect.**
+Use a zinc or neutral dark textured backdrop, oversized condensed titles, and lightly frosted neutral navigation. Remove red accents and blue tones from the interface, backdrop, and effects. Keep Bebas Neue titles and Space Mono menu lettering; use Archivo Narrow for detail headings and Geist Mono for descriptions/labels. Use GSAP motion to reinforce hierarchy and selection without delaying navigation. **No colored foil or shimmering title effect.**
 
 ## Acceptance and handoff
 
