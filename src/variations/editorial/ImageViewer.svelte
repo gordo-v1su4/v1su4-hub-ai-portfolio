@@ -9,14 +9,15 @@
 </script>
 
 <div class="image-viewer" role="region" aria-label={`${title} images`} aria-roledescription="carousel">
-  <Frame src={images[selected]} alt={`${title} — ${selected === 0 ? 'benchmark results' : 'playback view'}`} eager natural monochrome={selected !== 0} />
+  <Frame src={images[selected]} alt={`${title} — ${selected === 0 ? 'benchmark results' : 'playback view'}`} eager natural monochrome={selected !== 0} class="absolute inset-0" />
   <button class="image-arrow previous" aria-label="Previous image" onclick={() => advance(-1)}><span aria-hidden="true"></span></button>
   <button class="image-arrow next" aria-label="Next image" onclick={() => advance(1)}><span aria-hidden="true"></span></button>
 </div>
 <p class="label mt-3 text-zinc-500" aria-live="polite">{selected + 1} / {images.length} — {selected === 0 ? 'Benchmark results' : 'Playback view'}</p>
 
 <style>
-  .image-viewer { position: relative; }
+  .image-viewer { position: relative; aspect-ratio: 1508 / 1050; background: #0a0a0a; }
+  .image-viewer :global(figure) { overflow: hidden; }
   .image-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
     width: 24px; height: 44px; border: 0;
