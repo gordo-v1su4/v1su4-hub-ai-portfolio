@@ -15,6 +15,7 @@ export interface Project {
   stackGroups?: { title: string; items: string[] }[];
   // Placeholder stills from the Arena draft. Replace each with a real screenshot or capture of the project.
   cover: string;
+  previewImage?: string;
   imageFit?: "cover" | "contain";
   link?: string;
   what: string;
@@ -109,6 +110,7 @@ export const projects: Project[] = [
       { title: "Infra", items: ["Vercel", "FFmpeg · media preparation & recording"] },
     ],
     cover: "/images/frame-lab-results.png",
+    previewImage: "/images/frame-lab-playback.png",
     imageFit: "contain",
     media: ["/images/frame-lab-playback.png"],
     link: "https://frame-lab-gamma.vercel.app/benchmark",

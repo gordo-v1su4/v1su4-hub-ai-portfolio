@@ -75,8 +75,8 @@
       <div bind:this={layers} class="relative aspect-[16/10] overflow-hidden bg-ink-2 ring-1 ring-white/10">
         {#each items as p, i (p.slug)}
           <div data-layer style:opacity={i === selected ? 1 : 0} style:z-index={i === selected ? 2 : 1} class="absolute inset-0">
-          {#if p.imageFit === 'contain'}<img src={p.image} alt="" aria-hidden="true" decoding="async" class="mirrored-image-fill absolute inset-0 h-full w-full object-cover" />{/if}
-          <img src={p.image} alt={i === selected ? `${p.title} project preview` : ''} aria-hidden={i !== selected}
+          {#if p.imageFit === 'contain'}<img src={p.previewImage ?? p.image} alt="" aria-hidden="true" decoding="async" class="mirrored-image-fill absolute inset-0 h-full w-full object-cover" />{/if}
+          <img src={p.previewImage ?? p.image} alt={i === selected ? `${p.title} project preview` : ''} aria-hidden={i !== selected}
             loading={i === 0 ? 'eager' : 'lazy'} decoding="async" draggable="false"
             class="absolute inset-0 h-full w-full object-contain" />
           </div>
@@ -99,7 +99,7 @@
       <div class="flex items-center justify-between gap-3"><p class="label text-zinc-500">{String(i+1).padStart(2,'0')} · {p.category}</p><span class="status-pill shrink-0">{p.status}</span></div>
       <h3 class="display-title mt-3 text-[clamp(2.1rem,10vw,2.9rem)] text-zinc-50">{p.title} <span class="float-right text-zinc-500">→</span></h3>
       <p class="mt-2 font-mono text-[12.5px] leading-relaxed text-zinc-400">{p.line}</p>
-      <Frame src={p.image} alt={`${p.title} project preview`} eager={i < 2} natural={p.imageFit === 'contain'} class="mt-4" />
+      <Frame src={p.previewImage ?? p.image} alt={`${p.title} project preview`} eager={i < 2} natural={p.imageFit === 'contain'} class="mt-4" />
     </a></li>
   {/each}</ul>
 {/if}
