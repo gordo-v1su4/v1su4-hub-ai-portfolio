@@ -11,6 +11,7 @@ export interface Project {
   status: ProjectStatus;
   year: string;
   stack: string[];
+  stackGroups?: { title: string; items: string[] }[];
   // Placeholder stills from the Arena draft. Replace each with a real screenshot or capture of the project.
   cover: string;
   imageFit?: "cover" | "contain";
@@ -100,6 +101,11 @@ export const projects: Project[] = [
     status: "Live",
     year: "2026",
     stack: ["TypeScript", "WebCodecs / Mediabunny", "WebGPU", "HTML video pool", "libmedia · experimental probe", "FFmpeg · media preparation & recording"],
+    stackGroups: [
+      { title: "Front end", items: ["TypeScript", "HTML video pool", "WebCodecs / Mediabunny", "WebGPU", "libmedia · experimental probe"] },
+      { title: "State", items: ["IndexedDB", "Local measurement reports"] },
+      { title: "Infra", items: ["Vercel", "FFmpeg · media preparation & recording"] },
+    ],
     cover: "/images/frame-lab-results.png",
     imageFit: "contain",
     media: ["/images/frame-lab-playback.png"],

@@ -4,12 +4,13 @@ export interface Entry {
   slug: string; title: string; category: string; line: string; summary: string;
   image: string; imageFit?: 'cover' | 'contain'; status: string; year: string;
   role: string; stack: string[]; flow: {label: string; sub: string}[];
+  stackGroups?: {title: string; items: string[]}[];
   link?: string; media: string[]; experimental: boolean;
 }
 export const work: Entry[] = projects.map(p => ({
   slug: p.slug, title: p.title, category: p.type, line: p.tagline,
   summary: p.what, image: p.cover, imageFit: p.imageFit, status: p.status,
-  year: p.year, role: p.role, stack: p.stack, flow: p.flow, link: p.link,
+  year: p.year, role: p.role, stack: p.stack, stackGroups: p.stackGroups, flow: p.flow, link: p.link,
   media: p.media ?? [], experimental: false,
 }));
 export const lab: Entry[] = labItems.map(p => ({

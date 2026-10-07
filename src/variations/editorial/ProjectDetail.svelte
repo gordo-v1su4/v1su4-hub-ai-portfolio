@@ -32,7 +32,20 @@
   <div data-scroll-reveal class="mt-6"><Frame src={p.image} alt={`${p.title} main image`} eager natural={p.imageFit === 'contain'} /><p class="label mt-3 text-zinc-600">{p.title} — {p.year}</p></div>
   {#each p.media as image, i (`${image}-${i}`)}<div data-scroll-reveal class="mt-6"><Frame src={image} alt={`${p.title} screenshot ${i+1}`} natural monochrome={p.slug === 'frame-lab'} /></div>{/each}
   {/if}
-  {#if p.stack.length}<section class="mt-8"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Stack & build</h2><ul data-scroll-reveal class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{#each p.stack as item (item)}<li class="border border-white/8 bg-white/[0.015] p-5 font-mono text-[13px] text-zinc-300">{item}</li>{/each}</ul></section>{/if}
+  {#if p.stack.length}<section class="mt-8"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Stack & build</h2>
+    {#if p.stackGroups}
+      <div class="mt-6 grid gap-6 sm:grid-cols-3">
+        {#each p.stackGroups as group (group.title)}
+          <div data-scroll-reveal class="border border-white/8 bg-white/[0.015] p-5">
+            <h3 class="label text-zinc-500">{group.title}</h3>
+            <ul class="mt-3 space-y-2 font-mono text-[13px] leading-relaxed text-zinc-300">{#each group.items as item (item)}<li>{item}</li>{/each}</ul>
+          </div>
+        {/each}
+      </div>
+    {:else}
+      <ul data-scroll-reveal class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{#each p.stack as item (item)}<li class="border border-white/8 bg-white/[0.015] p-5 font-mono text-[13px] text-zinc-300">{item}</li>{/each}</ul>
+    {/if}
+  </section>{/if}
   {#if next}<section class={p.slug === 'frame-lab' ? 'mt-16 lg:mt-20' : 'mt-10'}><p data-scroll-reveal class="label text-zinc-600">Next {p.experimental ? 'experiment' : 'project'}</p><a href={href(next)} data-scroll-reveal onpointerdown={press} class="group mt-4 flex items-end justify-between gap-4 pb-2"><span class="display-title text-[clamp(2.6rem,9vw,7rem)] text-zinc-500 group-hover:text-zinc-50">{next.title}</span><span class="text-zinc-400">→</span></a></section>{/if}
 {:else}
   <h1 class="display-title text-7xl text-zinc-100">Project not found</h1><a href="#/" class="button-outline mt-8">Back to index</a>
