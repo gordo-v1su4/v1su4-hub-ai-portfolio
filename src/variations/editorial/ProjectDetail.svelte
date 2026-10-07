@@ -46,7 +46,7 @@
       <ul data-scroll-reveal class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{#each p.stack as item (item)}<li class="border border-white/8 bg-white/[0.015] p-5 font-mono text-[13px] text-zinc-300">{item}</li>{/each}</ul>
     {/if}
   </section>{/if}
-  {#if next}<section class={p.slug === 'frame-lab' ? 'mt-32 lg:mt-40' : 'mt-10'}><p data-scroll-reveal class="label text-zinc-600">Next {p.experimental ? 'experiment' : 'project'}</p><a href={href(next)} data-scroll-reveal onpointerdown={press} class="group mt-4 flex items-end justify-between gap-4 pb-2"><span class="display-title text-[clamp(2.6rem,9vw,7rem)] text-zinc-500 group-hover:text-zinc-50">{next.title}</span><span class="text-zinc-400">→</span></a></section>{/if}
+  {#if next}<section class={p.slug === 'frame-lab' ? 'mt-64 lg:mt-80' : 'mt-10'}><p data-scroll-reveal class="label text-zinc-600">Next {p.experimental ? 'experiment' : 'project'}</p><a href={href(next)} data-scroll-reveal onpointerdown={press} class="group mt-4 flex items-end justify-between gap-4 pb-2"><span class="display-title text-[clamp(2.6rem,9vw,7rem)] text-zinc-500 group-hover:text-zinc-50">{next.title}</span><span class="text-zinc-400">→</span></a></section>{/if}
 {:else}
   <h1 class="display-title text-7xl text-zinc-100">Project not found</h1><a href="#/" class="button-outline mt-8">Back to index</a>
 {/if}
