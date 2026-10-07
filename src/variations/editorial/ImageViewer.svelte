@@ -16,7 +16,7 @@
 <p class="label mt-3 text-zinc-500" aria-live="polite">{selected + 1} / {images.length} — {selected === 0 ? 'Benchmark results' : 'Playback view'}</p>
 
 <style>
-  .image-viewer { position: relative; aspect-ratio: 1508 / 1300; background: #0a0a0a; }
+  .image-viewer { position: relative; aspect-ratio: 1524 / 1300; background: #0a0a0a; }
   .image-stage { position: absolute; inset: 0; overflow: hidden; }
   .image-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
