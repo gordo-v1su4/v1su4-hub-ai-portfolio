@@ -8,6 +8,9 @@
   const desktop = new MediaQuery('(min-width: 1024px)');
   let selected = $state(0);
   const active = $derived(items[selected] ?? items[0]);
+  let imageRatios = $state<Record<string, number>>({});
+  const activeImage = $derived(active.previewImage ?? active.image);
+  const activeRatio = $derived(imageRatios[activeImage] ?? 16 / 10);
   let layers = $state<HTMLDivElement>();
   let copy = $state<HTMLDivElement>();
   let list = $state<HTMLUListElement>();
@@ -72,13 +75,13 @@
     </div>
     <div class="sticky top-24">
       <div class="flex items-center justify-between pb-3"><p class="label text-zinc-500">{active.category}</p><p class="label text-zinc-600">{String(selected+1).padStart(2,'0')} / {String(items.length).padStart(2,'0')}</p></div>
-      <div bind:this={layers} class="relative aspect-[16/10] overflow-hidden bg-ink-2 ring-1 ring-white/10">
+      <div bind:this={layers} style:aspect-ratio={activeRatio} class="relative overflow-hidden bg-ink-2 ring-1 ring-white/10">
         {#each items as p, i (p.slug)}
           <div data-layer style:opacity={i === selected ? 1 : 0} style:z-index={i === selected ? 2 : 1} class="absolute inset-0" style:background-color={p.slug === 'review-room' ? '#080e0d' : p.slug === 'frame-lab' ? '#0a0a0a' : undefined}>
-          {#if p.slug === 'creative-studio-pro'}<img src={p.previewImage ?? p.image} alt="" aria-hidden="true" decoding="async" class="mirrored-image-fill absolute inset-0 h-full w-full object-cover" />{/if}
           <img src={p.previewImage ?? p.image} alt={i === selected ? `${p.title} project preview` : ''} aria-hidden={i !== selected}
             loading={i === 0 ? 'eager' : 'lazy'} decoding="async" draggable="false"
-            class={p.slug === 'creative-studio-pro' ? 'absolute inset-0 h-full w-full object-contain' : ['frame-lab', 'review-room'].includes(p.slug) ? 'absolute inset-0 h-full w-full object-cover object-top' : 'absolute left-0 top-0 h-auto w-full'} />
+            onload={(event) => { const image = event.currentTarget; if (image instanceof HTMLImageElement && image.naturalHeight) imageRatios[p.previewImage ?? p.image] = image.naturalWidth / image.naturalHeight; }}
+            class="absolute left-0 top-0 h-auto w-full" />
           </div>
         {/each}
         <div aria-hidden="true" class="pointer-events-none absolute bottom-3 left-3 z-10 flex gap-1.5">{#each items as p, i (p.slug)}<span class={`h-[2px] transition-all duration-300 ${i === selected ? 'w-6 bg-accent-2' : 'w-2.5 bg-white/25'}`}></span>{/each}</div>

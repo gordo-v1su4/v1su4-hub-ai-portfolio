@@ -6,6 +6,11 @@
   let { slug }: {slug: string} = $props();
   const p = $derived(all.find(p=>p.slug === slug));
   const next = $derived.by(() => { if (!p) return undefined; const list = p.experimental ? lab : work; return list[(list.indexOf(p)+1)%list.length]; });
+  const workflow = $derived(p ? [
+    { title: 'Input', steps: p.flow.slice(0, 1) },
+    { title: 'Process', steps: p.flow.slice(1, -1) },
+    { title: 'Output', steps: p.flow.slice(-1) },
+  ] : []);
 </script>
 <div use:reveal={true} class="page-width pt-20 lg:pt-20">
 {#if p}
@@ -32,7 +37,7 @@
   </div>
   <section class="mt-8 grid gap-5 border-t border-white/8 pt-8 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] lg:gap-10"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Why it exists</h2><div data-scroll-reveal><p class="max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-300 sm:text-[15px]">{p.rationale ?? p.line}</p><dl class="mt-6 grid grid-cols-2 gap-6"><div><dt class="label text-zinc-600">Role</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.role}</dd></div><div><dt class="label text-zinc-600">Status</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.status}</dd></div></dl></div></section>
 
-  {#if p.flow.length}<section class="mt-12 border-t border-white/8 pt-8 lg:mt-16 lg:pt-10"><div class="flex flex-wrap items-baseline justify-between gap-3"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">How it works</h2><p data-scroll-reveal class="label text-zinc-500">{p.role}</p></div><ol class="mt-4 grid gap-x-10 gap-y-5 sm:grid-cols-2">{#each p.flow as step, i (step.label)}<li data-scroll-reveal class="min-w-0"><div class="flex items-baseline gap-3"><span class="label text-accent">{String(i+1).padStart(2,'0')}</span><h3 class="font-narrow text-[19px] font-semibold text-zinc-100">{step.label}</h3></div><p class="mt-3 font-mono text-[13px] leading-relaxed text-zinc-400">{step.sub}</p></li>{/each}</ol></section>{/if}
+  {#if p.flow.length}<section class="mt-12 border-t border-white/8 pt-8 lg:mt-16 lg:pt-10"><div class="flex flex-wrap items-baseline justify-between gap-3"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">How it works</h2><p data-scroll-reveal class="label text-zinc-500">{p.role}</p></div><ol class="mt-6 grid gap-6 md:grid-cols-3">{#each workflow as group, i (group.title)}<li data-scroll-reveal class="min-w-0"><div class="flex items-baseline gap-3"><span class="label text-accent">{String(i+1).padStart(2,'0')}</span><h3 class="font-narrow text-[19px] font-semibold text-zinc-100">{group.title}</h3></div><ul class="mt-4 space-y-5">{#each group.steps as step (step.label)}<li><h4 class="font-narrow text-[17px] font-semibold text-zinc-100">{step.label}</h4><p class="mt-2 font-mono text-[13px] leading-relaxed text-zinc-400">{step.sub}</p></li>{/each}</ul></li>{/each}</ol></section>{/if}
   {#if p.stack.length}<section class="mt-14 border-t border-white/8 pt-8 lg:mt-20 lg:pt-10"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Stack & build</h2>
     {#if p.stackGroups}
       <div class="mt-6 grid gap-6 sm:grid-cols-3">
