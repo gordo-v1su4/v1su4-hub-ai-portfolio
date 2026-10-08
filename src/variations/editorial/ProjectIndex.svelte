@@ -3,7 +3,7 @@
   import { MediaQuery } from 'svelte/reactivity';
   import { href, type Entry } from './data';
   import Frame from './Frame.svelte';
-  import { gsap, D, EASE, EASE_IO, reduced, press } from './motion';
+  import { gsap, D, EASE, EASE_IO, reduced, press, reveal } from './motion';
   let { items, experimental = false }: {items: Entry[]; experimental?: boolean} = $props();
   const desktop = new MediaQuery('(min-width: 1024px)');
   let selected = $state(0);
@@ -95,7 +95,7 @@
   </div>
 {:else}
   <ul class="border-t border-white/10">{#each items as p, i (p.slug)}
-    <li class="border-b border-white/10"><a href={href(p)} onpointerdown={press} class="block py-5 active:bg-white/[0.03]">
+    <li use:reveal={true} class="border-b border-white/10"><a data-scroll-reveal href={href(p)} onpointerdown={press} class="block py-5 active:bg-white/[0.03]">
       <div class="flex items-center justify-between gap-3"><p class="label text-zinc-500">{String(i+1).padStart(2,'0')} · {p.category}</p><span class="status-pill shrink-0">{p.status}</span></div>
       <h3 class="display-title mt-3 text-[clamp(2.1rem,10vw,2.9rem)] text-zinc-50">{p.title} <span class="float-right text-zinc-500">→</span></h3>
       <p class="mt-2 font-mono text-[12.5px] leading-relaxed text-zinc-400">{p.line}</p>

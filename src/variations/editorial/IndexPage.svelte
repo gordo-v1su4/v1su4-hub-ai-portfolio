@@ -8,7 +8,7 @@
   const items = $derived(experimental ? lab : work);
 </script>
 <div use:reveal>
-  <header class="border-b border-white/8 pb-10 pt-24 sm:pb-14 sm:pt-32 lg:pt-36">
+  <header class="border-b border-white/8 pb-8 pt-22 sm:pb-10 sm:pt-28 lg:pt-28">
     <div class="page-width">
       <p data-reveal class={`kicker ${experimental ? '' : 'portfolio-heading-line'}`}>{experimental ? 'V1SU4 · Lab — work in progress' : 'Creative Production Portfolio and Software'}</p>
       <h1 class="mt-5"><span data-reveal class="display-title block text-[clamp(3.4rem,13vw,10rem)] text-zinc-50">{experimental ? 'The' : 'Selected'}</span>
@@ -21,13 +21,13 @@
   </header>
   <div class="page-width pt-10 lg:pt-14"><ProjectIndex {items} {experimental} /></div>
   {#if experimental}
-    <section class="page-width mt-20 sm:mt-28"><div class="grid gap-8 border border-dashed border-white/12 bg-white/[0.015] p-6 sm:p-8 lg:grid-cols-[auto_1fr] lg:gap-14"><h2 class="display-title text-4xl text-zinc-100">Reading<br/>the lab</h2><p class="max-w-2xl font-mono text-[13.5px] leading-relaxed text-zinc-400">These projects are experimental and in development. Features and workflows may change. Each has a page here; a public application link appears when one is available.</p></div></section>
+    <section use:reveal={true} class="page-width mt-20 sm:mt-28"><div class="grid gap-8 border border-dashed border-white/12 bg-white/[0.015] p-6 sm:p-8 lg:grid-cols-[auto_1fr] lg:gap-14"><h2 data-scroll-reveal class="display-title text-4xl text-zinc-100">Reading<br/>the lab</h2><p class="max-w-2xl font-mono text-[13.5px] leading-relaxed text-zinc-400">These projects are experimental and in development. Features and workflows may change. Each has a page here; a public application link appears when one is available.</p></div></section>
   {:else}
-    <section class="page-width mt-20 sm:mt-28"><div class="flex items-baseline justify-between gap-4"><h2 class="display-title text-[clamp(1.8rem,4vw,3rem)] text-zinc-100">What I do</h2><a href="#/about" class="label text-zinc-500 hover:text-zinc-200">About Gordo →</a></div>
-      <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">{#each skillGroups as group (group.title)}<div class="border-t border-white/10 pt-4"><h3 class="label text-zinc-300">{group.title}</h3><ul class="mt-4 space-y-2">{#each group.items as item (item)}<li class="font-mono text-[13px] text-zinc-400">{item}</li>{/each}</ul></div>{/each}</div>
+    <section use:reveal={true} class="page-width mt-20 sm:mt-28"><div class="flex items-baseline justify-between gap-4"><h2 data-scroll-reveal class="display-title text-[clamp(1.8rem,4vw,3rem)] text-zinc-100">What I do</h2><a href="#/about" class="label text-zinc-500 hover:text-zinc-200">About Gordo →</a></div>
+      <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">{#each skillGroups as group (group.title)}<div data-scroll-reveal class="border-t border-white/10 pt-4"><h3 class="label text-accent">{group.title}</h3><ul class="mt-4 space-y-2">{#each group.items as item (item)}<li class="font-mono text-[13px] text-zinc-400">{item}</li>{/each}</ul></div>{/each}</div>
     </section>
   {/if}
-  <section class="page-width mt-20 sm:mt-28"><div class="flex items-end justify-between border-t border-white/8 pt-8"><h2 class="display-title text-[clamp(1.8rem,4vw,3rem)] text-zinc-100">{experimental ? 'Selected work' : 'Also building'}</h2><a class="label text-zinc-500" href={experimental ? '#/' : '#/lab'}>{experimental ? 'Portfolio index' : 'Into the lab'} →</a></div>
-    <ul class="mt-8 grid gap-5 sm:grid-cols-2">{#each (experimental ? work.slice(0,2) : lab) as p (p.slug)}<li><a href={href(p)} class="group block border border-white/8 bg-white/[0.015] p-3 hover:border-white/20"><Frame src={p.image} alt={`${p.title} preview`} class="mb-4" /><div class="flex items-center justify-between gap-3 px-1"><span class="label text-zinc-400">{p.title}</span><span class="label text-zinc-600">{p.status}</span></div></a></li>{/each}</ul>
+  <section use:reveal={true} class="page-width mt-20 sm:mt-28"><div class="flex items-end justify-between border-t border-white/8 pt-8"><h2 data-scroll-reveal class="display-title text-[clamp(1.8rem,4vw,3rem)] text-zinc-100">{experimental ? 'Selected work' : 'Also building'}</h2><a class="label text-zinc-500" href={experimental ? '#/' : '#/lab'}>{experimental ? 'Portfolio index' : 'Into the lab'} →</a></div>
+    <ul class="mt-8 grid gap-5 sm:grid-cols-2">{#each (experimental ? work.slice(0,2) : lab) as p (p.slug)}<li data-scroll-reveal><a href={href(p)} class="group block border border-white/8 bg-white/[0.015] p-3 hover:border-white/20"><Frame src={p.image} alt={`${p.title} preview`} class="mb-4" /><div class="flex items-center justify-between gap-3 px-1"><span class="label text-zinc-400">{p.title}</span><span class="label text-zinc-600">{p.status}</span></div></a></li>{/each}</ul>
   </section>
 </div>

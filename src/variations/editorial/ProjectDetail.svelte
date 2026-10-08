@@ -7,13 +7,13 @@
   const p = $derived(all.find(p=>p.slug === slug));
   const next = $derived.by(() => { if (!p) return undefined; const list = p.experimental ? lab : work; return list[(list.indexOf(p)+1)%list.length]; });
 </script>
-<div use:reveal={true} class="page-width pt-20 lg:pt-28">
+<div use:reveal={true} class="page-width pt-20 lg:pt-20">
 {#if p}
-  <a href={p.experimental ? '#/lab' : '#/'} data-scroll-reveal onpointerdown={press} class="label inline-flex min-h-11 items-center gap-2 text-zinc-500 hover:text-zinc-100">← {p.experimental ? 'Lab' : 'Portfolio'} index</a>
-  <header class="mt-6">
+  <a href={p.experimental ? '#/lab' : '#/'} data-scroll-reveal onpointerdown={press} class="label inline-flex min-h-8 items-center gap-2 text-zinc-500 hover:text-zinc-100">← {p.experimental ? 'Lab' : 'Portfolio'} index</a>
+  <header class="mt-4">
     <p data-scroll-reveal class="kicker">{p.category}</p>
-    <h1 data-scroll-reveal class="display-title mt-5 text-[clamp(3.2rem,12vw,9rem)] text-zinc-50">{p.title}</h1>
-    <div class="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-16">
+    <h1 data-scroll-reveal class="display-title mt-3 text-[clamp(3.2rem,12vw,9rem)] text-zinc-50">{p.title}</h1>
+    <div class="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-16">
       <p data-scroll-reveal class="max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-300 sm:text-[15px]">{p.summary}</p>
       <div data-scroll-reveal class="space-y-4"><div class="flex flex-wrap items-center gap-3"><span class="status-pill">{p.status}</span><span class="label text-zinc-600">{p.year}</span></div>
         {#if p.experimental}<p class="font-mono text-[12.5px] leading-relaxed text-zinc-500">Experimental project in development. Features and workflows may change.</p>{/if}
@@ -22,16 +22,17 @@
       </div>
     </div>
   </header>
-  {#if p.slug === 'frame-lab'}
-    <div data-scroll-reveal class="mt-6"><ImageViewer images={[p.image, ...p.media]} title={p.title} /></div>
-  {/if}
+  <div data-scroll-reveal class="mt-6">
+    {#if p.slug === 'frame-lab'}
+      <ImageViewer images={[p.image, ...p.media]} title={p.title} />
+    {:else}
+      <Frame src={p.image} alt={p.title + ' workspace'} eager natural />
+      <p class="label mt-3 text-zinc-500">{p.title} — {p.year}</p>
+    {/if}
+  </div>
   <section class="mt-8 grid gap-5 border-t border-white/8 pt-8 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] lg:gap-10"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Why it exists</h2><div data-scroll-reveal><p class="max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-300 sm:text-[15px]">{p.rationale ?? p.line}</p><dl class="mt-6 grid grid-cols-2 gap-6"><div><dt class="label text-zinc-600">Role</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.role}</dd></div><div><dt class="label text-zinc-600">Status</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.status}</dd></div></dl></div></section>
 
   {#if p.flow.length}<section class="mt-12 border-t border-white/8 pt-8 lg:mt-16 lg:pt-10"><div class="flex flex-wrap items-baseline justify-between gap-3"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">How it works</h2><p data-scroll-reveal class="label text-zinc-500">{p.role}</p></div><ol class="mt-4 grid gap-x-10 gap-y-5 sm:grid-cols-2">{#each p.flow as step, i (step.label)}<li data-scroll-reveal class="min-w-0"><div class="flex items-baseline gap-3"><span class="label text-accent">{String(i+1).padStart(2,'0')}</span><h3 class="font-narrow text-[19px] font-semibold text-zinc-100">{step.label}</h3></div><p class="mt-3 font-mono text-[13px] leading-relaxed text-zinc-400">{step.sub}</p></li>{/each}</ol></section>{/if}
-  {#if p.slug !== 'frame-lab'}
-  <div data-scroll-reveal class="mt-6"><Frame src={p.image} alt={`${p.title} main image`} eager natural={p.imageFit === 'contain'} /><p class="label mt-3 text-zinc-600">{p.title} — {p.year}</p></div>
-  {#each p.media as image, i (`${image}-${i}`)}<div data-scroll-reveal class="mt-6"><Frame src={image} alt={`${p.title} screenshot ${i+1}`} natural monochrome={p.slug === 'frame-lab'} /></div>{/each}
-  {/if}
   {#if p.stack.length}<section class="mt-14 border-t border-white/8 pt-8 lg:mt-20 lg:pt-10"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Stack & build</h2>
     {#if p.stackGroups}
       <div class="mt-6 grid gap-6 sm:grid-cols-3">
@@ -43,10 +44,10 @@
         {/each}
       </div>
     {:else}
-      <ul data-scroll-reveal class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{#each p.stack as item (item)}<li class="border border-white/8 bg-white/[0.015] p-5 font-mono text-[13px] text-zinc-300">{item}</li>{/each}</ul>
+      <div data-scroll-reveal class="mt-6 border border-white/8 bg-white/[0.015] p-5"><h3 class="label text-zinc-500">Technology</h3><ul class="mt-3 space-y-2 font-mono text-[13px] leading-relaxed text-zinc-300">{#each p.stack as item (item)}<li>{item}</li>{/each}</ul></div>
     {/if}
   </section>{/if}
-  {#if next}<section class={p.slug === 'frame-lab' ? 'mt-64 lg:mt-80' : 'mt-10'}><p data-scroll-reveal class="label text-zinc-600">Next {p.experimental ? 'experiment' : 'project'}</p><a href={href(next)} data-scroll-reveal onpointerdown={press} class="group mt-4 flex items-end justify-between gap-4 pb-2"><span class="display-title text-[clamp(2.6rem,9vw,7rem)] text-zinc-500 group-hover:text-zinc-50">{next.title}</span><span class="text-zinc-400">→</span></a></section>{/if}
+  {#if next}<section class="mt-64 lg:mt-80"><p data-scroll-reveal class="label text-zinc-600">Next {p.experimental ? 'experiment' : 'project'}</p><a href={href(next)} data-scroll-reveal onpointerdown={press} class="group mt-4 flex items-end justify-between gap-4 pb-2"><span class="display-title text-[clamp(2.6rem,9vw,7rem)] text-zinc-500 group-hover:text-zinc-50">{next.title}</span><span aria-hidden="true" class="text-accent">→</span></a></section>{/if}
 {:else}
   <h1 class="display-title text-7xl text-zinc-100">Project not found</h1><a href="#/" class="button-outline mt-8">Back to index</a>
 {/if}

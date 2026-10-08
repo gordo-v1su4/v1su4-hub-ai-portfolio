@@ -18,8 +18,10 @@ export const work: Entry[] = projects.map(p => ({
 }));
 export const lab: Entry[] = labItems.map(p => ({
   slug: p.slug, title: p.title, category: p.kind, line: p.body,
-  summary: p.body, image: p.slug === 'creative-studio-pro' ? '/images/cinema.jpg' : '/images/agents.jpg',
-  status: p.status, year: '2026', role: 'Research / Development', stack: [], flow: [],
+  summary: p.body, image: p.slug === 'creative-studio-pro' ? '/images/creative-studio-workspace.png' : '/images/music-video-workspace.png',
+  imageFit: 'contain', status: p.status, year: '2026', role: 'Research / Development',
+  stack: p.slug === 'creative-studio-pro' ? ['SvelteKit', 'Svelte Flow', 'AI SDK', 'Bun', 'WebGPU'] : ['SvelteKit', 'Rust', 'Convex', 'RustFS', 'FFmpeg'],
+  flow: p.slug === 'creative-studio-pro' ? [{label: 'STORY', sub: 'Develop the brief and story beats'}, {label: 'BOARD', sub: 'Arrange beats on a production canvas'}, {label: 'TAKES', sub: 'Approve generation and review takes'}, {label: 'CUTS', sub: 'Trim, finish and publish'}] : [{label: 'SONG', sub: 'Analyze beats and song sections'}, {label: 'TREATMENT', sub: 'Develop the music-video direction'}, {label: 'STORY', sub: 'Arrange the narrative and shot plan'}, {label: 'PRODUCTION', sub: 'Prepare approved shots for generation'}],
   media: [], experimental: true,
 }));
 export const all = [...work, ...lab];
