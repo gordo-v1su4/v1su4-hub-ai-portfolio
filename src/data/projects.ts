@@ -239,7 +239,7 @@ export const labItems: LabItem[] = [
 
 export const skillGroups = [
   { title: "GENERATIVE AI", items: ["ComfyUI", "LoRA training", "Image", "Video", "Audio"] },
-  { title: "3D / VFX", items: ["Houdini", "Unreal Engine", "Nuke"] },
+  { title: "3D / VFX", items: ["Houdini", "Unreal Engine", "Nuke", "After Effects"] },
   { title: "WEB", items: ["TypeScript", "Svelte", "React", "WebGPU"] },
   { title: "BACKEND", items: ["Python", "Rust", "Convex", "Trigger.dev", "Docker"] },
 ];

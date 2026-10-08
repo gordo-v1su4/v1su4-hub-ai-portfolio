@@ -75,10 +75,10 @@
       <div bind:this={layers} class="relative aspect-[16/10] overflow-hidden bg-ink-2 ring-1 ring-white/10">
         {#each items as p, i (p.slug)}
           <div data-layer style:opacity={i === selected ? 1 : 0} style:z-index={i === selected ? 2 : 1} class="absolute inset-0" style:background-color={p.slug === 'review-room' ? '#080e0d' : p.slug === 'frame-lab' ? '#0a0a0a' : undefined}>
-          {#if p.imageFit === 'contain' && !['frame-lab', 'review-room'].includes(p.slug)}<img src={p.previewImage ?? p.image} alt="" aria-hidden="true" decoding="async" class="mirrored-image-fill absolute inset-0 h-full w-full object-cover" />{/if}
+          {#if p.slug === 'creative-studio-pro'}<img src={p.previewImage ?? p.image} alt="" aria-hidden="true" decoding="async" class="mirrored-image-fill absolute inset-0 h-full w-full object-cover" />{/if}
           <img src={p.previewImage ?? p.image} alt={i === selected ? `${p.title} project preview` : ''} aria-hidden={i !== selected}
             loading={i === 0 ? 'eager' : 'lazy'} decoding="async" draggable="false"
-            class={`absolute inset-0 h-full w-full ${['frame-lab', 'review-room'].includes(p.slug) ? 'object-cover object-top' : 'object-contain'}`} />
+            class={p.slug === 'creative-studio-pro' ? 'absolute inset-0 h-full w-full object-contain' : ['frame-lab', 'review-room'].includes(p.slug) ? 'absolute inset-0 h-full w-full object-cover object-top' : 'absolute left-0 top-0 h-auto w-full'} />
           </div>
         {/each}
         <div aria-hidden="true" class="pointer-events-none absolute bottom-3 left-3 z-10 flex gap-1.5">{#each items as p, i (p.slug)}<span class={`h-[2px] transition-all duration-300 ${i === selected ? 'w-6 bg-accent-2' : 'w-2.5 bg-white/25'}`}></span>{/each}</div>
