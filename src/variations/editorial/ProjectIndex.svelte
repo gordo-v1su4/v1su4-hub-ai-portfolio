@@ -132,7 +132,10 @@
             <span class={`label w-8 shrink-0 ${i === selected ? 'text-accent-2' : 'text-zinc-600'}`}>{String(i+1).padStart(2,'0')}</span>
             <span class="min-w-0 flex-1"><span class={`display-title block text-[clamp(1.9rem,2.8vw,2.65rem)] ${i === selected ? 'text-zinc-50' : 'text-zinc-500'}`}>{p.title}</span>
               <span class="mt-2 block max-w-md font-mono text-[11px] leading-relaxed text-zinc-500">{p.line}</span></span>
-            <span class="label shrink-0 pr-3 text-zinc-500">{i === selected ? 'View →' : '·'}</span>
+            <span aria-hidden="true" class="label grid shrink-0 pr-3 text-right text-zinc-500">
+              <span class={`col-start-1 row-start-1 ${i === selected ? '' : 'invisible'}`}>View →</span>
+              <span class={`col-start-1 row-start-1 ${i === selected ? 'invisible' : ''}`}>·</span>
+            </span>
           </button></li>
         {/each}
       </ul>
