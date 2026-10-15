@@ -8,18 +8,20 @@
   const items = $derived(experimental ? lab : work);
 </script>
 <div use:reveal>
-  <header class="border-b border-white/8 pb-8 pt-22 sm:pb-10 sm:pt-28 lg:pt-28">
-    <div class="page-width">
-      <p data-reveal class={`kicker ${experimental ? '' : 'portfolio-heading-line'}`}>{experimental ? 'V1SU4 · Lab — work in progress' : 'Creative Production Portfolio and Software'}</p>
-      <h1 class="mt-5"><span data-reveal class="display-title block text-[clamp(3.4rem,13vw,10rem)] text-zinc-50">{experimental ? 'The' : 'Selected'}</span>
-        <span data-reveal class="display-title block text-[clamp(3.4rem,13vw,10rem)] text-zinc-600">{experimental ? 'Lab' : 'Work'}<span class="ml-3 align-super text-[0.18em] tracking-[0.2em] text-accent-2">{String(items.length).padStart(2,'0')}</span></span></h1>
-      <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-        <p data-reveal class="max-w-2xl font-mono text-[13.5px] leading-relaxed text-zinc-400 sm:text-[14px]">{experimental ? 'Experiments under construction. Explore the ideas, workflows, and current state of each project.' : 'Creative production and the software built around it. Explore the projects, how they work, and the public applications.'}</p>
-        <ul data-reveal class="flex flex-wrap gap-x-6 gap-y-2"><li class="label text-zinc-500">{String(items.length).padStart(2,'0')} {experimental ? 'Experiments' : 'Projects'}</li>{#if !experimental}<li class="label text-zinc-500">{String(work.filter(p=>p.link).length).padStart(2,'0')} Public apps</li>{/if}<li class="label text-zinc-500">Miami / LA</li></ul>
+  <header class="border-b border-white/8 pb-4 pt-22 sm:pb-5 sm:pt-24 lg:pt-26">
+    <div class="page-width flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+      <div>
+        <p data-reveal class={`kicker ${experimental ? '' : 'portfolio-heading-line'}`}>{experimental ? 'V1SU4 · Lab — work in progress' : 'Creative Production Portfolio and Software'}</p>
+        <h1 data-reveal class="display-title mt-2 text-[clamp(2rem,5vw,3.25rem)] text-zinc-50">{experimental ? 'The lab' : 'Selected work'}</h1>
       </div>
+      <ul data-reveal class="flex flex-wrap gap-x-5 gap-y-1">
+        <li class="label text-zinc-500">{String(items.length).padStart(2,'0')} {experimental ? 'Experiments' : 'Projects'}</li>
+        {#if !experimental}<li class="label text-zinc-500">{String(work.filter(p=>p.link).length).padStart(2,'0')} Public apps</li>{/if}
+        <li class="label text-zinc-600">Miami / LA</li>
+      </ul>
     </div>
   </header>
-  <div class="page-width pt-10 lg:pt-14"><ProjectIndex {items} {experimental} /></div>
+  <div class="page-width pt-5 lg:pt-6"><ProjectIndex {items} {experimental} /></div>
   {#if experimental}
     <section use:reveal={true} class="page-width mt-20 sm:mt-28"><div class="grid gap-8 border border-dashed border-white/12 bg-white/[0.015] p-6 sm:p-8 lg:grid-cols-[auto_1fr] lg:gap-14"><h2 data-scroll-reveal class="display-title text-4xl text-zinc-100">Reading<br/>the lab</h2><p class="max-w-2xl font-mono text-[13.5px] leading-relaxed text-zinc-400">These projects are experimental and in development. Features and workflows may change. Each has a page here; a public application link appears when one is available.</p></div></section>
   {:else}

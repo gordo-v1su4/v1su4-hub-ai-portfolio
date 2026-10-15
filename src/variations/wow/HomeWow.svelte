@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { labItems, projects, site } from "../../data/projects";
+  import { labItems, portfolioProjects, site } from "../../data/projects";
   import { go } from "../../lib/router.svelte";
 
+  const projects = portfolioProjects();
   const featured = projects.filter((p) => p.group === "featured");
   const more = projects.filter((p) => p.group !== "featured");
   const hero = projects.find((p) => p.slug === "beatsmaxxer-pro") ?? projects[0];

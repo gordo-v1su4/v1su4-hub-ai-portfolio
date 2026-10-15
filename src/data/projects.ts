@@ -7,6 +7,8 @@ export interface Project {
   type: string;
   group: Group;
   tagline: string;
+  /** Short series line under the title, e.g. “A V1SU4 format experience”. */
+  format?: string;
   rationale?: string;
   role: string;
   status: ProjectStatus;
@@ -24,7 +26,12 @@ export interface Project {
   horizontal?: boolean;
   // Screenshots or clips for the case-study page (files in public/images/). Empty slots show until added.
   media?: string[];
+  // Optional thematic pillars for concept / worldbuilding projects.
+  worlds?: { title: string; description: string }[];
 }
+
+/** Visual-format flagship — always last in portfolio index order. */
+export const SPOTLIGHT_SLUG = "gods-gatekeepers";
 
 export const projects: Project[] = [
   {
@@ -50,7 +57,7 @@ export const projects: Project[] = [
     title: "REVIEW ROOM",
     group: "more",
     type: "Review & Dailies",
-    tagline: "Production review and dailies, on my own storage.",
+    tagline: "Production review and dailies, self-hosted.",
     role: "Design / Development",
     status: "Demo on Request",
     year: "2026",
@@ -191,26 +198,84 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "v1su4-format",
-    title: "V1SU4 FORMAT",
-    group: "more",
-    type: "Concept Visuals",
-    tagline: "Concept worlds for live shows.",
-    role: "Concept / 3D / AI",
-    status: "Coming Soon",
+    slug: "gods-gatekeepers",
+    title: "GODS & GATEKEEPERS",
+    group: "featured",
+    horizontal: true,
+    type: "Immersive Concert Visual Concept Series",
+    format: "A V1SU4 format experience",
+    tagline: "Ancient mythology, impossible scale, and worlds within worlds.",
+    rationale:
+      "To explore how a concert stage can become an entire world. Rather than using screens as backdrops, Gods & Gatekeepers imagines them as architectural and narrative elements—surfaces that conceal depth, transform scale, and reveal worlds beyond what initially appears possible. Each concept is built around visual misdirection and escalating reveals, combining cinematic storytelling with the timing of live electronic music.",
+    role: "Creative Direction / Worldbuilding / 3D / AI / VFX / Previsualization",
+    status: "In Development",
     year: "2026",
-    stack: ["Houdini", "Unreal Engine", "ComfyUI"],
-    stackGroups: [{ title: "Front end", items: ["Unreal Engine · realtime visuals"] }, { title: "Back end", items: ["No application backend"] }, { title: "Production tasks", items: ["Houdini · 3D passes", "ComfyUI · AI passes", "Concept films, LED loops and music sync"] }],
-    cover: "/images/hero-eye.jpg",
-    what: "A series of themed visual worlds for live shows, each broken down from concept film to LED loop, 3D and AI passes, and music sync.",
+    stack: ["Maya", "Houdini", "ComfyUI", "Nuke", "After Effects"],
+    stackGroups: [
+      {
+        title: "Concept",
+        items: ["Concept art", "Art direction", "Story development", "World building"],
+      },
+      {
+        title: "Visual development",
+        items: ["3D modeling", "AI exploration", "Look development", "Previsualization", "Projection studies"],
+      },
+      {
+        title: "Show delivery",
+        items: ["LED content concepts", "Forced perspective", "Lighting synchronization", "Show visualization"],
+      },
+    ],
+    cover: "/images/gods-gatekeepers-hero.jpg",
+    previewImage: "/images/gods-gatekeepers-hero.jpg",
+    what: "Immersive concert concepts where DJ stages become evolving illusions. Monumental deities awaken, colossal guardians emerge from flat screens, and celestial gateways reveal dimensions hidden inside the architecture—each world expandable for different cities and performances through a hybrid 3D, AI, and VFX workflow.",
     flow: [
-      { label: "CONCEPT", sub: "Concept film" },
-      { label: "CONTENT", sub: "LED / projection loop" },
-      { label: "BREAKDOWN", sub: "3D + AI passes" },
-      { label: "SYNC", sub: "Music-locked" },
+      {
+        label: "CONCEPT & WORLD BUILDING",
+        sub: "Original mythologies, environments, and reveal sequences—concept art, art direction, and story development",
+      },
+      {
+        label: "3D, AI & VISUAL DEVELOPMENT",
+        sub: "Modeling, generative exploration, look dev, and previs—virtual cameras and projection studies for scale and depth",
+      },
+      {
+        label: "IMMERSIVE LIVE-SHOW CONCEPTS",
+        sub: "Cinematic sequences for LED and projection illusions—forced perspective, lighting sync, and show visualization",
+      },
+    ],
+    worlds: [
+      {
+        title: "The Gods",
+        description:
+          "Monumental mythological beings, celestial entities, and ancient-inspired architecture that transform the stage into an awakening world.",
+      },
+      {
+        title: "The Gatekeepers",
+        description:
+          "Colossal serpents, panthers, and other guardians that emerge from hidden dimensions, protecting gateways to worlds beyond the visible stage.",
+      },
+      {
+        title: "The Revelations",
+        description:
+          "Layered illusions in which familiar concert architecture transforms, fractures, expands, and reveals something unexpected beneath it.",
+      },
+    ],
+    media: [
+      "/images/gods-gatekeepers-workflow-deity.jpg",
+      "/images/gods-gatekeepers-workflow-panthers.jpg",
+      "/images/gods-gatekeepers-revelations.jpg",
     ],
   },
 ];
+
+/** Portfolio display order (spotlight last). */
+export function portfolioProjects(list: readonly Project[] = projects): Project[] {
+  const index = list.findIndex((p) => p.slug === SPOTLIGHT_SLUG);
+  if (index < 0 || index === list.length - 1) return [...list];
+  const ordered = [...list];
+  const [spotlight] = ordered.splice(index, 1);
+  ordered.push(spotlight);
+  return ordered;
+}
 
 export interface LabItem {
   slug: string;

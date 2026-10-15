@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { projects } from "../../data/projects";
+  import { portfolioProjects } from "../../data/projects";
+
+  const projects = portfolioProjects();
   import { go } from "../../lib/router.svelte";
   import HomeWow from "./HomeWow.svelte";
   import ProjectWow from "./ProjectWow.svelte";

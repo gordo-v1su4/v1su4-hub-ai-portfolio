@@ -2,6 +2,15 @@ node_modules
 dist
 .vercel
 .env*
+
+# Local agent runtime state.
+/.cursor/hooks/state/
 !.env.example
 *.log
 .DS_Store
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
+
+.vercel
+.env*

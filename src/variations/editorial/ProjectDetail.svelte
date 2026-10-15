@@ -18,6 +18,8 @@
   <header class="mt-4">
     <p data-scroll-reveal class="kicker">{p.category}</p>
     <h1 data-scroll-reveal class="display-title mt-3 text-[clamp(3.2rem,12vw,9rem)] text-zinc-50">{p.title}</h1>
+    {#if p.format}<p data-scroll-reveal class="mt-3 font-mono text-[13px] tracking-[0.04em] text-zinc-500 sm:text-[14px]">{p.format}</p>{/if}
+    <p data-scroll-reveal class={`max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-400 sm:text-[15px] ${p.format ? 'mt-3' : ''}`}>{p.line}</p>
     <div class="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-16">
       <p data-scroll-reveal class="max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-300 sm:text-[15px]">{p.summary}</p>
       <div data-scroll-reveal class="space-y-4"><div class="flex flex-wrap items-center gap-3"><span class="status-pill">{p.status}</span><span class="label text-zinc-600">{p.year}</span></div>
@@ -28,8 +30,13 @@
     </div>
   </header>
   <div data-scroll-reveal class="mt-6">
-    {#if p.slug === 'frame-lab'}
-      <ImageViewer images={[p.image, ...p.media]} title={p.title} />
+    {#if p.slug === 'frame-lab' || p.media.length >= 2}
+      <ImageViewer
+        images={[p.image, ...p.media]}
+        title={p.title}
+        monochromeSlides={p.slug === 'frame-lab'}
+        coverHero={p.slug === 'gods-gatekeepers'}
+      />
     {:else}
       <Frame src={p.image} alt={p.title + ' workspace'} eager natural />
       <p class="label mt-3 text-zinc-500">{p.title} — {p.year}</p>
@@ -37,6 +44,7 @@
   </div>
   <section class="mt-8 grid gap-5 border-t border-white/8 pt-8 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] lg:gap-10"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Why it exists</h2><div data-scroll-reveal><p class="max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-300 sm:text-[15px]">{p.rationale ?? p.line}</p><dl class="mt-6 grid grid-cols-2 gap-6"><div><dt class="label text-zinc-600">Role</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.role}</dd></div><div><dt class="label text-zinc-600">Status</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.status}</dd></div></dl></div></section>
 
+  {#if p.worlds?.length}<section class="mt-12 border-t border-white/8 pt-8 lg:mt-16 lg:pt-10"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Visual worlds</h2><ol class="mt-6 grid gap-6 md:grid-cols-3">{#each p.worlds as world (world.title)}<li data-scroll-reveal class="border border-white/8 bg-white/[0.015] p-5"><h3 class="font-narrow text-[19px] font-semibold text-zinc-100">{world.title}</h3><p class="mt-3 font-mono text-[13px] leading-relaxed text-zinc-400">{world.description}</p></li>{/each}</ol></section>{/if}
   {#if p.flow.length}<section class="mt-12 border-t border-white/8 pt-8 lg:mt-16 lg:pt-10"><div class="flex flex-wrap items-baseline justify-between gap-3"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">How it works</h2><p data-scroll-reveal class="label text-zinc-500">{p.role}</p></div><ol class="mt-6 grid gap-6 md:grid-cols-3">{#each workflow as group, i (group.title)}<li data-scroll-reveal class="min-w-0"><div class="flex items-baseline gap-3"><span class="label text-accent">{String(i+1).padStart(2,'0')}</span><h3 class="font-narrow text-[19px] font-semibold text-zinc-100">{group.title}</h3></div><ul class="mt-4 space-y-5">{#each group.steps as step (step.label)}<li><h4 class="font-narrow text-[17px] font-semibold text-zinc-100">{step.label}</h4><p class="mt-2 font-mono text-[13px] leading-relaxed text-zinc-400">{step.sub}</p></li>{/each}</ul></li>{/each}</ol></section>{/if}
   {#if p.stack.length}<section class="mt-14 border-t border-white/8 pt-8 lg:mt-20 lg:pt-10"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Stack & build</h2>
     {#if p.stackGroups}

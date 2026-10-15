@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { projects } from "../../data/projects";
+  import { portfolioProjects } from "../../data/projects";
   import { go } from "../../lib/router.svelte";
 
+  const projects = portfolioProjects();
   let { slug }: { slug: string } = $props();
   const p = $derived(projects.find((x) => x.slug === slug) ?? projects[0]);
   const next = $derived(projects[(projects.findIndex((x) => x.slug === p.slug) + 1) % projects.length]);

@@ -1,19 +1,23 @@
-import { projects, labItems } from '../../data/projects';
+import { labItems, portfolioProjects } from '../../data/projects';
 
 export interface Entry {
   slug: string; title: string; category: string; line: string; summary: string;
+  format?: string;
   rationale?: string;
   image: string; imageFit?: 'cover' | 'contain'; status: string; year: string;
   previewImage?: string;
   role: string; stack: string[]; flow: {label: string; sub: string}[];
   stackGroups?: {title: string; items: string[]}[];
+  worlds?: { title: string; description: string }[];
   link?: string; media: string[]; experimental: boolean;
 }
-export const work: Entry[] = projects.map(p => ({
+export const work: Entry[] = portfolioProjects().map(p => ({
   slug: p.slug, title: p.title, category: p.type, line: p.tagline,
+  format: p.format,
   rationale: p.rationale,
   summary: p.what, image: p.cover, previewImage: p.previewImage, imageFit: p.imageFit, status: p.status,
   year: p.year, role: p.role, stack: p.stack, stackGroups: p.stackGroups, flow: p.flow, link: p.link,
+  worlds: p.worlds,
   media: p.media ?? [], experimental: false,
 }));
 export const lab: Entry[] = labItems.map(p => ({

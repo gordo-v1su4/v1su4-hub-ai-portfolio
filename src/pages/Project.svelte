@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { projects } from "../data/projects";
+  import { portfolioProjects } from "../data/projects";
+
+  const projects = portfolioProjects();
   import Caption from "../lib/Caption.svelte";
   import Carousel from "../lib/Carousel.svelte";
   import CreditLines from "../lib/CreditLines.svelte";

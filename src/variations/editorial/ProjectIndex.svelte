@@ -1,49 +1,114 @@
 <script lang="ts">
   import { tick, onDestroy } from 'svelte';
   import { MediaQuery } from 'svelte/reactivity';
+  import { SPOTLIGHT_SLUG } from '../../data/projects';
   import { href, type Entry } from './data';
   import Frame from './Frame.svelte';
-  import { gsap, D, EASE, EASE_IO, reduced, press, reveal } from './motion';
-  let { items, experimental = false }: {items: Entry[]; experimental?: boolean} = $props();
+  import { gsap, D, EASE_IO, reduced, press, reveal } from './motion';
+
+  let { items, experimental = false }: { items: Entry[]; experimental?: boolean } = $props();
   const desktop = new MediaQuery('(min-width: 1024px)');
+
+  const defaultIndex = $derived.by(() => {
+    if (experimental) return 0;
+    const i = items.findIndex((p) => p.slug === SPOTLIGHT_SLUG);
+    return i >= 0 ? i : 0;
+  });
+
   let selected = $state(0);
+  $effect(() => {
+    selected = defaultIndex;
+  });
   const active = $derived(items[selected] ?? items[0]);
-  let imageRatios = $state<Record<string, number>>({});
-  const activeImage = $derived(active.previewImage ?? active.image);
-  const activeRatio = $derived(imageRatios[activeImage] ?? 16 / 10);
+
   let layers = $state<HTMLDivElement>();
   let copy = $state<HTMLDivElement>();
   let list = $state<HTMLUListElement>();
-  let generation = 0;
-  async function select(index: number) {
-    if (index === selected) return;
-    selected = index;
-    const request = ++generation;
-    await tick();
-    if (request !== generation || !layers || !copy) return;
-    const images = layers.querySelectorAll('[data-layer]');
-    images.forEach((el, i) => {
-      if (i !== index) gsap.to(el, { opacity: 0, duration: reduced() ? 0 : D.fast, ease: EASE_IO, overwrite: 'auto' });
-    });
-    const image = images[index];
-    if (reduced()) gsap.set(image, {opacity: 1, scale: 1});
-    else {
-      gsap.fromTo(image, {opacity: 0, scale: 1.03}, {opacity: 1, scale: 1, duration: D.base + 0.1, ease: EASE, overwrite: 'auto'});
-      gsap.fromTo(copy.querySelectorAll('[data-pv]'), {opacity: 0, y: 10}, {opacity: 1, y: 0, duration: D.base, ease: EASE, stagger: 0.045, overwrite: 'auto'});
+
+  let transitionLock = false;
+  let queuedIndex: number | null = null;
+  let runId = 0;
+
+  function runPreviewTransition(index: number, request: number): Promise<void> {
+    if (!layers || !copy) return Promise.resolve();
+    if (reduced()) {
+      const images = layers.querySelectorAll('[data-layer]');
+      images.forEach((el, i) => gsap.set(el, { opacity: i === index ? 1 : 0 }));
+      gsap.set(copy.querySelectorAll('[data-pv]'), { opacity: 1, y: 0 });
+      return Promise.resolve();
     }
+
+    const duration = D.fast;
+    const images = layers.querySelectorAll('[data-layer]');
+    const copyBits = copy.querySelectorAll('[data-pv]');
+
+    return new Promise((resolve) => {
+      const tl = gsap.timeline({
+        defaults: { ease: EASE_IO, overwrite: false },
+        onComplete: () => resolve(),
+      });
+
+      images.forEach((el, i) => {
+        if (i !== index) tl.to(el, { opacity: 0, duration }, 0);
+      });
+      const image = images[index];
+      if (image) tl.fromTo(image, { opacity: 0 }, { opacity: 1, duration }, 0);
+      if (copyBits.length) {
+        tl.fromTo(copyBits, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration, stagger: 0 }, 0);
+      }
+    });
   }
+
+  async function select(index: number) {
+    if (index < 0 || index >= items.length) return;
+    if (index === selected) return;
+
+    if (transitionLock) {
+      queuedIndex = index;
+      return;
+    }
+
+    transitionLock = true;
+    const request = ++runId;
+
+    selected = index;
+    await tick();
+    if (request !== runId) return;
+
+    await runPreviewTransition(index, request);
+    if (request !== runId) return;
+
+    finishTransition(request);
+  }
+
+  function finishTransition(request: number) {
+    if (request !== runId) return;
+    transitionLock = false;
+    const next = queuedIndex;
+    queuedIndex = null;
+    if (next !== null && next !== selected) void select(next);
+  }
+
   function keyboard(e: KeyboardEvent) {
-    const direction: Record<string, number> = {ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1};
+    const direction: Record<string, number> = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
     let next: number;
     if (e.key in direction) next = (selected + direction[e.key] + items.length) % items.length;
     else if (e.key === 'Home') next = 0;
     else if (e.key === 'End') next = items.length - 1;
-    else if (e.key === 'Enter') { e.preventDefault(); window.location.hash = href(active).slice(1); return; }
-    else return;
-    e.preventDefault(); void select(next); list?.querySelectorAll('button')[next]?.focus();
+    else if (e.key === 'Enter') {
+      e.preventDefault();
+      window.location.hash = href(active).slice(1);
+      return;
+    } else return;
+    e.preventDefault();
+    void select(next);
+    list?.querySelectorAll('button')[next]?.focus();
   }
+
   onDestroy(() => {
-    generation++;
+    runId++;
+    transitionLock = false;
+    queuedIndex = null;
     if (layers) gsap.killTweensOf(layers.querySelectorAll('[data-layer]'));
     if (copy) gsap.killTweensOf(copy.querySelectorAll('[data-pv]'));
   });
@@ -75,20 +140,24 @@
     </div>
     <div class="sticky top-24">
       <div class="flex items-center justify-between pb-3"><p class="label text-zinc-500">{active.category}</p><p class="label text-zinc-600">{String(selected+1).padStart(2,'0')} / {String(items.length).padStart(2,'0')}</p></div>
-      <div bind:this={layers} style:aspect-ratio={activeRatio} class="relative overflow-hidden bg-ink-2 ring-1 ring-white/10">
+      <div
+        bind:this={layers}
+        class="relative aspect-[16/10] overflow-hidden bg-ink-2 ring-1 ring-white/10"
+      >
         {#each items as p, i (p.slug)}
           <div data-layer style:opacity={i === selected ? 1 : 0} style:z-index={i === selected ? 2 : 1} class="absolute inset-0" style:background-color={p.slug === 'review-room' ? '#080e0d' : p.slug === 'frame-lab' ? '#0a0a0a' : undefined}>
           <img src={p.previewImage ?? p.image} alt={i === selected ? `${p.title} project preview` : ''} aria-hidden={i !== selected}
             loading={i === 0 ? 'eager' : 'lazy'} decoding="async" draggable="false"
-            onload={(event) => { const image = event.currentTarget; if (image instanceof HTMLImageElement && image.naturalHeight) imageRatios[p.previewImage ?? p.image] = image.naturalWidth / image.naturalHeight; }}
-            class="absolute left-0 top-0 h-auto w-full" />
+            class="absolute inset-0 h-full w-full object-cover object-center" />
           </div>
         {/each}
         <div aria-hidden="true" class="pointer-events-none absolute bottom-3 left-3 z-10 flex gap-1.5">{#each items as p, i (p.slug)}<span class={`h-[2px] transition-all duration-300 ${i === selected ? 'w-6 bg-accent-2' : 'w-2.5 bg-white/25'}`}></span>{/each}</div>
         {#if experimental}<span class="label absolute left-3 top-3 z-10 border border-dashed border-white/20 bg-ink/70 px-2 py-1 text-zinc-400">Experiment</span>{/if}
       </div>
-      <div bind:this={copy} aria-live="polite" class="min-h-[19.5rem] pt-6 xl:min-h-[20.5rem]">
+      <div bind:this={copy} aria-live="polite" class="min-h-[21rem] pt-6 xl:min-h-[22rem]">
         <h3 data-pv class="display-title text-[clamp(2rem,3vw,3rem)] text-zinc-50">{active.title}</h3>
+        {#if active.format}<p data-pv class="mt-2 font-mono text-[12px] tracking-[0.04em] text-zinc-500">{active.format}</p>{/if}
+        <p data-pv class="mt-2 max-w-xl font-mono text-[13px] leading-relaxed text-zinc-500">{active.line}</p>
         <p data-pv class="mt-3 max-w-xl font-mono text-[13px] leading-relaxed text-zinc-400">{active.summary}</p>
         <div data-pv class="mt-5 flex flex-wrap items-center gap-3"><span class="status-pill">{active.status}</span><span class="label text-zinc-600">{active.year}</span></div>
         <div data-pv class="mt-6 flex flex-wrap gap-3"><a href={href(active)} onpointerdown={press} class="button-solid">View Project →</a>
@@ -102,7 +171,12 @@
       <div class="flex items-center justify-between gap-3"><p class="label text-zinc-500">{String(i+1).padStart(2,'0')} · {p.category}</p><span class="status-pill shrink-0">{p.status}</span></div>
       <h3 class="display-title mt-3 text-[clamp(2.1rem,10vw,2.9rem)] text-zinc-50">{p.title} <span class="float-right text-zinc-500">→</span></h3>
       <p class="mt-2 font-mono text-[12.5px] leading-relaxed text-zinc-400">{p.line}</p>
-      <Frame src={p.previewImage ?? p.image} alt={`${p.title} project preview`} eager={i < 2} natural={p.imageFit === 'contain'} class="mt-4" />
+      <Frame
+        src={p.previewImage ?? p.image}
+        alt={`${p.title} project preview`}
+        eager={i < 2}
+        class="mt-4"
+      />
     </a></li>
   {/each}</ul>
 {/if}

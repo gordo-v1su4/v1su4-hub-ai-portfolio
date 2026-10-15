@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { projects } from "./data/projects";
+  import { portfolioProjects } from "./data/projects";
+
+  const projects = portfolioProjects();
   import { router } from "./lib/router.svelte";
   import EditorialPortfolio from "./variations/editorial/EditorialPortfolio.svelte";
   import WowPreview from "./variations/wow/WowPreview.svelte";

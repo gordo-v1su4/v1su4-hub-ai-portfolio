@@ -1,6 +1,11 @@
 <script lang="ts">
   import Frame from './Frame.svelte';
-  let { images, title }: { images: string[]; title: string } = $props();
+  let {
+    images,
+    title,
+    monochromeSlides = false,
+    coverHero = false,
+  }: { images: string[]; title: string; monochromeSlides?: boolean; coverHero?: boolean } = $props();
   let current = $state(0);
   const selected = $derived(current % images.length);
   function advance(direction: number) {
@@ -9,14 +14,26 @@
 </script>
 
 <div class="image-viewer" role="region" aria-label={`${title} images`} aria-roledescription="carousel">
-  <div class="image-stage"><Frame src={images[selected]} alt={`${title} — ${selected === 0 ? 'benchmark results' : 'playback view'}`} eager natural monochrome={selected !== 0} /></div>
+  <div class="image-stage">
+    <Frame
+      src={images[selected]}
+      alt={`${title} — image ${selected + 1}`}
+      eager
+      heroCover={coverHero && selected === 0}
+      natural={!(coverHero && selected === 0)}
+      monochrome={monochromeSlides && selected !== 0}
+    />
+  </div>
   <button class="image-arrow previous" aria-label="Previous image" onclick={() => advance(-1)}><span aria-hidden="true"></span></button>
   <button class="image-arrow next" aria-label="Next image" onclick={() => advance(1)}><span aria-hidden="true"></span></button>
 </div>
-<p class="label mt-3 text-zinc-500" aria-live="polite">{selected + 1} / {images.length} — {selected === 0 ? 'Benchmark results' : 'Playback view'}</p>
+<p class="label mt-3 text-zinc-500" aria-live="polite">{selected + 1} / {images.length}</p>
 
 <style>
-  .image-viewer { position: relative; aspect-ratio: 1524 / 1300; background: #0a0a0a; }
+  .image-viewer { position: relative; aspect-ratio: 4 / 5; background: #0a0a0a; }
+  @media (min-width: 640px) {
+    .image-viewer { aspect-ratio: 1524 / 1300; }
+  }
   .image-stage { position: absolute; inset: 0; overflow: hidden; }
   .image-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);

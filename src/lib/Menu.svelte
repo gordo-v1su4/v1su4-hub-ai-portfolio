@@ -4,7 +4,9 @@
     so moving between them feels the same. CONTACT opens the contact panel.
   */
   import { tick } from "svelte";
-  import { labItems, projects, site, skillGroups } from "../data/projects";
+  import { labItems, portfolioProjects, site, skillGroups } from "../data/projects";
+
+  const projects = portfolioProjects();
   import { gsap } from "./gsap";
   import { COL, go, reduceMotion } from "./router.svelte";
 

@@ -1,7 +1,9 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
   import { slide } from "svelte/transition";
-  import { labItems, projects, site, skillGroups } from "../../data/projects";
+  import { labItems, portfolioProjects, site, skillGroups } from "../../data/projects";
+
+  const projects = portfolioProjects();
   import { gsap } from "../../lib/gsap";
   import { go, reduceMotion, type Route } from "../../lib/router.svelte";
   import ProjectRow from "./ProjectRow.svelte";

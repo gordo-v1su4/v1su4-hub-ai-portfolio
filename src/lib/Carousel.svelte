@@ -6,7 +6,9 @@
     While the pointer is over the carousel the wheel drives it; move off it (above or below) to scroll the page.
   */
   import { onMount } from "svelte";
-  import { projects, type Project } from "../data/projects";
+  import { portfolioProjects, type Project } from "../data/projects";
+
+  const projects = portfolioProjects();
   import { COL, reduceMotion } from "./router.svelte";
 
   type Slide = { kicker: string; title: string; sub: string; img: string; pos: string };
@@ -14,9 +16,10 @@
 
   function slidesFor(p: Project): Slide[] {
     const covers = [p.cover, ...projects.filter((x) => x.slug !== p.slug).map((x) => x.cover)];
+    const imgs = [p.cover, ...(p.media ?? [])];
     const steps: Slide[] = p.flow.map((s, i) => ({
       kicker: `${String(i + 1).padStart(2, "0")} / ${String(p.flow.length).padStart(2, "0")}`,
-      title: s.label, sub: s.sub, img: p.cover, pos: `${(i * 25) % 100}% 50%`,
+      title: s.label, sub: s.sub, img: imgs[i % imgs.length] ?? p.cover, pos: `${(i * 25) % 100}% 50%`,
     }));
     // Sample slides so the loop has enough cards; replace with real media later.
     const samples: Slide[] = Array.from({ length: Math.max(0, 8 - steps.length) }, (_, i) => ({
