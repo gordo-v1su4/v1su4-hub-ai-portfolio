@@ -200,6 +200,7 @@ export const projects: Project[] = [
   {
     slug: "gods-gatekeepers",
     title: "GODS & GATEKEEPERS",
+    link: "https://gods-and-gatekeepers.vercel.app/",
     group: "featured",
     horizontal: true,
     type: "Immersive Concert Visual Concept Series",
