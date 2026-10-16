@@ -1,4 +1,4 @@
-export type ProjectStatus = "Live" | "Beta" | "In Development" | "Coming Soon" | "Demo on Request";
+export type ProjectStatus = "Live" | "Beta" | "In Development" | "Coming Soon" | "In Production";
 export type Group = "featured" | "more";
 
 export interface Project {
@@ -9,7 +9,7 @@ export interface Project {
   tagline: string;
   /** Short series line under the title, e.g. “A V1SU4 format experience”. */
   format?: string;
-  rationale?: string;
+  rationale: string;
   role: string;
   status: ProjectStatus;
   year: string;
@@ -20,6 +20,7 @@ export interface Project {
   previewImage?: string;
   imageFit?: "cover" | "contain";
   link?: string;
+  linkLabel?: string;
   what: string;
   flow: { label: string; sub: string }[];
   // Show "How it works" as a pinned horizontal slide section on the project page.
@@ -40,7 +41,7 @@ export const projects: Project[] = [
     group: "featured",
     type: "Series Breakdown",
     tagline: "A series-specific home for the story, characters and production material.",
-    rationale: "A series needs one place where its story, characters, world and working footage can be explored together. Video Haven brings that breakdown into a visual experience, with Blood Rush as the first featured series.",
+    rationale: "I wanted someone to be able to get to know a fictional world through both its finished imagery and the work taking shape behind it.",
     role: "Creative Direction / Production / Development",
     status: "In Development",
     year: "2026",
@@ -48,7 +49,7 @@ export const projects: Project[] = [
     stackGroups: [{ title: "Front end", items: ["React", "TypeScript", "Vite", "GSAP", "Three.js"] }, { title: "Back end", items: ["Static site · no server backend"] }, { title: "Production tasks", items: ["Series breakdown", "Interactive DVD collection", "Character auditions", "Storyboards and working previews"] }],
     cover: "/images/video-haven-centered.png",
     imageFit: "contain",
-    what: "A show-specific series breakdown bringing together the story, characters, locations, storyboards and working footage. Blood Rush is the first series, presented through Video Haven’s interactive collection.",
+    what: "An interactive home for an original series, bringing its story, characters, locations, and production material together. I’m developing the creative presentation and building the experience, with Blood Rush as the first featured series.",
     flow: [{ label: "SERIES", sub: "Explore the story and visual direction" }, { label: "COLLECTION", sub: "Browse working previews and development tests" }, { label: "WORLD", sub: "Meet the characters and explore locations" }, { label: "PRODUCTION", sub: "Follow storyboards and production development" }],
     media: [],
   },
@@ -59,15 +60,17 @@ export const projects: Project[] = [
     type: "Review & Dailies",
     tagline: "Production review and dailies, self-hosted.",
     role: "Design / Development",
-    status: "Demo on Request",
+    status: "In Production",
+    rationale: "Keeping review close to the footage helps me follow a shot from upload through feedback without losing the conversation around it.",
     year: "2026",
     stack: ["Svelte", "Convex", "RustFS", "Trigger.dev"],
     stackGroups: [{ title: "Front end", items: ["Svelte"] }, { title: "Back end", items: ["Convex", "RustFS", "Trigger.dev"] }, { title: "Production tasks", items: ["Project media and daily playlists", "Shot review, comments and ratings", "Client notifications"] }],
     cover: "/images/review-room-main.webp",
     imageFit: "contain",
-    link: "https://review.v1su4.dev",
+    link: "https://www.linkedin.com/in/gordo-spaniolo/",
+    linkLabel: "Request a demo",
     media: [],
-    what: "Client and studio logins, projects and folders, daily playlists, per-artist review, hover-scrub previews, comments, ratings and notifications. Used in production with studios and clients.",
+    what: "I designed and built Review Room to keep footage, dailies, and feedback together on infrastructure I control. It brings project organization, video review, comments, and playlists into one place. I use it in production, where finding a shot, reviewing it, and responding to notes matter as much as the interface.",
     flow: [
       { label: "UPLOAD", sub: "Shots into projects" },
       { label: "PLAYLIST", sub: "Dailies per artist" },
@@ -90,7 +93,8 @@ export const projects: Project[] = [
     cover: "/images/pindeck-workspace.png",
     imageFit: "contain",
     link: "https://www.pindeck.dev",
-    what: "One workspace for image curation. Images come in from Discord, Pinterest or upload, get tagged and color-analyzed automatically, branch into AI variations with full lineage, and end up on boards, storyboards and pitch decks.",
+    what: "Pindeck grew out of needing a better way to work with a growing collection of AI images. I designed and built a workspace that keeps references, variations, and their origins together, then carries selected images into boards, storyboards, and pitch decks.",
+    rationale: "I wanted a collection to help me develop a direction, beyond simply saving images for later.",
     flow: [
       { label: "INGEST", sub: "Discord · Pinterest · upload" },
       { label: "ANALYZE", sub: "Auto tags · palette · sref" },
@@ -114,7 +118,8 @@ export const projects: Project[] = [
     cover: "/images/beatsmaxxer-workspace.png",
     imageFit: "contain",
     link: "https://www.beatsmaxxing.com",
-    what: "Eight clip slots, a program monitor that cuts on the beat, and 19 WebGPU shader effects. Song sections land on a timeline; ramps, stutters and jump cuts lock to the beat grid. Runs in the browser, on phones, and as a Windows app.",
+    what: "A video effects rack for making loaded footage move with music. I designed and built the app, combining audio analysis, beat-synced cuts, and real-time effects in a performance interface.",
+    rationale: "I’m exploring how much of the timing can happen automatically while leaving room to choose the clips, shape the look, and perform.",
     flow: [
       { label: "ANALYSIS", sub: "Beats · sections · tempo" },
       { label: "AUDIO-REACTIVE EDIT", sub: "Cuts · ramps · stutters locked to the beat grid" },
@@ -128,7 +133,7 @@ export const projects: Project[] = [
     group: "more",
     type: "Playback Benchmark",
     tagline: "Which browser playback strategy shows the right frame on the beat?",
-    rationale: "Beat-synced editing needs the right frame to appear on time, even across multiple videos, rapid cuts and speed changes. I needed to find out which browser playback approach could actually keep up, so I built a benchmark to compare timing, reliability and memory use on the same workloads.",
+    rationale: "A repeatable test lets me choose a playback approach based on what actually happens on screen.",
     role: "Research / Development",
     status: "Live",
     year: "2026",
@@ -143,7 +148,8 @@ export const projects: Project[] = [
     imageFit: "contain",
     media: ["/images/frame-lab-playback.png"],
     link: "https://frame-lab-gamma.vercel.app/benchmark",
-    what: "A public benchmark comparing HTML video pools, Mediabunny / WebCodecs frame caches and preloaded WebGPU textures under musical cuts, seeks, stutters and speed ramps. libmedia is included as an experimental capability probe; FFmpeg prepares fixture media and demo recordings. Built to choose the playback engine for beat-synced editing.",
+    linkLabel: "Open benchmark",
+    what: "When I started building beat-synced video tools, I needed to know which browser playback approaches could keep up. I built Frame Lab to compare them under cuts, seeks, stutters, and speed changes.",
     flow: [
       { label: "CLIPS", sub: "FFmpeg-prepared multi-clip workload" },
       { label: "STRATEGIES", sub: "HTML video · Mediabunny / WebCodecs · GPU textures; libmedia capability probe" },
@@ -165,7 +171,8 @@ export const projects: Project[] = [
     cover: "/images/trailer-feed-workspace.png",
     imageFit: "contain",
     link: "https://trailerfeed.video",
-    what: "A video portfolio for importing finished projects, watching versions, comparing takes, and keeping prompts and model metadata alongside the videos. Prompts and sources are kept as a reference library.",
+    what: "A home for finished AI video projects and the versions, prompts, and model details behind them. I designed and built it so I could watch the work, compare variations, and return to how a particular result was made.",
+    rationale: "Keeping the creative output and its production history together gives me something I can return to and learn from.",
     flow: [
       { label: "IMPORT", sub: "Finished videos in" },
       { label: "VERSIONS", sub: "Play · compare takes" },
@@ -188,7 +195,8 @@ export const projects: Project[] = [
     cover: "/images/project-stack-workspace.png",
     imageFit: "contain",
     link: "https://project-stack-structure.vercel.app",
-    what: "Real footage drives the edit. The song is analyzed for beats and sections, clips are scene-detected and captioned, moments are matched to the story, and AI generation fills only the gaps, using cloud models or local ComfyUI.",
+    what: "A music-video tool built around a song and footage you already have. I designed and built the workflow to analyze the music, find useful moments in the clips, and assemble a beat-aligned rough cut, with AI generation available for missing coverage.",
+    rationale: "I’m exploring how software can help organize an edit while keeping the supplied footage central to the result.",
     flow: [
       { label: "ANALYZE", sub: "Beats · sections" },
       { label: "INGEST", sub: "Scene detect · captions" },
@@ -201,13 +209,14 @@ export const projects: Project[] = [
     slug: "gods-gatekeepers",
     title: "GODS & GATEKEEPERS",
     link: "https://gods-and-gatekeepers.vercel.app/",
+    linkLabel: "Explore concept",
     group: "featured",
     horizontal: true,
     type: "Immersive Concert Visual Concept Series",
     format: "A V1SU4 format experience",
     tagline: "Ancient mythology, impossible scale, and worlds within worlds.",
     rationale:
-      "To explore how a concert stage can become an entire world. Rather than using screens as backdrops, Gods & Gatekeepers imagines them as architectural and narrative elements—surfaces that conceal depth, transform scale, and reveal worlds beyond what initially appears possible. Each concept is built around visual misdirection and escalating reveals, combining cinematic storytelling with the timing of live electronic music.",
+      "The project asks how a stage might feel like an unfolding world, with depth and transformation becoming part of the experience.",
     role: "Creative Direction / Worldbuilding / 3D / AI / VFX / Previsualization",
     status: "In Development",
     year: "2026",
@@ -228,7 +237,7 @@ export const projects: Project[] = [
     ],
     cover: "/images/gods-gatekeepers-hero.jpg",
     previewImage: "/images/gods-gatekeepers-hero.jpg",
-    what: "Immersive concert concepts where DJ stages become evolving illusions. Monumental deities awaken, colossal guardians emerge from flat screens, and celestial gateways reveal dimensions hidden inside the architecture—each world expandable for different cities and performances through a hybrid 3D, AI, and VFX workflow.",
+    what: "A personal concept series of imagined concert worlds built around mythology, impossible scale, and unexpected reveals. I’m developing the visual direction, worldbuilding, and sequences through 3D, AI, and VFX exploration.",
     flow: [
       {
         label: "CONCEPT & WORLD BUILDING",
@@ -284,6 +293,7 @@ export interface LabItem {
   kind: string;
   tagline: string;
   body: string;
+  rationale: string;
   status: string;
 }
 
@@ -294,6 +304,7 @@ export const labItems: LabItem[] = [
     kind: "AGENTIC FILM STUDIO",
     tagline: "A canvas-first studio for AI short films, commercials, and trailers.",
     body: "An agentic workflow takes an idea from story development and shot planning through generation to a finished edit. Shape the story on a visual board, review the images and video for each shot, and trim the approved footage into a final cut. Generation runs only after approval and a cost check.",
+    rationale: "Keep creative decisions close to story beats, takes, and cuts so I can see what a sequence needs before generating more material.",
     status: "In development",
   },
   {
@@ -302,22 +313,35 @@ export const labItems: LabItem[] = [
     kind: "AGENTIC · LOCAL",
     tagline: "An agentic workspace for building a music video around a song.",
     body: "Analyze the song, develop the story, craft the prompts, and generate the images and videos. Review agents powered by different LLMs independently evaluate and score the results. The user then reviews the creative direction and generated outputs, selects the final option, and gives final approval.",
+    rationale: "I want help developing alternatives and reviewing the results while keeping creative direction and the final selection with the maker.",
     status: "In development",
   },
 ];
 
 export const skillGroups = [
-  { title: "GENERATIVE AI", items: ["ComfyUI", "LoRA training", "Image", "Video", "Audio"] },
-  { title: "3D / VFX", items: ["Houdini", "Unreal Engine", "Nuke", "After Effects"] },
-  { title: "WEB", items: ["TypeScript", "Svelte", "React", "WebGPU"] },
-  { title: "BACKEND", items: ["Python", "Rust", "Convex", "Trigger.dev", "Docker"] },
+  { title: "Visual storytelling", items: ["Concepts, worlds, and sequences developed through 3D, VFX, and AI filmmaking."] },
+  { title: "Immersive & interactive experiences", items: ["Experiences that let people explore an idea or shape what happens."] },
+  { title: "Creative tools", items: ["Apps for gathering references, developing stories, working with footage, and reviewing results."] },
+  { title: "Production systems", items: ["The workflows and technical foundations that carry creative work from exploration through delivery."] },
 ];
 
 export const site = {
   name: "Gordo",
   label: "V1SU4",
-  role: "Creative Technologist",
-  focus: "Generative AI for commercials, TV & live shows",
+  role: "Visual Artist / Creative Technologist",
+  focus: "Film, television, commercials, and immersive experiences",
+  mission: "I make visual stories, immersive experiences, and creative tools, bringing ideas to life across film, television, commercials, and interactive work.",
+  description: "Gordo’s visual stories, immersive experiences, and creative tools across film, television, commercials, and interactive work.",
+  about: [
+    "I’m Gordo, a visual artist and creative technologist. I like figuring out what an idea could become, then working through the details that make it feel right.",
+    "My background is in VFX for film, television, and commercials, with Houdini still a big part of how I work. These days, I’m making AI films, commercials, and original series, developing immersive experiences, and building apps that support the creative process—from exploring an idea to bringing it through production. Sometimes the work is an image or a sequence; sometimes it’s a tool that makes the next project easier to make. I care about the creative choices and the technical work needed to carry them through to a polished result.",
+    "I grew up performing as a singer and dancer, including two and a half years in a Broadway show. There’s a whole earlier chapter there, if you ever want to ask.",
+  ],
+  archives: "My film and television background includes FX work at ILM, DNEG, MPC, and The Mill. Explore the reel and credits for that part of my work.",
+  lab: "A place for ideas I’m still working out: prototypes, creative workflows, and tools taking shape through use.",
+  contactHeading: "Have something in mind?",
+  contactBody: "I’m happy to talk about a film, a commercial, an immersive experience, or a tool you wish existed.",
+  contactUrl: "https://www.linkedin.com/in/gordo-spaniolo/",
   base: "Miami / LA",
   // TODO: add a contact email before publishing.
   email: "",

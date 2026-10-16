@@ -164,7 +164,7 @@
         <p data-pv class="mt-3 max-w-xl font-mono text-[13px] leading-relaxed text-zinc-400">{active.summary}</p>
         <div data-pv class="mt-5 flex flex-wrap items-center gap-3"><span class="status-pill">{active.status}</span><span class="label text-zinc-600">{active.year}</span></div>
         <div data-pv class="mt-6 flex flex-wrap gap-3"><a href={href(active)} onpointerdown={press} class="button-solid">View Project →</a>
-          {#if active.link}<a href={active.link} target="_blank" rel="noopener noreferrer" onpointerdown={press} class="button-outline">Open App ↗</a>{:else}<span class="label flex min-h-11 items-center border border-dashed border-white/12 px-4 text-zinc-500">No public app</span>{/if}</div>
+          {#if active.link}<a href={active.link} target="_blank" rel="noopener noreferrer" onpointerdown={press} class="button-outline">{active.linkLabel ?? 'Open app'} ↗</a>{:else}<span class="label flex min-h-11 items-center border border-dashed border-white/12 px-4 text-zinc-500">In development</span>{/if}</div>
       </div>
     </div>
   </div>

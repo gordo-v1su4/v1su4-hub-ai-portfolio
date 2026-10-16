@@ -25,7 +25,7 @@
             <h4 class="v0-label red"><span class="v0-dot"></span>{project.type}</h4>
             <h5>{project.tagline}</h5>
             <p>{project.what}</p>
-            <div class="v0-actions"><a href={`#/work/${project.slug}`}>View project ↗</a>{#if project.link}<a href={project.link} target="_blank" rel="noopener">Open app ↗</a>{/if}</div>
+            <div class="v0-actions"><a href={`#/work/${project.slug}`}>View project ↗</a>{#if project.link}<a href={project.link} target="_blank" rel="noopener">{project.linkLabel ?? 'Open app'} ↗</a>{/if}</div>
           </section>
           <div class="v0-divider" aria-hidden="true"></div>
           <section>

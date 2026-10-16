@@ -62,7 +62,7 @@
         <div class="flex justify-between gap-4"><dt class="text-[#f2ede3]/45">Year</dt><dd class="text-right">{p.year}</dd></div>
       </dl>
       {#if p.link}
-        <a href={p.link} target="_blank" rel="noopener" class="wow-btn mt-5 w-full justify-center">Open app ↗</a>
+        <a href={p.link} target="_blank" rel="noopener" class="wow-btn mt-5 w-full justify-center">{p.linkLabel ?? 'Open app'} ↗</a>
       {/if}
     </div>
   </aside>

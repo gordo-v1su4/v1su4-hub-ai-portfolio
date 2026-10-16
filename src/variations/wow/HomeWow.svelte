@@ -21,7 +21,7 @@
 
   <div class="relative w-full px-4 pb-10 pt-28 md:px-10 md:pb-14">
     <div class="flex flex-wrap items-center gap-2">
-      <span class="wow-tag is-live"><span class="dot"></span>3 live apps</span>
+      <span class="wow-tag is-live"><span class="dot"></span>{projects.length} projects</span>
       <span class="wow-tag"><span class="dot"></span>{site.base} — {site.focus}</span>
       <span class="wow-tag is-beta"><span class="dot"></span>Creative technologist</span>
     </div>
@@ -34,9 +34,7 @@
 
     <div class="mt-6 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
       <p class="max-w-[52ch] text-[15px] leading-[1.55] text-[#f2ede3]/85">
-        {site.name} builds generative-AI tools for commercials, TV and live shows —
-        real-time visuals, beat-locked editing and the pipelines behind them.
-        12+ years FX at ILM, DNEG, Sony Imageworks, MPC, Luma.
+        {site.mission}
       </p>
       <div class="flex flex-wrap gap-3">
         <button class="wow-btn" onclick={() => go(`/wow/work/${featured[0]?.slug ?? projects[0].slug}`)}>Watch the work ↓</button>
@@ -51,7 +49,7 @@
 <!-- Ticker -->
 <div class="overflow-hidden border-b border-white/10 py-3" aria-hidden="true">
   <div class="wow-marquee wow-mono text-[11px] text-[#f2ede3]/50">
-    {#each Array(2) as _}
+    {#each [0, 1] as repeat (repeat)}
       <span>Pindeck · live&ensp;—&ensp;Beatsmaxxer Pro · live&ensp;—&ensp;Frame Lab · live&ensp;—&ensp;Trailer Feed · live&ensp;—&ensp;Project Stack Structure · beta&ensp;—&ensp;Review Room · demo on request&ensp;—&ensp;</span>
     {/each}
   </div>
@@ -61,7 +59,7 @@
 <section class="px-4 py-14 md:px-10 md:py-20">
   <div class="flex items-baseline justify-between gap-4">
     <h2 class="wow-display text-[13vw] md:text-[6vw]">Work</h2>
-    <p class="wow-mono hidden text-[11px] text-[#f2ede3]/50 md:block">7 projects — tap a row to open</p>
+    <p class="wow-mono hidden text-[11px] text-[#f2ede3]/50 md:block">{projects.length} projects — tap a row to open</p>
   </div>
 
   <div class="mt-6">
@@ -73,7 +71,7 @@
           <span class="mt-2 block max-w-[60ch] text-[13.5px] leading-[1.5] text-[#f2ede3]/65">{p.tagline}</span>
           <span class="mt-3 flex flex-wrap gap-2">
             <span class="wow-tag {statusClass(p.status)}"><span class="dot"></span>{p.type}</span>
-            {#if p.link}<span class="wow-tag">Open app ↗</span>{/if}
+            {#if p.link}<span class="wow-tag">{p.linkLabel ?? 'Open app'} ↗</span>{/if}
           </span>
         </span>
         <span class="wow-still aspect-[16/10] w-full">
@@ -89,8 +87,8 @@
 <!-- TWO LANES -->
 <section class="grid gap-0 md:grid-cols-2">
   <div class="border-b border-white/10 px-4 py-12 md:border-b-0 md:border-r md:px-10">
-    <p class="wow-mono text-[11px] text-[#ffb03a]">Now shipping</p>
-    <h3 class="wow-display mt-3 text-[10vw] md:text-[3vw]">Featured<br />tools</h3>
+    <p class="wow-mono text-[11px] text-[#ffb03a]">Selected work</p>
+    <h3 class="wow-display mt-3 text-[10vw] md:text-[3vw]">Featured<br />projects</h3>
     <div class="mt-6 flex flex-col gap-4">
       {#each featured as p (p.slug)}
         <button onclick={() => go(`/wow/work/${p.slug}`)} class="group text-left">
@@ -102,7 +100,7 @@
   </div>
   <div class="px-4 py-12 md:px-10">
     <p class="wow-mono text-[11px] text-[#7df0ff]">More work + lab</p>
-    <h3 class="wow-display mt-3 text-[10vw] md:text-[3vw]">Studio<br />&amp; Lab</h3>
+    <h3 class="wow-display mt-3 text-[10vw] md:text-[3vw]">Work<br />&amp; Lab</h3>
     <div class="mt-6 flex flex-col gap-3">
       {#each more as p (p.slug)}
         <button onclick={() => go(`/wow/work/${p.slug}`)} class="flex items-center justify-between gap-4 border-b border-white/10 py-3 text-left hover:text-[#ffb03a]">
@@ -124,12 +122,11 @@
 <section class="border-t border-white/10 bg-[#f2ede3] px-4 py-14 text-[#07090d] md:px-10">
   <p class="wow-mono text-[11px] opacity-60">About — {site.name} ‘{site.role}’</p>
   <p class="wow-display mt-4 max-w-[20ch] text-[9vw] leading-[0.9] md:text-[4vw]">
-    AI pipelines for pictures that move.
+    Visual stories, experiences, and tools.
   </p>
   <div class="mt-8 grid gap-8 md:grid-cols-3">
     <p class="max-w-[42ch] text-[14px] leading-[1.6]">
-      Custom AI production tools around ComfyUI — the right image, video, audio and music models
-      for each project, connected in one pipeline. Used in production with studios and clients.
+      {site.about.join(' ')}
     </p>
     <p class="wow-mono text-[12px] leading-[1.9] opacity-70">
       Role — {site.role}<br />Focus — {site.focus}<br />Base — {site.base}<br />Studio — {site.label}

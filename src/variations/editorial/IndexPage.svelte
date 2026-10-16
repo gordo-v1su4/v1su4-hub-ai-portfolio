@@ -1,6 +1,6 @@
 <script lang="ts">
   import { work, lab, href } from './data';
-  import { skillGroups } from '../../data/projects';
+  import { site, skillGroups } from '../../data/projects';
   import ProjectIndex from './ProjectIndex.svelte';
   import Frame from './Frame.svelte';
   import { reveal } from './motion';
@@ -13,17 +13,17 @@
       <div>
         <p data-reveal class={`kicker ${experimental ? '' : 'portfolio-heading-line'}`}>{experimental ? 'V1SU4 · Lab — work in progress' : 'Creative Production Portfolio and Software'}</p>
         <h1 data-reveal class="display-title mt-2 text-[clamp(2rem,5vw,3.25rem)] text-zinc-50">{experimental ? 'The lab' : 'Selected work'}</h1>
+        <p data-reveal class="mt-4 max-w-3xl font-mono text-[13.5px] leading-relaxed text-zinc-400 sm:text-[14px]">{experimental ? site.lab : site.mission}</p>
       </div>
       <ul data-reveal class="flex flex-wrap gap-x-5 gap-y-1">
         <li class="label text-zinc-500">{String(items.length).padStart(2,'0')} {experimental ? 'Experiments' : 'Projects'}</li>
-        {#if !experimental}<li class="label text-zinc-500">{String(work.filter(p=>p.link).length).padStart(2,'0')} Public apps</li>{/if}
         <li class="label text-zinc-600">Miami / LA</li>
       </ul>
     </div>
   </header>
   <div class="page-width pt-5 lg:pt-6"><ProjectIndex {items} {experimental} /></div>
   {#if experimental}
-    <section use:reveal={true} class="page-width mt-20 sm:mt-28"><div class="grid gap-8 border border-dashed border-white/12 bg-white/[0.015] p-6 sm:p-8 lg:grid-cols-[auto_1fr] lg:gap-14"><h2 data-scroll-reveal class="display-title text-4xl text-zinc-100">Reading<br/>the lab</h2><p class="max-w-2xl font-mono text-[13.5px] leading-relaxed text-zinc-400">These projects are experimental and in development. Features and workflows may change. Each has a page here; a public application link appears when one is available.</p></div></section>
+    <section use:reveal={true} class="page-width mt-20 sm:mt-28"><div class="grid gap-8 border border-dashed border-white/12 bg-white/[0.015] p-6 sm:p-8 lg:grid-cols-[auto_1fr] lg:gap-14"><h2 data-scroll-reveal class="display-title text-4xl text-zinc-100">Reading<br/>the lab</h2><p class="max-w-2xl font-mono text-[13.5px] leading-relaxed text-zinc-400">These projects are experimental and in development. Features and workflows may change as I use them, learn from them, and decide what to build next.</p></div></section>
   {:else}
     <section use:reveal={true} class="page-width mt-20 sm:mt-28"><div class="flex items-baseline justify-between gap-4"><h2 data-scroll-reveal class="display-title text-[clamp(1.8rem,4vw,3rem)] text-zinc-100">What I do</h2><a href="#/about" class="label text-zinc-500 hover:text-zinc-200">About Gordo →</a></div>
       <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">{#each skillGroups as group (group.title)}<div data-scroll-reveal class="border-t border-white/10 pt-4"><h3 class="label text-accent">{group.title}</h3><ul class="mt-4 space-y-2">{#each group.items as item (item)}<li class="font-mono text-[13px] text-zinc-400">{item}</li>{/each}</ul></div>{/each}</div>

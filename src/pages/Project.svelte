@@ -43,7 +43,7 @@
   </div>
   <p class="mt-6 font-mono text-[13px] font-semibold uppercase tracking-[0.03em]">
     {#if p.link}
-      <a href={p.link} target="_blank" rel="noopener" class="hover:opacity-70">[Open app ↗]</a>
+      <a href={p.link} target="_blank" rel="noopener" class="hover:opacity-70">[{p.linkLabel ?? 'Open app'} ↗]</a>
     {:else}
       <span class="text-accent/60">[{p.status}]</span>
     {/if}

@@ -23,7 +23,7 @@
         <p class="select-all text-center font-mono text-[14px] font-bold">{site.email}</p>
         <button onclick={copy} class="mt-4 w-full bg-accent py-3 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-ink">{copied ? "Copied" : "Copy email"}</button>
       {:else}
-        <p class="text-center font-mono text-[12px] font-medium uppercase opacity-80">Email coming soon. Reach me on LinkedIn for now.</p>
+        <p class="text-center font-mono text-[12px] font-medium uppercase opacity-80">{site.contactBody}</p><p class="mt-4 text-center"><a href={site.contactUrl} target="_blank" rel="noopener noreferrer" class="font-mono text-[12px] underline">Get in touch ↗</a></p>
       {/if}
     </div>
   </div>

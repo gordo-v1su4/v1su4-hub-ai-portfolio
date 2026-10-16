@@ -51,7 +51,7 @@
     {#if route.view === "home"}
       <header class="v0-hero">
         <div class="v0-hero-heading"><div class="v0-hero-mask"><h1 class="v0-hero-line">Creative</h1></div><div class="v0-hero-mask"><p class="v0-hero-line v0-gradient">Technologist</p></div></div>
-        <div class="v0-hero-sub"><p>{site.focus} • {site.base}</p><span class="v0-red-line"></span></div>
+        <div class="v0-hero-sub"><p>{site.mission} • {site.base}</p><span class="v0-red-line"></span></div>
       </header>
       <section id="work" class="v0-work">
         <header class="v0-section-heading"><div><span class="v0-eyebrow">Selected Works</span><h2>AI production<br />& creative tools</h2></div><span class="v0-heading-rule"></span></header>
@@ -77,7 +77,7 @@
     {:else if route.view === "about"}
       <section class="v0-work v0-detail">
         <header class="v0-section-heading"><div><span class="v0-eyebrow">{site.name} / {site.base}</span><h2>{site.role}</h2></div></header>
-        <div class="v0-about"><p>I build custom AI production tools around ComfyUI, choosing the right image, video, audio and music models for each project and connecting them in one pipeline. Before AI, I spent 12+ years as an FX artist at ILM, DNEG, Sony Imageworks, MPC and Luma Pictures.</p><div class="v0-info-grid"><section><h4 class="v0-label red">Focus</h4><h5>{site.focus}</h5></section><div class="v0-divider"></div><section><h4 class="v0-label">Skills</h4>{#each skillGroups as group (group.title)}<p class="v0-meta">{group.title}</p><div class="v0-tags">{#each group.items as tag (tag)}<span>{tag}</span>{/each}</div>{/each}</section></div></div>
+        <div class="v0-about"><p>{site.about.join(' ')}</p><div class="v0-info-grid"><section><h4 class="v0-label red">Focus</h4><h5>{site.focus}</h5></section><div class="v0-divider"></div><section><h4 class="v0-label">Skills</h4>{#each skillGroups as group (group.title)}<p class="v0-meta">{group.title}</p><div class="v0-tags">{#each group.items as tag (tag)}<span>{tag}</span>{/each}</div>{/each}</section></div></div>
       </section>
     {/if}
   </main>

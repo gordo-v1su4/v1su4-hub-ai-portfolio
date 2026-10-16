@@ -122,7 +122,7 @@
       <div class="{COL} flex min-h-[70svh] flex-col items-center justify-center gap-6 text-center">
         <p class="{item}">{site.name} <span class="font-medium opacity-80">‘{site.role}’</span></p>
         <p class="menu-link max-w-[46ch] font-mono text-[11.5px] font-medium uppercase leading-[1.55] text-accent/75">
-          I build custom AI production tools around ComfyUI, choosing the right image, video, audio and music models for each project and connecting them in one pipeline. Before AI, I spent 12+ years as an FX artist at ILM, DNEG, Sony Imageworks, MPC and Luma Pictures.
+          {site.about.join(' ')}
         </p>
         <div class="menu-link font-mono text-[11.5px] uppercase leading-[1.7]">
           {#each aboutRows as [k, v] (k)}

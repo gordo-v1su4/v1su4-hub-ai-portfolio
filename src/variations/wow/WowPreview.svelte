@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { portfolioProjects } from "../../data/projects";
+  import { portfolioProjects, site } from "../../data/projects";
 
   const projects = portfolioProjects();
   import { go } from "../../lib/router.svelte";
@@ -10,6 +10,8 @@
   let { slug }: { slug?: string } = $props();
   const valid = $derived(slug ? projects.some((p) => p.slug === slug) : true);
 </script>
+
+<svelte:head><title>{projects.find(p => p.slug === slug)?.title ?? "Selected work"} — V1SU4 · Gordo</title><meta name="description" content={site.description} /></svelte:head>
 
 <div class="wow-root min-h-svh">
   <!-- Minimal wow chrome — keeps current Header/Menu untouched -->

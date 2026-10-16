@@ -3,12 +3,13 @@ import { labItems, portfolioProjects } from '../../data/projects';
 export interface Entry {
   slug: string; title: string; category: string; line: string; summary: string;
   format?: string;
-  rationale?: string;
+  rationale: string;
   image: string; imageFit?: 'cover' | 'contain'; status: string; year: string;
   previewImage?: string;
   role: string; stack: string[]; flow: {label: string; sub: string}[];
   stackGroups?: {title: string; items: string[]}[];
   worlds?: { title: string; description: string }[];
+  linkLabel?: string;
   link?: string; media: string[]; experimental: boolean;
 }
 export const work: Entry[] = portfolioProjects().map(p => ({
@@ -16,12 +17,13 @@ export const work: Entry[] = portfolioProjects().map(p => ({
   format: p.format,
   rationale: p.rationale,
   summary: p.what, image: p.cover, previewImage: p.previewImage, imageFit: p.imageFit, status: p.status,
-  year: p.year, role: p.role, stack: p.stack, stackGroups: p.stackGroups, flow: p.flow, link: p.link,
+  year: p.year, role: p.role, stack: p.stack, stackGroups: p.stackGroups, flow: p.flow, link: p.link, linkLabel: p.linkLabel,
   worlds: p.worlds,
   media: p.media ?? [], experimental: false,
 }));
 export const lab: Entry[] = labItems.map(p => ({
   slug: p.slug, title: p.title, category: p.kind, line: p.tagline,
+  rationale: p.rationale,
   summary: p.body, image: p.slug === 'creative-studio-pro' ? '/images/creative-studio-workspace.png' : '/images/music-video-workspace.png',
   imageFit: 'contain', status: p.status, year: '2026', role: 'Research / Development',
   stack: p.slug === 'creative-studio-pro' ? ['SvelteKit', 'Svelte Flow', 'AI SDK', 'Bun', 'WebGPU'] : ['SvelteKit', 'Rust', 'Convex', 'RustFS', 'FFmpeg'],
