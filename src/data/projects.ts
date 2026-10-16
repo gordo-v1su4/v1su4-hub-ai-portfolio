@@ -282,6 +282,7 @@ export interface LabItem {
   slug: string;
   title: string;
   kind: string;
+  tagline: string;
   body: string;
   status: string;
 }
@@ -290,15 +291,17 @@ export const labItems: LabItem[] = [
   {
     slug: "creative-studio-pro",
     title: "CREATIVE STUDIO PRO",
-    kind: "AI TRAILER STUDIO",
-    body: "A canvas-first studio for AI short films and trailers: story beats on a board, generated takes on each beat, and cuts you trim and finish. Generation runs only after approval and a cost check.",
+    kind: "AGENTIC FILM STUDIO",
+    tagline: "A canvas-first studio for AI short films, commercials, and trailers.",
+    body: "An agentic workflow takes an idea from story development and shot planning through generation to a finished edit. Shape the story on a visual board, review the images and video for each shot, and trim the approved footage into a final cut. Generation runs only after approval and a cost check.",
     status: "In development",
   },
   {
     slug: "music-video-agent",
     title: "MUSIC VIDEO AGENT",
     kind: "AGENTIC · LOCAL",
-    body: "A music-video production workspace that analyzes a song, develops a treatment, and organizes the story and shot plan before generation.",
+    tagline: "An agentic workspace for building a music video around a song.",
+    body: "Start with song analysis, then develop a treatment, map the story to the music, and plan the shots. Review the creative direction and production plan before approving generation.",
     status: "In development",
   },
 ];

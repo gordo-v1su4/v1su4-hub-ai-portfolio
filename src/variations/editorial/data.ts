@@ -21,7 +21,7 @@ export const work: Entry[] = portfolioProjects().map(p => ({
   media: p.media ?? [], experimental: false,
 }));
 export const lab: Entry[] = labItems.map(p => ({
-  slug: p.slug, title: p.title, category: p.kind, line: p.body,
+  slug: p.slug, title: p.title, category: p.kind, line: p.tagline,
   summary: p.body, image: p.slug === 'creative-studio-pro' ? '/images/creative-studio-workspace.png' : '/images/music-video-workspace.png',
   imageFit: 'contain', status: p.status, year: '2026', role: 'Research / Development',
   stack: p.slug === 'creative-studio-pro' ? ['SvelteKit', 'Svelte Flow', 'AI SDK', 'Bun', 'WebGPU'] : ['SvelteKit', 'Rust', 'Convex', 'RustFS', 'FFmpeg'],
