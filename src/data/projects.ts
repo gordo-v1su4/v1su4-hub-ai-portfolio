@@ -301,7 +301,7 @@ export const labItems: LabItem[] = [
     title: "MUSIC VIDEO AGENT",
     kind: "AGENTIC · LOCAL",
     tagline: "An agentic workspace for building a music video around a song.",
-    body: "Start with song analysis, then develop a treatment, map the story to the music, and plan the shots. Review the creative direction and production plan before approving generation.",
+    body: "Analyze the song, develop the story, craft the prompts, and generate the images and videos. Review agents powered by different LLMs independently evaluate and score the results. The user then reviews the creative direction and generated outputs, selects the final option, and gives final approval.",
     status: "In development",
   },
 ];
