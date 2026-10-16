@@ -1,7 +1,6 @@
 <script lang="ts">
   import { tick, onDestroy } from 'svelte';
   import { MediaQuery } from 'svelte/reactivity';
-  import { SPOTLIGHT_SLUG } from '../../data/projects';
   import { href, type Entry } from './data';
   import Frame from './Frame.svelte';
   import { gsap, D, EASE_IO, reduced, press, reveal } from './motion';
@@ -9,16 +8,7 @@
   let { items, experimental = false }: { items: Entry[]; experimental?: boolean } = $props();
   const desktop = new MediaQuery('(min-width: 1024px)');
 
-  const defaultIndex = $derived.by(() => {
-    if (experimental) return 0;
-    const i = items.findIndex((p) => p.slug === SPOTLIGHT_SLUG);
-    return i >= 0 ? i : 0;
-  });
-
   let selected = $state(0);
-  $effect(() => {
-    selected = defaultIndex;
-  });
   const active = $derived(items[selected] ?? items[0]);
 
   let layers = $state<HTMLDivElement>();
