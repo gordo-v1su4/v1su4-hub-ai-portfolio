@@ -12,16 +12,17 @@ export interface Entry {
   linkLabel?: string;
   link?: string; media: string[]; experimental: boolean;
 }
-export const work: Entry[] = portfolioProjects().map(p => ({
+const projectEntries: Entry[] = portfolioProjects().map(p => ({
   slug: p.slug, title: p.title, category: p.type, line: p.tagline,
   format: p.format,
   rationale: p.rationale,
   summary: p.what, image: p.cover, previewImage: p.previewImage, imageFit: p.imageFit, status: p.status,
   year: p.year, role: p.role, stack: p.stack, stackGroups: p.stackGroups, flow: p.flow, link: p.link, linkLabel: p.linkLabel,
   worlds: p.worlds,
-  media: p.media ?? [], experimental: false,
+  media: p.media ?? [], experimental: p.slug === 'frame-lab',
 }));
-export const lab: Entry[] = labItems.map(p => ({
+export const work: Entry[] = projectEntries.filter(p => !p.experimental);
+export const lab: Entry[] = [...projectEntries.filter(p => p.experimental), ...labItems.map<Entry>(p => ({
   slug: p.slug, title: p.title, category: p.kind, line: p.tagline,
   rationale: p.rationale,
   summary: p.body, image: p.slug === 'creative-studio-pro' ? '/images/creative-studio-workspace.png' : '/images/music-video-workspace.png',
@@ -32,6 +33,6 @@ export const lab: Entry[] = labItems.map(p => ({
     : [{title: 'Front end', items: ['SvelteKit']}, {title: 'Back end', items: ['Rust', 'Convex', 'RustFS']}, {title: 'Production tasks', items: ['Song analysis and treatment', 'Story and shot planning', 'FFmpeg · media processing']}],
   flow: p.slug === 'creative-studio-pro' ? [{label: 'STORY', sub: 'Develop the brief and story beats'}, {label: 'BOARD', sub: 'Arrange beats on a production canvas'}, {label: 'TAKES', sub: 'Approve generation and review takes'}, {label: 'CUTS', sub: 'Trim, finish and publish'}] : [{label: 'SONG', sub: 'Analyze beats and song sections'}, {label: 'TREATMENT', sub: 'Develop the music-video direction'}, {label: 'STORY', sub: 'Arrange the narrative and shot plan'}, {label: 'PRODUCTION', sub: 'Prepare approved shots for generation'}],
   media: [], experimental: true,
-}));
+}))];
 export const all = [...work, ...lab];
 export const href = (p: Entry) => `#/${p.experimental ? 'lab' : 'work'}/${p.slug}`;

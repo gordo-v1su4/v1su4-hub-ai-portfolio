@@ -8,9 +8,9 @@
     standardFrame = false,
   }: { images: string[]; title: string; monochromeSlides?: boolean; coverHero?: boolean; standardFrame?: boolean } = $props();
   let current = $state(0);
-  const selected = $derived(current % images.length);
+  const selected = $derived(Math.min(current, Math.max(0, images.length - 1)));
   function advance(direction: number) {
-    current = (selected + direction + images.length) % images.length;
+    current = Math.max(0, Math.min(selected + direction, images.length - 1));
   }
 </script>
 
@@ -25,8 +25,8 @@
       monochrome={monochromeSlides && selected !== 0}
     />
   </div>
-  <button class="image-arrow previous" aria-label="Previous image" onclick={() => advance(-1)}><span aria-hidden="true"></span></button>
-  <button class="image-arrow next" aria-label="Next image" onclick={() => advance(1)}><span aria-hidden="true"></span></button>
+  <button class="image-arrow previous" aria-label="Previous image" disabled={selected === 0} onclick={() => advance(-1)}><span aria-hidden="true"></span></button>
+  <button class="image-arrow next" aria-label="Next image" disabled={selected >= images.length - 1} onclick={() => advance(1)}><span aria-hidden="true"></span></button>
 </div>
 <p class="label mt-3 text-zinc-500" aria-live="polite">{selected + 1} / {images.length}</p>
 
@@ -49,6 +49,7 @@
   .previous span { transform: rotate(-135deg); }
   .next span { transform: rotate(45deg); }
   .image-arrow:hover { color: #d4d4d8; }
+  .image-arrow:disabled { opacity: 0.2; cursor: default; }
   .image-arrow:focus-visible { outline: 2px solid #d4d4d8; outline-offset: 3px; }
   @media (max-width: 639px) {
     .image-arrow { width: 16px; }

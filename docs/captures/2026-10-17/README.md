@@ -30,3 +30,9 @@ Portfolio homepage honors each entry's imageFit. App entries using contain rende
 Creative Studio Pro captures and preview videos are deferred. Gods & Gatekeepers UI work is in a separate chat; CG/3D and god imagery remain deferred. Video Haven is next after this capture pass.
 
 Validation: portfolio Svelte check passed with zero errors/warnings; production build passed. All 13 exported images were checked as 3840 × 2400. Browser checks covered Review Room slide navigation including diagram slides, all four Trailer Feed slides, desktop preview object-fit, and the mobile 16:10 frame without horizontal overflow.
+
+## Final review selections
+
+The initial capture set above is retained as an archive. The published Review Room gallery uses review-room-cover-final.jpg and review-room-library-retake.jpg (both 1920 × 1200, 16:10) instead of the original lead and library images. The final cover includes the fixed lower-sidebar black fade and no sidebar dividers. The shortlist slide was removed; media-flow and metadata-model diagrams remain last. Gallery navigation stops at both ends.
+
+Trailer Feed also includes trailer-feed-selected.png, the exact homepage frame selected during review. It is contained within the standard frame without stretching. Frame Lab now belongs to Lab.
