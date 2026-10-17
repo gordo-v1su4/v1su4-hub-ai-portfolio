@@ -49,6 +49,7 @@ export const projects: Project[] = [
     stackGroups: [{ title: "Front end", items: ["React", "TypeScript", "Vite", "GSAP", "Three.js"] }, { title: "Back end", items: ["Static site · no server backend"] }, { title: "Production tasks", items: ["Series breakdown", "Interactive DVD collection", "Character auditions", "Storyboards and working previews"] }],
     cover: "/images/video-haven-centered.png",
     imageFit: "contain",
+    link: "https://www.videohaven.stream/",
     what: "An interactive home for an original series, bringing its story, characters, locations, and production material together. I’m developing the creative presentation and building the experience, with Blood Rush as the first featured series.",
     flow: [{ label: "SERIES", sub: "Explore the story and visual direction" }, { label: "COLLECTION", sub: "Browse working previews and development tests" }, { label: "WORLD", sub: "Meet the characters and explore locations" }, { label: "PRODUCTION", sub: "Follow storyboards and production development" }],
     media: [],
