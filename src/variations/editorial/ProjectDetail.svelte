@@ -36,6 +36,7 @@
         title={p.title}
         monochromeSlides={p.slug === 'frame-lab'}
         coverHero={p.slug === 'gods-gatekeepers'}
+        standardFrame={p.imageFit === 'contain'}
       />
     {:else}
       <Frame src={p.image} alt={p.title + ' workspace'} eager natural />

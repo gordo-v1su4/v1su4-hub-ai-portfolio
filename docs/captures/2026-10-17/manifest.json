@@ -1,0 +1,106 @@
+{
+  "date": "2026-10-17",
+  "viewport": {
+    "width": 1920,
+    "height": 1200,
+    "deviceScaleFactor": 2
+  },
+  "pixels": {
+    "width": 3840,
+    "height": 2400
+  },
+  "aspect": "16:10",
+  "entries": [
+    {
+      "name": "review-room-review",
+      "width": 3840,
+      "height": 2400,
+      "asset": "/images/captures/2026-10-17/review-room-review.webp",
+      "bytes": 2242500
+    },
+    {
+      "name": "review-room-library",
+      "width": 3840,
+      "height": 2400,
+      "asset": "/images/captures/2026-10-17/review-room-library.webp",
+      "bytes": 1853918
+    },
+    {
+      "name": "review-room-list",
+      "width": 3840,
+      "height": 2400,
+      "asset": "/images/captures/2026-10-17/review-room-list.webp",
+      "bytes": 986384
+    },
+    {
+      "name": "review-room-table",
+      "width": 3840,
+      "height": 2400,
+      "asset": "/images/captures/2026-10-17/review-room-table.webp",
+      "bytes": 363230
+    },
+    {
+      "name": "review-room-drawover",
+      "width": 3840,
+      "height": 2400,
+      "asset": "/images/captures/2026-10-17/review-room-drawover.webp",
+      "bytes": 1830548
+    },
+    {
+      "name": "review-room-shortlist",
+      "width": 3840,
+      "height": 2400,
+      "asset": "/images/captures/2026-10-17/review-room-shortlist.webp",
+      "bytes": 676410
+    },
+    {
+      "name": "review-room-publishing",
+      "width": 3840,
+      "height": 2400,
+      "asset": "/images/captures/2026-10-17/review-room-publishing.webp",
+      "bytes": 1214538
+    },
+    {
+      "name": "review-room-media-flow",
+      "width": 3840,
+      "height": 2400,
+      "asset": "/images/captures/2026-10-17/review-room-media-flow.webp",
+      "bytes": 117412
+    },
+    {
+      "name": "review-room-metadata-model",
+      "width": 3840,
+      "height": 2400,
+      "asset": "/images/captures/2026-10-17/review-room-metadata-model.webp",
+      "bytes": 116474
+    },
+    {
+      "name": "trailer-feed-main",
+      "width": 3840,
+      "height": 2400,
+      "asset": "/images/captures/2026-10-17/trailer-feed-main.webp",
+      "bytes": 2207786
+    },
+    {
+      "name": "trailer-feed-comparison",
+      "width": 3840,
+      "height": 2400,
+      "asset": "/images/captures/2026-10-17/trailer-feed-comparison.webp",
+      "bytes": 1667990
+    },
+    {
+      "name": "trailer-feed-home",
+      "width": 3840,
+      "height": 2400,
+      "asset": "/images/captures/2026-10-17/trailer-feed-home.webp",
+      "bytes": 3137328
+    },
+    {
+      "name": "trailer-feed-prompts",
+      "width": 3840,
+      "height": 2400,
+      "asset": "/images/captures/2026-10-17/trailer-feed-prompts.webp",
+      "bytes": 162862
+    }
+  ]
+}
