@@ -68,7 +68,7 @@
       {:else if route.view === 'archives'}
         <div use:reveal class="page-width pt-24 lg:pt-32"><p data-reveal class="kicker">V1SU4 · Archives</p><h1 data-reveal class="display-title mt-5 text-[clamp(3.2rem,12vw,9rem)] text-zinc-50">Archives</h1><p data-reveal class="mt-6 max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-400">{site.archives}</p><div data-reveal class="mt-8 flex flex-wrap gap-3">{#each site.links.filter(l=>['VFX REEL','IMDB'].includes(l.label)) as link (link.href)}<a class="button-outline" href={link.href} target="_blank" rel="noopener noreferrer">{link.label} ↗</a>{/each}</div></div>
       {:else}
-        <div use:reveal class="page-width pt-24 lg:pt-32"><header class="relative isolate border-b border-white/8 pb-32 sm:pb-40">
+        <div use:reveal class="page-width pt-24 lg:pt-32"><header class="relative isolate pb-32 sm:pb-40">
           <img src="/images/about-profile-backdrop.png" alt="" aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover object-[center_42%] opacity-50 grayscale" />
           <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-56 bg-gradient-to-t from-black via-black/65 via-35% to-transparent sm:h-72"></div>
           <p data-reveal class="kicker">V1SU4 · About</p><h1 data-reveal class="display-title mt-5 text-[clamp(3.2rem,12vw,9rem)] text-zinc-50">Gordo</h1><div class="mt-5 max-w-2xl space-y-5 font-mono text-[14px] leading-relaxed text-zinc-400 sm:text-[15px]">{#each site.about as paragraph (paragraph)}<p data-reveal>{paragraph}</p>{/each}</div></header>
