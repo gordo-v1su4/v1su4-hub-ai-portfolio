@@ -328,6 +328,13 @@ export const labItems: LabItem[] = [
   },
 ];
 
+export const softwareGroups = [
+  { title: "Generative AI", items: ["ComfyUI", "LoRA training", "Image", "Video", "Audio"] },
+  { title: "3D / VFX", items: ["Houdini", "Unreal Engine", "Nuke", "After Effects"] },
+  { title: "Web", items: ["TypeScript", "Svelte", "React", "WebGPU"] },
+  { title: "Backend", items: ["Python", "Rust", "Convex", "Trigger.dev", "Docker"] },
+];
+
 export const skillGroups = [
   { title: "Visual storytelling", items: ["Concepts, worlds, and sequences developed through 3D, VFX, and AI filmmaking."] },
   { title: "Immersive & interactive experiences", items: ["Experiences that let people explore an idea or shape what happens."] },

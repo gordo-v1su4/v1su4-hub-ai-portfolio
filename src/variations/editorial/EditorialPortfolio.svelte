@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tick } from 'svelte';
   import type { Route } from '../../lib/router.svelte';
-  import { site, skillGroups } from '../../data/projects';
+  import { site, skillGroups, softwareGroups } from '../../data/projects';
   import { work, lab, all, href } from './data';
   import IndexPage from './IndexPage.svelte';
   import ProjectDetail from './ProjectDetail.svelte';
@@ -75,6 +75,7 @@
           <p data-reveal class="kicker">V1SU4 · About</p><h1 data-reveal class="display-title mt-5 text-[clamp(3.2rem,12vw,9rem)] text-zinc-50">Gordo</h1><div class="mt-5 max-w-2xl space-y-5 font-mono text-[14px] leading-relaxed text-zinc-400 sm:text-[15px]">{#each site.about as paragraph (paragraph)}<p data-reveal>{paragraph}</p>{/each}</div></header>
           <div class="mt-10 grid gap-8 sm:grid-cols-3">{#each [{label:'Role',value:site.role},{label:'Focus',value:site.focus},{label:'Base',value:site.base}] as fact (fact.label)}<div class="border-t border-white/10 pt-4"><h2 class="label text-zinc-500">{fact.label}</h2><p class="mt-3 font-narrow text-[22px] text-zinc-100">{fact.value}</p></div>{/each}</div>
           <h2 class="display-title mt-16 text-4xl text-zinc-100">Capabilities</h2><div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">{#each skillGroups as group (group.title)}<div class="border-t border-white/10 pt-4"><h3 class="label text-zinc-500">{group.title}</h3><ul class="mt-4 space-y-2">{#each group.items as item (item)}<li class="font-mono text-[13px] text-zinc-300">{item}</li>{/each}</ul></div>{/each}</div>
+          <h2 class="display-title mt-16 text-4xl text-zinc-100">Software & tools</h2><div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">{#each softwareGroups as group (group.title)}<div class="border-t border-white/10 pt-4"><h3 class="label text-zinc-500">{group.title}</h3><ul class="mt-4 space-y-2">{#each group.items as item (item)}<li class="font-mono text-[13px] text-zinc-300">{item}</li>{/each}</ul></div>{/each}</div>
         </div>
       {/if}
     {/key}
