@@ -363,6 +363,7 @@ export const site = {
   // TODO: add a contact email before publishing.
   email: "",
   links: [
+    { label: "MIDJOURNEY", href: "https://www.midjourney.com/@gordo" },
     { label: "GITHUB", href: "https://github.com/gordo-v1su4" },
     { label: "LINKEDIN", href: "https://www.linkedin.com/in/gordo-spaniolo/" },
     { label: "INSTAGRAM", href: "https://www.instagram.com/shotbyspaniolo" },
