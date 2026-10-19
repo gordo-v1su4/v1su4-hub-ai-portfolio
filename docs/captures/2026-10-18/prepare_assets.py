@@ -2,12 +2,12 @@
 import json
 from pathlib import Path
 
-from PIL import Image, ImageOps
+from PIL import Image
 
 HERE = Path(__file__).resolve().parent
 OUTPUT = HERE.parents[2] / "public/images/captures/2026-10-18"
 NAMES = [
-    "perform-video", "perform-graphics", "clip-bank", "rack-detail",
+    "perform-graphics", "perform-video", "clip-bank", "rack-detail",
     "timing", "arrangement", "help",
 ]
 SIZE = (3840, 2400)
@@ -17,18 +17,17 @@ for name in NAMES:
     filename = f"beatsmaxxer-{name}"
     with Image.open(HERE / "originals" / f"{filename}.png") as source:
         source_size = source.size
-        fitted = ImageOps.contain(source.convert("RGB"), SIZE, Image.Resampling.LANCZOS)
-    canvas = Image.new("RGB", SIZE, "#090b0d")
-    offset = ((SIZE[0] - fitted.width) // 2, (SIZE[1] - fitted.height) // 2)
-    canvas.paste(fitted, offset)
-    target = OUTPUT / f"{filename}.webp"
-    canvas.save(target, "WEBP", lossless=True, method=6)
+        if source_size != SIZE:
+            raise ValueError(f"Recapture {filename}: expected {SIZE}, got {source_size}; padding and resizing are forbidden.")
+        canvas = source.convert("RGB")
+    target = OUTPUT / f"{filename}-v2.webp"
+    canvas.save(target, "WEBP", lossless=True, method=4)
     entries.append({
         "name": filename,
         "sourcePixels": list(source_size),
         "pixels": list(SIZE),
-        "contentPixels": list(fitted.size),
-        "offset": list(offset),
+        "contentPixels": list(SIZE),
+        "offset": [0, 0],
         "asset": f"/images/captures/2026-10-18/{target.name}",
         "bytes": target.stat().st_size,
     })
