@@ -1,6 +1,6 @@
 # Portfolio capture corrections — 18 October 2026
 
-All selected images are native 16:10 captures. BeatsMaxxer images are 3840 × 2400; the final Trailer Feed retake is 1920 × 1200, matching Review Room's final cover and library captures. Their visible content fills the complete canvas. No side padding, stretching or letterboxing is added. Versioned filenames avoid stale cached images.
+All selected images use exactly 16:10 proportions. BeatsMaxxer images are 3840 × 2400; Trailer Feed uses a clean native browser screenshot with its few pixels of browser-edge rounding trimmed to 1904 × 1190. Their visible content fills the complete canvas. No side padding, stretching or letterboxing is added. Versioned filenames avoid stale cached images.
 
 ## BeatsMaxxer gallery order
 
@@ -18,7 +18,7 @@ The previous 3840 × 2800 originals are retained locally in `originals/previous/
 
 ## Trailer Feed
 
-The previous `trailer-feed-selected.png` was 1643 × 1237 and produced side bars inside the standard frame. Its replacement is `trailer-feed-selected-v3.jpg`, a native 1920 × 1200 browser screenshot of the populated homepage, showing Delivery and latest renders. High-density raw captures were rejected after visual inspection found a compositor defect that inserted a black band. The clean native screenshot is retained at its original resolution without upscaling.
+The previous `trailer-feed-selected.png` was 1643 × 1237 and produced side bars inside the standard frame. Its replacement is `trailer-feed-selected-v4.jpg`, a native browser screenshot of the populated homepage, showing Delivery and latest renders. High-density raw captures were rejected after visual inspection found a compositor defect that inserted a black band. The clean native capture returned 1910 × 1194; six pixels at the right and four at the bottom were trimmed to make exact 16:10 without upscaling or stretching.
 
 ## Scope
 
