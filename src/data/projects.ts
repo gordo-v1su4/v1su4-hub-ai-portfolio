@@ -178,7 +178,7 @@ export const projects: Project[] = [
     stack: ["SvelteKit", "Python", "SQLite", "RustFS"],
     stackGroups: [{ title: "Front end", items: ["SvelteKit"] }, { title: "Back end", items: ["Python", "SQLite", "RustFS"] }, { title: "Production tasks", items: ["Finished project import", "Version playback and comparison", "Prompt and model reference library"] }],
     cover: "/images/captures/2026-10-17/trailer-feed-main.webp",
-    media: ["/images/captures/2026-10-18/trailer-feed-selected-v2.webp","/images/captures/2026-10-17/trailer-feed-comparison.webp","/images/captures/2026-10-17/trailer-feed-home.webp","/images/captures/2026-10-17/trailer-feed-prompts.webp"],
+    media: ["/images/captures/2026-10-18/trailer-feed-selected-v3.jpg","/images/captures/2026-10-17/trailer-feed-comparison.webp","/images/captures/2026-10-17/trailer-feed-home.webp","/images/captures/2026-10-17/trailer-feed-prompts.webp"],
     imageFit: "contain",
     link: "https://trailerfeed.video",
     what: "A home for finished AI video projects and the versions, prompts, and model details behind them. I designed and built it so I could watch the work, compare variations, and return to how a particular result was made.",
