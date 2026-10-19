@@ -1,0 +1,153 @@
+{
+  "date": "2026-10-18",
+  "aspect": "16:10",
+  "entries": [
+    {
+      "name": "beatsmaxxer-perform-video",
+      "sourcePixels": [
+        3840,
+        2400
+      ],
+      "pixels": [
+        3840,
+        2400
+      ],
+      "contentPixels": [
+        3840,
+        2400
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "asset": "/images/captures/2026-10-18/beatsmaxxer-perform-video.webp",
+      "bytes": 2837354
+    },
+    {
+      "name": "beatsmaxxer-perform-graphics",
+      "sourcePixels": [
+        3840,
+        2400
+      ],
+      "pixels": [
+        3840,
+        2400
+      ],
+      "contentPixels": [
+        3840,
+        2400
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "asset": "/images/captures/2026-10-18/beatsmaxxer-perform-graphics.webp",
+      "bytes": 967466
+    },
+    {
+      "name": "beatsmaxxer-clip-bank",
+      "sourcePixels": [
+        3840,
+        2400
+      ],
+      "pixels": [
+        3840,
+        2400
+      ],
+      "contentPixels": [
+        3840,
+        2400
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "asset": "/images/captures/2026-10-18/beatsmaxxer-clip-bank.webp",
+      "bytes": 2464272
+    },
+    {
+      "name": "beatsmaxxer-rack-detail",
+      "sourcePixels": [
+        3840,
+        2400
+      ],
+      "pixels": [
+        3840,
+        2400
+      ],
+      "contentPixels": [
+        3840,
+        2400
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "asset": "/images/captures/2026-10-18/beatsmaxxer-rack-detail.webp",
+      "bytes": 2525670
+    },
+    {
+      "name": "beatsmaxxer-timing",
+      "sourcePixels": [
+        3840,
+        2800
+      ],
+      "pixels": [
+        3840,
+        2400
+      ],
+      "contentPixels": [
+        3291,
+        2400
+      ],
+      "offset": [
+        274,
+        0
+      ],
+      "asset": "/images/captures/2026-10-18/beatsmaxxer-timing.webp",
+      "bytes": 2764048
+    },
+    {
+      "name": "beatsmaxxer-arrangement",
+      "sourcePixels": [
+        3840,
+        2800
+      ],
+      "pixels": [
+        3840,
+        2400
+      ],
+      "contentPixels": [
+        3291,
+        2400
+      ],
+      "offset": [
+        274,
+        0
+      ],
+      "asset": "/images/captures/2026-10-18/beatsmaxxer-arrangement.webp",
+      "bytes": 669472
+    },
+    {
+      "name": "beatsmaxxer-help",
+      "sourcePixels": [
+        3840,
+        2800
+      ],
+      "pixels": [
+        3840,
+        2400
+      ],
+      "contentPixels": [
+        3291,
+        2400
+      ],
+      "offset": [
+        274,
+        0
+      ],
+      "asset": "/images/captures/2026-10-18/beatsmaxxer-help.webp",
+      "bytes": 690024
+    }
+  ]
+}
