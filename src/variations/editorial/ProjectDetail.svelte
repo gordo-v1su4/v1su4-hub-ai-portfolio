@@ -78,6 +78,9 @@
 </div>
 
 <style>
+  .gods-project :global(.image-viewer.standard-frame),
+  .gods-project :global(.image-stage figure) { aspect-ratio: 16 / 9; }
+  .gods-project :global(img[alt="GODS & GATEKEEPERS — image 1"]) { object-fit: cover; object-position: center top; }
   .gods-project :global(h2),
   .gods-project :global(h3),
   .gods-project :global(h4),
