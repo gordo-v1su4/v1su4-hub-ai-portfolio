@@ -103,6 +103,7 @@ export const projects: Project[] = [
       "/images/captures/2026-10-19/pindeck-pinterest-import.webp",
       "/images/captures/2026-10-19/pindeck-docs.webp",
       "/images/captures/2026-10-19/pindeck-architecture-detail.webp",
+      "/images/pindeck-workspace.png",
     ],
     imageFit: "contain",
     link: "https://www.pindeck.dev",
