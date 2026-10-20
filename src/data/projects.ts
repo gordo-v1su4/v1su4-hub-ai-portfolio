@@ -247,49 +247,50 @@ export const projects: Project[] = [
     stackGroups: [
       {
         title: "Concept",
-        items: ["Concept art", "Art direction", "Story development", "World building"],
+        items: ["Art direction", "Worldbuilding", "Story development"],
       },
       {
         title: "Visual development",
-        items: ["3D modeling", "AI exploration", "Look development", "Previsualization", "Projection studies"],
+        items: ["3D & AI exploration", "Look development", "Previsualization"],
       },
       {
         title: "Show delivery",
-        items: ["LED content concepts", "Forced perspective", "Lighting synchronization", "Show visualization"],
+        items: ["LED concepts", "Lighting & perspective", "Show visualization"],
       },
     ],
-    cover: "/images/gods-gatekeepers-hero.jpg",
+    cover: "/images/gods-gatekeepers-hero-16x10.webp",
+    imageFit: "contain",
     previewImage: "/images/gods-gatekeepers-hero.jpg",
     what: "A personal concept series of imagined concert worlds built around mythology, impossible scale, and unexpected reveals. I’m developing the visual direction, worldbuilding, and sequences through 3D, AI, and VFX exploration.",
     flow: [
       {
-        label: "CONCEPT & WORLD BUILDING",
-        sub: "Original mythologies, environments, and reveal sequences—concept art, art direction, and story development",
+        label: "Worldbuilding",
+        sub: "Develop the mythology, environments, and key reveals.",
       },
       {
-        label: "3D, AI & VISUAL DEVELOPMENT",
-        sub: "Modeling, generative exploration, look dev, and previs—virtual cameras and projection studies for scale and depth",
+        label: "Visual development",
+        sub: "Explore scale, materials, and movement through 3D and AI.",
       },
       {
-        label: "IMMERSIVE LIVE-SHOW CONCEPTS",
-        sub: "Cinematic sequences for LED and projection illusions—forced perspective, lighting sync, and show visualization",
+        label: "Show concept",
+        sub: "Shape the sequences into a connected live-show concept.",
       },
     ],
     worlds: [
       {
         title: "The Gods",
         description:
-          "Monumental mythological beings, celestial entities, and ancient-inspired architecture that transform the stage into an awakening world.",
+          "Mythological beings and ancient architecture awaken at monumental scale.",
       },
       {
         title: "The Gatekeepers",
         description:
-          "Colossal serpents, panthers, and other guardians that emerge from hidden dimensions, protecting gateways to worlds beyond the visible stage.",
+          "Serpents, panthers, and other guardians mark the gateways between worlds.",
       },
       {
         title: "The Revelations",
         description:
-          "Layered illusions in which familiar concert architecture transforms, fractures, expands, and reveals something unexpected beneath it.",
+          "Familiar stage structures fracture and transform, revealing hidden worlds.",
       },
     ],
     media: [

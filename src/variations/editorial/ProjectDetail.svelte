@@ -35,7 +35,7 @@
         images={[p.image, ...p.media]}
         title={p.title}
         monochromeSlides={p.slug === 'frame-lab'}
-        coverHero={p.slug === 'gods-gatekeepers'}
+        coverHero={p.slug === 'gods-gatekeepers' && p.imageFit !== 'contain'}
         standardFrame={p.imageFit === 'contain'}
       />
     {:else}
