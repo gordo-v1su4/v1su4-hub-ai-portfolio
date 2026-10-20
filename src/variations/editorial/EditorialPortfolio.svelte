@@ -50,10 +50,8 @@
 </script>
 <svelte:head><title>{title} — V1SU4 · Gordo</title><meta name="description" content={site.description} /></svelte:head>
 <svelte:window onscroll={scroll} onresize={scroll} onkeydown={keydown} />
-<div class="min-h-screen" style:background-color={route.view === 'about' ? '#000' : undefined}>
-  {#if route.view !== 'about'}
+<div class="min-h-screen">
     <div aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-ink"><div class="absolute inset-0 bg-grid opacity-70"></div><div class="absolute inset-0 bg-grain opacity-[0.16] mix-blend-soft-light"></div><div class="editorial-vignette absolute inset-0"></div></div>
-  {/if}
   <a href="#main" onclick={(e)=>{e.preventDefault(); page?.focus();}} class="label sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:bg-zinc-100 focus:px-3 focus:py-2 focus:text-ink">Skip to content</a>
   <header class={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${solid || open ? 'border-b border-white/8 bg-ink/72 backdrop-blur-xl supports-[backdrop-filter]:bg-ink/60' : 'border-b border-transparent'}`}>
     <div class="page-width flex h-14 items-center justify-between gap-4 sm:h-16"><a href="#/" aria-label="V1SU4 — home" onpointerdown={press} class="flex items-baseline gap-2.5"><span class="display-title text-[26px] tracking-[0.02em] text-zinc-50 sm:text-[28px]">V1SU4</span><span class="label text-zinc-500">Gordo</span></a>
@@ -79,7 +77,7 @@
       {/if}
     {/key}
   </main>
-  <footer style:background-color={route.view === 'about' ? '#000' : undefined} class={`relative border-t border-white/8 bg-ink/60 ${['project', 'lab-project'].includes(route.view) ? 'mt-8' : 'mt-24 sm:mt-32'}`}><div class="page-width py-14 lg:py-20"><div class="grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr]"><div><h2 class="display-title max-w-md text-[clamp(1.85rem,5.5vw,3.25rem)] leading-[0.92] text-zinc-50">{site.contactHeading}</h2><p class="mt-4 max-w-sm font-mono text-[13px] leading-relaxed text-zinc-400">{site.contactBody}</p><a href={site.contactUrl} target="_blank" rel="noopener noreferrer" class="button-outline mt-7">Get in touch <span aria-hidden="true" class="text-accent">→</span></a></div>
+  <footer class={`relative border-t border-white/8 bg-ink/60 ${['project', 'lab-project'].includes(route.view) ? 'mt-8' : 'mt-24 sm:mt-32'}`}><div class="page-width py-14 lg:py-20"><div class="grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr]"><div><h2 class="display-title max-w-md text-[clamp(1.85rem,5.5vw,3.25rem)] leading-[0.92] text-zinc-50">{site.contactHeading}</h2><p class="mt-4 max-w-sm font-mono text-[13px] leading-relaxed text-zinc-400">{site.contactBody}</p><a href={site.contactUrl} target="_blank" rel="noopener noreferrer" class="button-outline mt-7">Get in touch <span aria-hidden="true" class="text-accent">→</span></a></div>
       {#each [{title:'Portfolio',entries:work},{title:'Lab',entries:lab}] as group (group.title)}<div><h3 class="label text-zinc-500">{group.title}</h3><ul class="mt-5 space-y-3">{#each group.entries as p (p.slug)}<li><a href={href(p)} class="footer-link">{p.title}</a></li>{/each}</ul></div>{/each}
       <div><h3 class="label text-zinc-500">Elsewhere</h3><ul class="mt-5 space-y-3">{#each site.links as link (link.href)}<li><a href={link.href} target="_blank" rel="noopener noreferrer" class="footer-link">{link.label} ↗</a></li>{/each}</ul></div>
     </div><div class="mt-14 flex flex-col gap-3 border-t border-white/8 pt-6 sm:flex-row sm:justify-between"><p class="label text-zinc-600">© {new Date().getFullYear()} V1SU4 — Gordo</p><p class="label text-zinc-600">Miami / LA</p></div></div></footer>
