@@ -1,0 +1,46 @@
+{
+  "source": "https://www.trailerfeed.video",
+  "viewport": {
+    "width": 1440,
+    "height": 900,
+    "deviceScaleFactor": 2.6666666666666665
+  },
+  "pixels": [
+    3840,
+    2400
+  ],
+  "notes": [
+    "Native high-resolution captures; no upscaling.",
+    "Normal responsive page width avoids outer gutters; capture-only scrollbars hidden.",
+    "Home hero fills viewport for framing; navigation remains in identical position.",
+    "Prompt and shot grid saved on Delivery v3; grid uses deployed automatic cover fit."
+  ],
+  "captures": [
+    {
+      "original": "originals/trailer-feed-comparison.png",
+      "asset": "/images/captures/2026-10-20/trailer-feed-comparison.webp"
+    },
+    {
+      "original": "originals/trailer-feed-details.png",
+      "asset": "/images/captures/2026-10-20/trailer-feed-details.webp"
+    },
+    {
+      "original": "originals/trailer-feed-home.png",
+      "asset": "/images/captures/2026-10-20/trailer-feed-home.webp",
+      "videoTimeSeconds": 5
+    },
+    {
+      "original": "originals/trailer-feed-kick.png",
+      "asset": "/images/captures/2026-10-20/trailer-feed-kick.webp",
+      "videoTimeSeconds": 15
+    },
+    {
+      "original": "originals/trailer-feed-main.png",
+      "asset": "/images/captures/2026-10-20/trailer-feed-main.webp"
+    },
+    {
+      "original": "originals/trailer-feed-prompts.png",
+      "asset": "/images/captures/2026-10-20/trailer-feed-prompts.webp"
+    }
+  ]
+}
