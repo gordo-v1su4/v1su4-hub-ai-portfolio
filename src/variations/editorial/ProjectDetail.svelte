@@ -47,7 +47,15 @@
   <section class="mt-8 grid gap-5 border-t border-white/8 pt-8 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] lg:gap-10"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Why it exists</h2><div data-scroll-reveal><p class="max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-300 sm:text-[15px]">{p.rationale}</p><dl class="mt-6 grid grid-cols-2 gap-6"><div><dt class="label text-zinc-600">Role</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.role}</dd></div><div><dt class="label text-zinc-600">Status</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.status}</dd></div></dl></div></section>
 
   {#if p.worlds?.length}<section class={`mt-12 pt-8 lg:mt-16 lg:pt-10 ${p.slug === 'gods-gatekeepers' ? '' : 'border-t border-white/8'}`}><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Visual worlds</h2><ol class="mt-6 grid gap-6 md:grid-cols-3">{#each p.worlds as world (world.title)}<li data-scroll-reveal class={p.slug === 'gods-gatekeepers' ? 'py-2' : 'border border-white/8 bg-white/[0.015] p-5'}><h3 class="font-narrow text-[19px] font-semibold text-zinc-100">{world.title}</h3><p class="mt-3 font-mono text-[13px] leading-relaxed text-zinc-400">{world.description}</p></li>{/each}</ol></section>{/if}
-  {#if p.slug === 'gods-gatekeepers'}<GodsCreativeProcess />{/if}
+  {#if p.slug === 'gods-gatekeepers'}
+    <GodsCreativeProcess />
+    <section class="mt-10 lg:mt-12" aria-labelledby="gods-software-title">
+      <h2 id="gods-software-title" class="font-narrow text-[26px] text-zinc-100 sm:text-[32px]">Software &amp; tools</h2>
+      <ul class="mt-4 flex flex-wrap gap-x-8 gap-y-3 font-mono text-[13px] text-zinc-400">
+        {#each p.stack as tool (tool)}<li>{tool}</li>{/each}
+      </ul>
+    </section>
+  {/if}
   {#if p.flow.length && p.slug !== 'gods-gatekeepers'}<section class={`mt-12 pt-8 lg:mt-16 lg:pt-10 ${p.slug === 'gods-gatekeepers' ? '' : 'border-t border-white/8'}`}><div class="flex flex-wrap items-baseline justify-between gap-3"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">How it works</h2>{#if p.slug !== 'gods-gatekeepers'}<p data-scroll-reveal class="label text-zinc-500">{p.role}</p>{/if}</div><ol class="mt-6 grid gap-6 md:grid-cols-3">{#each workflow as group, i (group.title)}<li data-scroll-reveal class="min-w-0"><div class="flex items-baseline gap-3"><span class="label text-accent">{String(i+1).padStart(2,'0')}</span><h3 class="font-narrow text-[19px] font-semibold text-zinc-100">{group.title}</h3></div><ul class="mt-4 space-y-5">{#each group.steps as step (step.label)}<li><h4 class="font-narrow text-[17px] font-semibold text-zinc-100">{step.label}</h4><p class="mt-2 font-mono text-[13px] leading-relaxed text-zinc-400">{step.sub}</p></li>{/each}</ul></li>{/each}</ol></section>{/if}
   {#if p.stack.length && p.slug !== 'gods-gatekeepers'}<section class={`mt-14 pt-8 lg:mt-20 lg:pt-10 ${p.slug === 'gods-gatekeepers' ? '' : 'border-t border-white/8'}`}><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Stack & build</h2>
     {#if p.stackGroups}
