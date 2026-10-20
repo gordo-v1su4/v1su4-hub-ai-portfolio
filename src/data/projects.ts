@@ -236,7 +236,6 @@ export const projects: Project[] = [
     group: "featured",
     horizontal: true,
     type: "Immersive Concert Visual Concept Series",
-    format: "A V1SU4 format experience",
     tagline: "Ancient mythology, impossible scale, and worlds within worlds.",
     rationale:
       "The project asks how a stage might feel like an unfolding world, with depth and transformation becoming part of the experience.",
@@ -261,7 +260,7 @@ export const projects: Project[] = [
     cover: "/images/gods-gatekeepers-hero-16x10.webp",
     imageFit: "contain",
     previewImage: "/images/gods-gatekeepers-hero.jpg",
-    what: "A personal concept series of imagined concert worlds built around mythology, impossible scale, and unexpected reveals. I’m developing the visual direction, worldbuilding, and sequences through 3D, AI, and VFX exploration.",
+    what: "A personal concept series exploring a visual format for immersive concerts, built around mythology, impossible scale, and unexpected reveals. I’m developing the visual direction, worldbuilding, and sequences through 3D, AI, and VFX exploration.",
     flow: [
       {
         label: "Worldbuilding",
