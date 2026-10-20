@@ -66,7 +66,7 @@ export const projects: Project[] = [
     tagline: "Production review and dailies, self-hosted.",
     role: "Design / Development",
     status: "In Production",
-    rationale: "Keeping review close to the footage helps me follow a shot from upload through feedback without losing the conversation around it.",
+    rationale: "Keeping review close to the footage helps me follow a shot from upload through feedback without losing the conversation around it. Review Room also gives my media a central home on my own server. I can upload a file once and reference it across my other apps, keeping everything connected without uploading the same video in three different places.",
     year: "2026",
     stack: ["Svelte", "Convex", "RustFS", "Trigger.dev"],
     stackGroups: [{ title: "Front end", items: ["Svelte"] }, { title: "Back end", items: ["Convex", "RustFS", "Trigger.dev"] }, { title: "Production tasks", items: ["Project media and daily playlists", "Shot review, comments and ratings", "Client notifications"] }],
