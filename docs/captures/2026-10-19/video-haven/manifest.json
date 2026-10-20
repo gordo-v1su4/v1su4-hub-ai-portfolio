@@ -14,8 +14,8 @@
         3840,
         2400
       ],
-      "asset": "/images/captures/2026-10-19/video-haven-home.webp",
-      "bytes": 6177366
+      "asset": "/images/captures/2026-10-19/video-haven-home-v2.webp",
+      "bytes": 6373438
     },
     {
       "name": "video-haven-dvd-shelf",
@@ -23,8 +23,8 @@
         3840,
         2400
       ],
-      "asset": "/images/captures/2026-10-19/video-haven-dvd-shelf.webp",
-      "bytes": 3187012
+      "asset": "/images/captures/2026-10-19/video-haven-dvd-shelf-v2.webp",
+      "bytes": 2994412
     },
     {
       "name": "video-haven-foil-detail",
@@ -32,8 +32,8 @@
         3840,
         2400
       ],
-      "asset": "/images/captures/2026-10-19/video-haven-foil-detail.webp",
-      "bytes": 1340962
+      "asset": "/images/captures/2026-10-19/video-haven-foil-detail-v2.webp",
+      "bytes": 1505052
     },
     {
       "name": "video-haven-characters",
@@ -41,8 +41,10 @@
         3840,
         2400
       ],
-      "asset": "/images/captures/2026-10-19/video-haven-characters.webp",
-      "bytes": 1465784
+      "asset": "/images/captures/2026-10-19/video-haven-characters-v2.webp",
+      "bytes": 1443180
     }
-  ]
+  ],
+  "scrollbars": "Hidden during capture; no reserved gutter, cropping or resizing.",
+  "detail": "Blood Law episode one DVD with active foil reflection."
 }

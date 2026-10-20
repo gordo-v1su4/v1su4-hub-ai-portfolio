@@ -28,6 +28,7 @@
 
   html {
     -webkit-text-size-adjust: 100%;
+    scrollbar-gutter: stable;
     scrollbar-color: #303038 #09090b;
   }
 
