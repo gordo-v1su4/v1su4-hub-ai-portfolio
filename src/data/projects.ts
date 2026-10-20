@@ -98,7 +98,7 @@ export const projects: Project[] = [
     cover: "/images/pindeck-workspace.png",
     imageFit: "contain",
     link: "https://www.pindeck.dev",
-    what: "Pindeck grew out of needing a better way to work with a growing collection of AI images. I designed and built a workspace that keeps references, variations, and their origins together, then carries selected images into boards, storyboards, and pitch decks.",
+    what: "Pindeck grew out of needing a better way to work with a growing collection of AI images. I designed and built a workspace that keeps references, variations, and their origins together, then carries selected images into collections and storyboards for pitch decks.",
     rationale: "I wanted a collection to help me develop a direction, beyond simply saving images for later.",
     flow: [
       { label: "INGEST", sub: "Discord · Pinterest · upload" },
