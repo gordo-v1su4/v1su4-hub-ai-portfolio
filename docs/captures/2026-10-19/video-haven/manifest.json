@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-19",
+  "source": "https://www.videohaven.stream/",
+  "aspect": "16:10",
+  "viewport": [
+    1920,
+    1200
+  ],
+  "deviceScaleFactor": 2,
+  "entries": [
+    {
+      "name": "video-haven-home",
+      "pixels": [
+        3840,
+        2400
+      ],
+      "asset": "/images/captures/2026-10-19/video-haven-home.webp",
+      "bytes": 6177366
+    },
+    {
+      "name": "video-haven-dvd-shelf",
+      "pixels": [
+        3840,
+        2400
+      ],
+      "asset": "/images/captures/2026-10-19/video-haven-dvd-shelf.webp",
+      "bytes": 3187012
+    },
+    {
+      "name": "video-haven-foil-detail",
+      "pixels": [
+        3840,
+        2400
+      ],
+      "asset": "/images/captures/2026-10-19/video-haven-foil-detail.webp",
+      "bytes": 1340962
+    },
+    {
+      "name": "video-haven-characters",
+      "pixels": [
+        3840,
+        2400
+      ],
+      "asset": "/images/captures/2026-10-19/video-haven-characters.webp",
+      "bytes": 1465784
+    }
+  ]
+}
