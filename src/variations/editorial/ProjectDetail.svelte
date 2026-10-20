@@ -13,7 +13,7 @@
     { title: 'Output', steps: p.flow.slice(-1) },
   ] : []);
 </script>
-<div use:reveal={true} class="page-width pt-20 lg:pt-20">
+<div use:reveal={true} class="page-width pt-20 lg:pt-20" class:gods-project={p?.slug === 'gods-gatekeepers'}>
 {#if p}
   <a href={p.experimental ? '#/lab' : '#/'} data-scroll-reveal onpointerdown={press} class="label inline-flex min-h-8 items-center gap-2 text-zinc-500 hover:text-zinc-100">← {p.experimental ? 'Lab' : 'Portfolio'} index</a>
   <header class="mt-4">
@@ -68,3 +68,24 @@
   <h1 class="display-title text-7xl text-zinc-100">Project not found</h1><a href="#/" class="button-outline mt-8">Back to index</a>
 {/if}
 </div>
+
+<style>
+  .gods-project :global(h2),
+  .gods-project :global(h3),
+  .gods-project :global(h4),
+  .gods-project :global(dd) {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+  .gods-project :global(dl > div:first-child dd) {
+    max-width: 58ch;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.8;
+    letter-spacing: 0.025em;
+    text-transform: none;
+    color: #a1a1aa;
+  }
+</style>
