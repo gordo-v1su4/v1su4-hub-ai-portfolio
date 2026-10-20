@@ -1,0 +1,67 @@
+{
+  "source": "https://www.pindeck.dev/",
+  "entries": [
+    {
+      "name": "gallery-detail",
+      "source": "docs\\captures\\2026-10-19\\pindeck\\originals\\pindeck-selected-01.png",
+      "asset": "/images/captures/2026-10-19/pindeck-gallery-detail.webp",
+      "pixels": [
+        3840,
+        2400
+      ]
+    },
+    {
+      "name": "table-palettes",
+      "source": "docs\\captures\\2026-10-19\\pindeck\\originals\\pindeck-selected-02.png",
+      "asset": "/images/captures/2026-10-19/pindeck-table-palettes.webp",
+      "pixels": [
+        3840,
+        2400
+      ]
+    },
+    {
+      "name": "deck-composer",
+      "source": "docs\\captures\\2026-10-19\\pindeck\\originals\\pindeck-selected-03.png",
+      "asset": "/images/captures/2026-10-19/pindeck-deck-composer.webp",
+      "pixels": [
+        3840,
+        2400
+      ]
+    },
+    {
+      "name": "storyboard",
+      "source": "docs\\captures\\2026-10-19\\pindeck\\originals\\pindeck-selected-04.png",
+      "asset": "/images/captures/2026-10-19/pindeck-storyboard.webp",
+      "pixels": [
+        3840,
+        2400
+      ]
+    },
+    {
+      "name": "pinterest-import",
+      "source": "docs\\captures\\2026-10-19\\pindeck\\originals\\pindeck-selected-05.png",
+      "asset": "/images/captures/2026-10-19/pindeck-pinterest-import.webp",
+      "pixels": [
+        3840,
+        2400
+      ]
+    },
+    {
+      "name": "docs",
+      "source": "docs\\captures\\2026-10-19\\pindeck\\originals\\pindeck-selected-06.png",
+      "asset": "/images/captures/2026-10-19/pindeck-docs.webp",
+      "pixels": [
+        3840,
+        2400
+      ]
+    },
+    {
+      "name": "architecture-detail",
+      "asset": "/images/captures/2026-10-19/pindeck-architecture-detail.webp",
+      "pixels": [
+        3840,
+        1844
+      ]
+    }
+  ]
+}
