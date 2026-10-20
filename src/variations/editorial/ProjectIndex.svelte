@@ -167,12 +167,17 @@
       <div class="flex items-center justify-between gap-3"><p class="label text-zinc-500">{String(i+1).padStart(2,'0')} · {p.category}</p><span class="status-pill shrink-0">{p.status}</span></div>
       <h3 class="display-title mt-3 text-[clamp(2.1rem,10vw,2.9rem)] text-zinc-50">{p.title} <span class="float-right text-zinc-500">→</span></h3>
       <p class="mt-2 font-mono text-[12.5px] leading-relaxed text-zinc-400">{p.line}</p>
+      <div class="relative mt-4">
       <Frame
         src={p.previewImage ?? p.image}
         alt={`${p.title} project preview`}
         eager={i < 2}
-        class="mt-4"
+        class={p.slug === 'gods-gatekeepers' ? '[&_img]:object-cover' : ''}
       />
+      {#if p.slug === 'gods-gatekeepers'}
+        <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 h-[28%]" style="background:linear-gradient(to top,rgba(0,0,0,.65),transparent)"></div>
+      {/if}
+      </div>
     </a></li>
   {/each}</ul>
 {/if}

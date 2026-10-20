@@ -18,7 +18,7 @@
   <a href={p.experimental ? '#/lab' : '#/'} data-scroll-reveal onpointerdown={press} class="label inline-flex min-h-8 items-center gap-2 text-zinc-500 hover:text-zinc-100">← {p.experimental ? 'Lab' : 'Portfolio'} index</a>
   <header class="mt-4">
     <p data-scroll-reveal class="kicker">{p.category}</p>
-    <h1 data-scroll-reveal class="display-title mt-3 text-[clamp(3.2rem,12vw,9rem)] text-zinc-50">{p.title}</h1>
+    <h1 data-scroll-reveal class="display-title mt-3 text-[clamp(1.6rem,6vw,4.5rem)] text-zinc-50">{p.title}</h1>
     {#if p.format}<p data-scroll-reveal class="mt-3 font-mono text-[13px] tracking-[0.04em] text-zinc-500 sm:text-[14px]">{p.format}</p>{/if}
     <p data-scroll-reveal class={`max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-400 sm:text-[15px] ${p.format ? 'mt-3' : ''}`}>{p.line}</p>
     <div class="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-16">

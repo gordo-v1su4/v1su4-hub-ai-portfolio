@@ -30,7 +30,8 @@ window.addEventListener("hashchange", async () => {
   router.route = parseHash();
   await tick();
   if (request !== navigation) return;
-  window.scrollTo({top: positions.get(previousPath) ?? 0, behavior: "instant"});
+  const projectPage = ["project", "lab-project", "wow-project"].includes(router.route.view);
+  window.scrollTo({top: projectPage ? 0 : positions.get(previousPath) ?? 0, behavior: "instant"});
 });
 
 /* In-site navigation. Each move adds a history entry, so the browser's back button and [BACK] both work. */

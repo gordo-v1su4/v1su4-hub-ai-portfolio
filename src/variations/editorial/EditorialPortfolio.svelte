@@ -64,7 +64,7 @@
   <main id="main" bind:this={page} tabindex="-1">
     {#key `${route.view}/${route.slug ?? ''}`}
       {#if route.view === 'home' || route.view === 'lab'}<IndexPage experimental={route.view === 'lab'} />
-      {:else if route.view === 'project' || route.view === 'lab-project'}<ProjectDetail slug={route.slug ?? ''} />
+      {:else if route.view === 'project' || route.view === 'lab-project'}{#key route.slug}<ProjectDetail slug={route.slug ?? ''} />{/key}
       {:else if route.view === 'archives'}
         <div use:reveal class="page-width pt-24 lg:pt-32"><p data-reveal class="kicker">V1SU4 · Archives</p><h1 data-reveal class="display-title mt-5 text-[clamp(3.2rem,12vw,9rem)] text-zinc-50">Archives</h1><p data-reveal class="mt-6 max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-400">{site.archives}</p><div data-reveal class="mt-8 flex flex-wrap gap-3">{#each site.links.filter(l=>['VFX REEL','IMDB'].includes(l.label)) as link (link.href)}<a class="button-outline" href={link.href} target="_blank" rel="noopener noreferrer">{link.label} ↗</a>{/each}</div></div>
       {:else}
