@@ -6,6 +6,7 @@
   import { reveal } from './motion';
   let { experimental = false }: {experimental?: boolean} = $props();
   const items = $derived(experimental ? lab : work);
+  const homepageLab = lab.filter(project => ['creative-studio-pro', 'music-video-agent'].includes(project.slug));
 </script>
 <div use:reveal>
   <header class="border-b border-white/8 pb-4 pt-22 sm:pb-5 sm:pt-24 lg:pt-26">
@@ -30,6 +31,6 @@
     </section>
   {/if}
   <section use:reveal={true} class="page-width mt-20 sm:mt-28"><div class="flex items-end justify-between border-t border-white/8 pt-8"><h2 data-scroll-reveal class="display-title text-[clamp(1.8rem,4vw,3rem)] text-zinc-100">{experimental ? 'Selected work' : 'Also building'}</h2><a class="label text-zinc-500" href={experimental ? '#/' : '#/lab'}>{experimental ? 'Portfolio index' : 'Into the lab'} →</a></div>
-    <ul class="mt-8 grid gap-5 sm:grid-cols-2">{#each (experimental ? work.slice(0,2) : lab) as p (p.slug)}<li data-scroll-reveal><a href={href(p)} class="group flex h-full flex-col border border-white/8 bg-white/[0.015] p-3 hover:border-white/20"><Frame src={p.image} alt={`${p.title} preview`} natural class="mb-4" /><div class="mt-auto flex items-center justify-between gap-3 px-1"><span class="label text-zinc-400">{p.title}</span><span class="label text-zinc-600">{p.status}</span></div></a></li>{/each}</ul>
+    <ul class="mt-8 grid gap-5 sm:grid-cols-2">{#each (experimental ? work.slice(0,2) : homepageLab) as p (p.slug)}<li data-scroll-reveal><a href={href(p)} class="group flex h-full flex-col border border-white/8 bg-white/[0.015] p-3 hover:border-white/20"><Frame src={p.image} alt={`${p.title} preview`} natural class="mb-4" /><div class="mt-auto flex items-center justify-between gap-3 px-1"><span class="label text-zinc-400">{p.title}</span><span class="label text-zinc-600">{p.status}</span></div></a></li>{/each}</ul>
   </section>
 </div>
