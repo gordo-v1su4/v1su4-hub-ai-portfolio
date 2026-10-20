@@ -349,12 +349,12 @@ export const skillGroups = [
 export const site = {
   name: "Gordo",
   label: "V1SU4",
-  role: "Visual Artist / Creative Technologist",
+  role: "Creative Technologist / Visual Artist",
   focus: "Film, television, commercials, and immersive experiences",
   mission: "I make visual stories, immersive experiences, and creative tools, bringing ideas to life across film, television, commercials, and interactive work.",
   description: "Gordo’s visual stories, immersive experiences, and creative tools across film, television, commercials, and interactive work.",
   about: [
-    "I’m Gordo, a visual artist and creative technologist. I like figuring out what an idea could become, then working through the details that make it feel right.",
+    "I’m Gordo, a creative technologist and visual artist. I like figuring out what an idea could become, then working through the details that make it feel right.",
     "My background is in VFX for film, television, and commercials, with Houdini still a big part of how I work. These days, I’m making AI films, commercials, and original series, developing immersive experiences, and building apps that support the creative process—from exploring an idea to bringing it through production. Sometimes the work is an image or a sequence; sometimes it’s a tool that makes the next project easier to make. I care about the creative choices and the technical work needed to carry them through to a polished result.",
     "I grew up performing as a singer and dancer, including two and a half years in a Broadway show. There’s a whole earlier chapter there, if you ever want to ask.",
   ],
