@@ -141,7 +141,10 @@
           <div data-layer style:opacity={i === selected ? 1 : 0} style:z-index={i === selected ? 2 : 1} class="absolute inset-0" style:background-color={p.slug === 'review-room' ? '#080e0d' : p.slug === 'frame-lab' ? '#0a0a0a' : undefined}>
           <img src={p.previewImage ?? p.image} alt={i === selected ? `${p.title} project preview` : ''} aria-hidden={i !== selected}
             loading={i === 0 ? 'eager' : 'lazy'} decoding="async" draggable="false"
-            class="absolute inset-0 h-full w-full object-center" style:object-fit={p.imageFit ?? "cover"} />
+            class="absolute inset-0 h-full w-full object-center" style:object-fit={p.slug === 'gods-gatekeepers' ? 'cover' : p.imageFit ?? "cover"} />
+          {#if p.slug === 'gods-gatekeepers'}
+            <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 h-[28%]" style="background:linear-gradient(to top,rgba(0,0,0,.65),transparent)"></div>
+          {/if}
           </div>
         {/each}
         <div aria-hidden="true" class="pointer-events-none absolute bottom-3 left-3 z-10 flex gap-1.5">{#each items as p, i (p.slug)}<span class={`h-[2px] transition-all duration-300 ${i === selected ? 'w-6 bg-accent-2' : 'w-2.5 bg-white/25'}`}></span>{/each}</div>
