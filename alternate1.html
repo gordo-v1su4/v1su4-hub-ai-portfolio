@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#09090b">
+  <title>V1SU4 — Gordo</title>
+  <meta name="description" content="Gordo’s visual stories, immersive experiences, and creative tools across film, television, commercials, and interactive work.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist+Mono:wght@400;500&family=Space+Mono&family=Instrument+Serif:ital@0;1&family=Syne:wght@800&family=Archivo:wdth,wght@125,800&family=Major+Mono+Display&family=Bricolage+Grotesque:opsz,wght@96,700&display=swap">
+</head>
+<body>
+  <canvas id="gl" aria-label="Project index. Drag or scroll to browse, click to open."></canvas>
+
+  <div class="ui" id="ui">
+    <div class="now" aria-live="polite">
+      <span class="label count" id="count"></span>
+      <h1 class="display" id="title"></h1>
+      <p class="line" id="line"></p>
+      <div class="label meta" id="meta"></div>
+      <div class="split" id="now-split"></div>
+    </div>
+    <nav class="list" id="list" aria-label="Projects"></nav>
+    <span class="label hint" id="hint">Drag or scroll · Click to open</span>
+  </div>
+
+  <article class="page detail" id="detail" aria-hidden="true">
+    <div class="bar"><button class="label" data-back>← Index</button><span class="label" id="d-count"></span></div>
+    <div class="hero"><img id="d-img" alt=""></div>
+    <div class="body" id="d-body"></div>
+  </article>
+
+  <article class="page about" id="about" aria-hidden="true">
+    <div class="bar"><button class="label" data-back>← Index</button><span class="label">About</span></div>
+    <div class="hero"><img src="/images/about-profile-backdrop.png" alt="Gordo under a single overhead light against a green tiled wall"></div>
+    <div class="body" id="a-body"></div>
+  </article>
+
+  <header class="top" id="top">
+    <a class="brand" href="#/">V1SU4</a>
+    <div class="fontpick" aria-label="Title font">
+      <button id="fp-prev" aria-label="Previous font">‹</button>
+      <span class="label" id="fp-name"></span>
+      <button id="fp-next" aria-label="Next font">›</button>
+    </div>
+    <nav class="label" aria-label="Site">
+      <a href="#/" data-nav="index">Index</a>
+      <a href="#/about" data-nav="about">About</a>
+      <a href="#/about/contact" data-nav="contact">Contact</a>
+    </nav>
+  </header>
+
+  <script type="module" src="/src/alternate1/main.ts"></script>
+</body>
+</html>
