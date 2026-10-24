@@ -4,6 +4,8 @@
   import Frame from './Frame.svelte';
   import ImageViewer from './ImageViewer.svelte';
   import GodsCreativeProcess from './GodsCreativeProcess.svelte';
+  import ProjectStackFlow from './ProjectStackFlow.svelte';
+  import ProjectStackBuild from './ProjectStackBuild.svelte';
   let { slug }: {slug: string} = $props();
   const p = $derived(all.find(p=>p.slug === slug));
   const next = $derived.by(() => { if (!p) return undefined; const list = p.experimental ? lab : work; return list[(list.indexOf(p)+1)%list.length]; });
@@ -13,7 +15,7 @@
     { title: 'Output', steps: p.flow.slice(-1) },
   ] : []);
 </script>
-<div use:reveal={true} class="page-width pt-20 lg:pt-20" class:gods-project={p?.slug === 'gods-gatekeepers'}>
+<div use:reveal={true} class="page-width pt-20 lg:pt-20" class:stack-project={p?.slug === 'project-stack-structure'} class:gods-project={p?.slug === 'gods-gatekeepers'}>
 {#if p}
   <a href={p.experimental ? '#/lab' : '#/'} data-scroll-reveal onpointerdown={press} class="label inline-flex min-h-8 items-center gap-2 text-zinc-500 hover:text-zinc-100">← {p.experimental ? 'Lab' : 'Portfolio'} index</a>
   <header class="mt-4">
@@ -56,9 +58,9 @@
       </ul>
     </section>
   {/if}
-  {#if p.flow.length && p.slug !== 'gods-gatekeepers'}<section class={`mt-12 pt-8 lg:mt-16 lg:pt-10 ${p.slug === 'gods-gatekeepers' ? '' : 'border-t border-white/8'}`}><div class="flex flex-wrap items-baseline justify-between gap-3"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">How it works</h2>{#if p.slug !== 'gods-gatekeepers'}<p data-scroll-reveal class="label text-zinc-500">{p.role}</p>{/if}</div><ol class="mt-6 grid gap-6 md:grid-cols-3">{#each workflow as group, i (group.title)}<li data-scroll-reveal class="min-w-0"><div class="flex items-baseline gap-3"><span class="label text-accent">{String(i+1).padStart(2,'0')}</span><h3 class="font-narrow text-[19px] font-semibold text-zinc-100">{group.title}</h3></div><ul class="mt-4 space-y-5">{#each group.steps as step (step.label)}<li><h4 class="font-narrow text-[17px] font-semibold text-zinc-100">{step.label}</h4><p class="mt-2 font-mono text-[13px] leading-relaxed text-zinc-400">{step.sub}</p></li>{/each}</ul></li>{/each}</ol></section>{/if}
+  {#if p.flow.length && p.slug !== 'gods-gatekeepers'}<section class={`mt-12 pt-8 lg:mt-16 lg:pt-10 ${p.slug === 'gods-gatekeepers' ? '' : 'border-t border-white/8'}`}><div class="flex flex-wrap items-baseline justify-between gap-3"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">How it works</h2>{#if p.slug !== 'gods-gatekeepers'}<p data-scroll-reveal class="label text-zinc-500">{p.role}</p>{/if}</div>{#if p.slug === 'project-stack-structure'}<div data-scroll-reveal><ProjectStackFlow steps={p.flow} /></div>{:else}<ol class="mt-6 grid gap-6 md:grid-cols-3">{#each workflow as group, i (group.title)}<li data-scroll-reveal class="min-w-0"><div class="flex items-baseline gap-3"><span class="label text-accent">{String(i+1).padStart(2,'0')}</span><h3 class="font-narrow text-[19px] font-semibold text-zinc-100">{group.title}</h3></div><ul class="mt-4 space-y-5">{#each group.steps as step (step.label)}<li><h4 class="font-narrow text-[17px] font-semibold text-zinc-100">{step.label}</h4><p class="mt-2 font-mono text-[13px] leading-relaxed text-zinc-400">{step.sub}</p></li>{/each}</ul></li>{/each}</ol>{/if}</section>{/if}
   {#if p.stack.length && p.slug !== 'gods-gatekeepers'}<section class={`mt-14 pt-8 lg:mt-20 lg:pt-10 ${p.slug === 'gods-gatekeepers' ? '' : 'border-t border-white/8'}`}><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Stack & build</h2>
-    {#if p.stackGroups}
+    {#if p.slug === 'project-stack-structure'}<div data-scroll-reveal><ProjectStackBuild /></div>{:else if p.stackGroups}
       <div class="mt-6 grid gap-6 sm:grid-cols-3">
         {#each p.stackGroups as group (group.title)}
           <div data-scroll-reveal class={p.slug === 'gods-gatekeepers' ? 'py-2' : 'border border-white/8 bg-white/[0.015] p-5'}>
@@ -78,6 +80,8 @@
 </div>
 
 <style>
+  .stack-project > section { border-top-width: .5px; border-color: #ffffff0d; }
+
   .gods-project :global(.image-viewer.standard-frame),
   .gods-project :global(.image-stage figure) { aspect-ratio: 16 / 9; }
   .gods-project :global(img[alt="GODS & GATEKEEPERS — image 1"]) { object-fit: cover; object-position: center top; }
