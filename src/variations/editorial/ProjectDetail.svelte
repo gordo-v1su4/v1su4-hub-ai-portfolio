@@ -6,16 +6,21 @@
   import GodsCreativeProcess from './GodsCreativeProcess.svelte';
   import ProjectStackFlow from './ProjectStackFlow.svelte';
   import ProjectStackBuild from './ProjectStackBuild.svelte';
+  import AppWorkflow from './AppWorkflow.svelte';
+  import AppArchitecture from './ProjectStackArchitecture.svelte';
+  import { caseStudies } from './caseStudies';
   let { slug }: {slug: string} = $props();
   const p = $derived(all.find(p=>p.slug === slug));
+  const accents: Record<string, string> = {
+    'review-room': '#7dd9c8', 'video-haven': '#e82a44',
+    'trailer-feed': '#eabf45', 'pindeck': '#3a7bff',
+    'creative-studio-pro': '#99f6e4', 'music-video-agent': '#a78bfa',
+    'beatsmaxxer-pro': '#4ade80',
+    'frame-lab': '#d4d4d4', 'gods-gatekeepers': '#f3263e',
+  };
   const next = $derived.by(() => { if (!p) return undefined; const list = p.experimental ? lab : work; return list[(list.indexOf(p)+1)%list.length]; });
-  const workflow = $derived(p ? [
-    { title: 'Input', steps: p.flow.slice(0, 1) },
-    { title: 'Process', steps: p.flow.slice(1, -1) },
-    { title: 'Output', steps: p.flow.slice(-1) },
-  ] : []);
 </script>
-<div use:reveal={true} class="page-width pt-20 lg:pt-20" class:stack-project={p?.slug === 'project-stack-structure'} class:gods-project={p?.slug === 'gods-gatekeepers'}>
+<div use:reveal={true} style:--project-accent={accents[slug] ?? '#e05c00'} class="project-detail page-width pt-20 lg:pt-20" class:stack-project={p?.slug === 'project-stack-structure'} class:gods-project={p?.slug === 'gods-gatekeepers'}>
 {#if p}
   <a href={p.experimental ? '#/lab' : '#/'} data-scroll-reveal onpointerdown={press} class="label inline-flex min-h-8 items-center gap-2 text-zinc-500 hover:text-zinc-100">← {p.experimental ? 'Lab' : 'Portfolio'} index</a>
   <header class="mt-4">
@@ -58,21 +63,26 @@
       </ul>
     </section>
   {/if}
-  {#if p.flow.length && p.slug !== 'gods-gatekeepers'}<section class={`mt-12 pt-8 lg:mt-16 lg:pt-10 ${p.slug === 'gods-gatekeepers' ? '' : 'border-t border-white/8'}`}><div class="flex flex-wrap items-baseline justify-between gap-3"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">How it works</h2>{#if p.slug !== 'gods-gatekeepers'}<p data-scroll-reveal class="label text-zinc-500">{p.role}</p>{/if}</div>{#if p.slug === 'project-stack-structure'}<div data-scroll-reveal><ProjectStackFlow steps={p.flow} /></div>{:else}<ol class="mt-6 grid gap-6 md:grid-cols-3">{#each workflow as group, i (group.title)}<li data-scroll-reveal class="min-w-0"><div class="flex items-baseline gap-3"><span class="label text-accent">{String(i+1).padStart(2,'0')}</span><h3 class="font-narrow text-[19px] font-semibold text-zinc-100">{group.title}</h3></div><ul class="mt-4 space-y-5">{#each group.steps as step (step.label)}<li><h4 class="font-narrow text-[17px] font-semibold text-zinc-100">{step.label}</h4><p class="mt-2 font-mono text-[13px] leading-relaxed text-zinc-400">{step.sub}</p></li>{/each}</ul></li>{/each}</ol>{/if}</section>{/if}
-  {#if p.stack.length && p.slug !== 'gods-gatekeepers'}<section class={`mt-14 pt-8 lg:mt-20 lg:pt-10 ${p.slug === 'gods-gatekeepers' ? '' : 'border-t border-white/8'}`}><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Stack & build</h2>
-    {#if p.slug === 'project-stack-structure'}<div data-scroll-reveal><ProjectStackBuild /></div>{:else if p.stackGroups}
-      <div class="mt-6 grid gap-6 sm:grid-cols-3">
-        {#each p.stackGroups as group (group.title)}
-          <div data-scroll-reveal class={p.slug === 'gods-gatekeepers' ? 'py-2' : 'border border-white/8 bg-white/[0.015] p-5'}>
-            <h3 class={p.slug === 'gods-gatekeepers' ? 'font-narrow text-[17px] font-semibold text-zinc-100' : 'label text-zinc-500'}>{group.title}</h3>
-            <ul class="mt-3 space-y-2 font-mono text-[13px] leading-relaxed text-zinc-300">{#each group.items as item (item)}<li>{item}</li>{/each}</ul>
-          </div>
-        {/each}
-      </div>
-    {:else}
-      <div data-scroll-reveal class="mt-6 border border-white/8 bg-white/[0.015] p-5"><h3 class="label text-zinc-500">Technology</h3><ul class="mt-3 space-y-2 font-mono text-[13px] leading-relaxed text-zinc-300">{#each p.stack as item (item)}<li>{item}</li>{/each}</ul></div>
-    {/if}
-  </section>{/if}
+  {#if p.flow.length && p.slug !== 'gods-gatekeepers'}
+    <section class="case-section">
+      <h2 data-scroll-reveal>How it works</h2>
+      {#if p.slug === 'project-stack-structure'}
+        <div data-scroll-reveal class="technical-figure"><span class="side-label">Workflow</span><div><ProjectStackFlow steps={p.flow} /></div></div>
+      {:else if caseStudies[p.slug]}
+        <div data-scroll-reveal><AppWorkflow study={caseStudies[p.slug]} slug={p.slug} /></div>
+      {/if}
+    </section>
+  {/if}
+  {#if p.stack.length && p.slug !== 'gods-gatekeepers'}
+    <section class="case-section">
+      <h2 data-scroll-reveal>Stack &amp; build</h2>
+      {#if p.slug === 'project-stack-structure'}
+        <div data-scroll-reveal class="technical-figure"><span class="side-label">Stack &amp; production</span><div><ProjectStackBuild /></div></div>
+      {:else if caseStudies[p.slug]}
+        <div data-scroll-reveal><AppArchitecture architecture={caseStudies[p.slug].architecture} /></div>
+      {/if}
+    </section>
+  {/if}
   {#if next}<section class="mt-64 lg:mt-80"><p data-scroll-reveal class="label text-zinc-600">Next {p.experimental ? 'experiment' : 'project'}</p><a href={href(next)} data-scroll-reveal onpointerdown={press} class="group mt-4 flex items-end justify-between gap-4 pb-2"><span class="display-title text-[clamp(2.6rem,9vw,7rem)] text-zinc-500 group-hover:text-zinc-50">{next.title}</span><span aria-hidden="true" class="text-accent">→</span></a></section>{/if}
 {:else}
   <h1 class="display-title text-7xl text-zinc-100">Project not found</h1><a href="#/" class="button-outline mt-8">Back to index</a>
@@ -80,19 +90,20 @@
 </div>
 
 <style>
-  .stack-project > section { border-top-width: .5px; border-color: #ffffff0d; }
+  .case-section { margin-top: 64px; padding-top: 32px; border-top: .5px solid #ffffff0d; }
+  .project-detail :global(h2) { font-family: var(--font-narrow); font-size: 26px; font-weight: 600; line-height: 1.5; letter-spacing: normal; text-transform: none; color: var(--color-zinc-100); }
+  .technical-figure { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 14px; }
+  .technical-figure > div { min-width: 0; }
+  .side-label { writing-mode: vertical-rl; transform: rotate(180deg); align-self: center; justify-self: start; font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--color-zinc-500); }
+  @media (min-width: 640px) { .project-detail :global(h2) { font-size: 32px; } }
+  @media (min-width: 1024px) { .case-section { margin-top: 80px; padding-top: 40px; } }
+  @media (max-width: 760px) { .technical-figure { grid-template-columns: 16px minmax(0, 1fr); gap: 8px; } }
+
+  .project-detail > section { border-top-width: .5px; border-color: #ffffff0d; }
 
   .gods-project :global(.image-viewer.standard-frame),
   .gods-project :global(.image-stage figure) { aspect-ratio: 16 / 9; }
   .gods-project :global(img[alt="GODS & GATEKEEPERS — image 1"]) { object-fit: cover; object-position: center top; }
-  .gods-project :global(h2),
-  .gods-project :global(h3),
-  .gods-project :global(h4),
-  .gods-project :global(dd) {
-    font-family: var(--font-display);
-    font-weight: 400;
-    text-transform: uppercase;
-  }
   .gods-project :global(dl > div:first-child dd) {
     max-width: 58ch;
     font-family: var(--font-mono);
