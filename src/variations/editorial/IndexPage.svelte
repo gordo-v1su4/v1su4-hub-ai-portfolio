@@ -9,11 +9,11 @@
   const homepageLab = lab.filter(project => ['creative-studio-pro', 'music-video-agent'].includes(project.slug));
 </script>
 <div use:reveal>
-  <header class="border-b border-white/8 pb-4 pt-22 sm:pb-5 sm:pt-24 lg:pt-26">
+  <header class="border-b border-white/8 pb-4 pt-22 sm:pb-5 sm:pt-24 lg:pt-26" class:portfolio-intro={!experimental}>
     <div class="page-width flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
       <div>
         <p data-reveal class={`kicker ${experimental ? '' : 'portfolio-heading-line'}`}>{experimental ? 'V1SU4 · Lab — work in progress' : 'Creative Production Portfolio and Software'}</p>
-        <h1 data-reveal class="display-title mt-2 text-[clamp(2rem,5vw,3.25rem)] text-zinc-50">{experimental ? 'The lab' : 'Selected work'}</h1>
+        <h1 data-reveal class={`display-title ${experimental ? 'mt-2' : 'mt-4'} text-[clamp(2rem,5vw,3.25rem)] text-zinc-50`}>{experimental ? 'The lab' : 'Selected work'}</h1>
         <p data-reveal class="mt-4 max-w-3xl font-mono text-[13.5px] leading-relaxed text-zinc-400 sm:text-[14px]">{experimental ? site.lab : site.mission}</p>
       </div>
       <ul data-reveal class="flex flex-wrap gap-x-5 gap-y-1">
@@ -34,3 +34,11 @@
     <ul class="mt-8 grid gap-5 sm:grid-cols-2">{#each (experimental ? work.slice(0,2) : homepageLab) as p (p.slug)}<li data-scroll-reveal><a href={href(p)} class="group flex h-full flex-col border border-white/8 bg-white/[0.015] p-3 hover:border-white/20"><Frame src={p.image} alt={`${p.title} preview`} natural class="mb-4" /><div class="mt-auto flex items-center justify-between gap-3 px-1"><span class="label text-zinc-400">{p.title}</span><span class="label text-zinc-600">{p.status}</span></div></a></li>{/each}</ul>
   </section>
 </div>
+
+<style>
+  .portfolio-intro { padding-top: 76px; }
+  .portfolio-heading-line { color: var(--color-accent-2); }
+  .portfolio-heading-line::before { content: none; }
+  @media (min-width: 640px) { .portfolio-intro { padding-top: 84px; } }
+  @media (min-width: 1024px) { .portfolio-intro { padding-top: 92px; } }
+</style>
