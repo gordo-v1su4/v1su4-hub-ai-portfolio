@@ -93,7 +93,7 @@
     } else return;
     e.preventDefault();
     void select(next);
-    list?.querySelectorAll('button')[next]?.focus();
+    list?.querySelectorAll('[role="option"]')[next]?.focus();
   }
 
   onDestroy(() => {
@@ -107,37 +107,53 @@
 
 <section aria-label="Project index">
 {#if desktop.current}
-  <div class="grid grid-cols-[minmax(0,0.82fr)_minmax(0,1fr)] items-start gap-10 xl:gap-16">
-    <div data-reveal>
-      <div class="mb-2 flex items-center justify-between border-b border-white/10 pb-3">
+  <div class="grid grid-cols-[minmax(0,0.82fr)_minmax(0,1fr)] gap-10 xl:gap-16">
+    <div data-reveal class="flex flex-col">
+      <div class="mb-1 flex items-center justify-between pb-2">
         <p class="label text-zinc-500">{experimental ? 'Experiment' : 'Project'} · {String(items.length).padStart(2,'0')}</p>
         <p class="label text-zinc-600">↑↓ browse · ↵ open</p>
       </div>
-      <ul bind:this={list} class="border-b border-white/10">
+      <ul bind:this={list} role="listbox" aria-label="Projects" class="flex flex-1 flex-col justify-between">
         {#each items as p, i (p.slug)}
-          <li><button type="button" tabindex={i === selected ? 0 : -1} aria-current={i === selected ? 'true' : undefined}
-            onkeydown={keyboard} onpointerdown={press} onmouseenter={() => select(i)}
-            onclick={() => i === selected ? window.location.hash = href(p).slice(1) : select(i)}
-            class={`group relative flex w-full items-center gap-5 rounded-[2px] py-[18px] pl-3 text-left transition-colors duration-150 ${i === selected ? 'bg-white/[0.025]' : 'hover:bg-white/[0.02]'}`}>
-            <span aria-hidden="true" class={`absolute inset-y-[10px] left-0 w-[2px] bg-accent transition-transform duration-200 ${i === selected ? 'scale-y-100' : 'scale-y-0'}`}></span>
+          <li role="presentation">
+            <div
+              role="option"
+              aria-selected={i === selected}
+              tabindex={i === selected ? 0 : -1}
+              onkeydown={keyboard}
+              onmouseenter={() => select(i)}
+              onclick={(e) => {
+                if ((e.target as HTMLElement).closest('a')) return;
+                if (i === selected) window.location.hash = href(p).slice(1);
+                else void select(i);
+              }}
+              class={`group relative flex w-full cursor-pointer items-center gap-5 rounded-[2px] py-[13px] pl-3 text-left transition-colors duration-150 ${i === selected ? 'bg-white/[0.025]' : 'hover:bg-white/[0.02]'}`}
+            >
+            <span aria-hidden="true" class={`absolute inset-y-0 left-0 w-[2px] bg-accent transition-transform duration-200 ${i === selected ? 'scale-y-100' : 'scale-y-0'}`}></span>
             <span class={`label w-8 shrink-0 ${i === selected ? 'text-accent-2' : 'text-zinc-600'}`}>{String(i+1).padStart(2,'0')}</span>
-            <span class="min-w-0 flex-1"><span class={`display-title block text-[clamp(1.9rem,2.8vw,2.65rem)] ${i === selected ? 'text-zinc-50' : 'text-zinc-500'}`}>{p.title}</span>
-              <span class="mt-2 block max-w-md font-mono text-[11px] leading-relaxed text-zinc-500">{p.line}</span></span>
-            <span aria-hidden="true" class="label grid shrink-0 pr-3 text-right text-zinc-500">
-              <span class={`col-start-1 row-start-1 ${i === selected ? '' : 'invisible'}`}>View →</span>
-              <span class={`col-start-1 row-start-1 ${i === selected ? 'invisible' : ''}`}>·</span>
+            <span class="min-w-0 flex-1">
+              <a href={href(p)} onpointerdown={press} class={`display-title block text-[clamp(1.42rem,2.1vw,2rem)] hover:text-zinc-50 ${i === selected ? 'text-zinc-50' : 'text-zinc-500'}`}>{p.title}</a>
+              <span class="mt-1 block max-w-md truncate font-mono text-[11px] leading-relaxed text-zinc-500">{p.line}</span>
             </span>
-          </button></li>
+            {#if i === selected}
+              <a href={href(p)} onpointerdown={press} class="label shrink-0 pr-3 text-zinc-500 hover:text-zinc-200">View →</a>
+            {:else}
+              <span aria-hidden="true" class="label shrink-0 pr-3 text-zinc-600">·</span>
+            {/if}
+            </div>
+          </li>
         {/each}
       </ul>
-      <p class="mt-5 font-mono text-[12px] leading-relaxed text-zinc-600">Hover or arrow through the index — the preview swaps without moving the list. Click to open the full project.</p>
     </div>
     <div class="sticky top-24">
       <div class="flex items-center justify-between pb-3"><p class="label text-zinc-500">{active.category}</p><p class="label text-zinc-600">{String(selected+1).padStart(2,'0')} / {String(items.length).padStart(2,'0')}</p></div>
-      <div
-        bind:this={layers}
-        class="relative aspect-[16/10] overflow-hidden bg-ink-2 ring-1 ring-white/10"
+      <a
+        href={href(active)}
+        onpointerdown={press}
+        aria-label={`View ${active.title} project`}
+        class="relative block aspect-[16/10] overflow-hidden bg-ink-2 ring-1 ring-white/10 transition-[box-shadow] hover:ring-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
       >
+        <div bind:this={layers} class="absolute inset-0">
         {#each items as p, i (p.slug)}
           <div data-layer style:opacity={i === selected ? 1 : 0} style:z-index={i === selected ? 2 : 1} class="absolute inset-0" style:background-color={p.slug === 'review-room' ? '#080e0d' : p.slug === 'frame-lab' ? '#0a0a0a' : undefined}>
           <img src={p.previewImage ?? p.image} alt={i === selected ? `${p.title} project preview` : ''} aria-hidden={i !== selected}
@@ -148,14 +164,16 @@
           {/if}
           </div>
         {/each}
+        </div>
         <div aria-hidden="true" class="pointer-events-none absolute bottom-3 left-3 z-10 flex gap-1.5">{#each items as p, i (p.slug)}<span class={`h-[2px] transition-all duration-300 ${i === selected ? 'w-6 bg-accent-2' : 'w-2.5 bg-white/25'}`}></span>{/each}</div>
-        {#if experimental}<span class="label absolute left-3 top-3 z-10 border border-dashed border-white/20 bg-ink/70 px-2 py-1 text-zinc-400">Experiment</span>{/if}
-      </div>
-      <div bind:this={copy} aria-live="polite" class="min-h-[21rem] pt-6 xl:min-h-[22rem]">
-        <h3 data-pv class="display-title text-[clamp(2rem,3vw,3rem)] text-zinc-50">{active.title}</h3>
+        {#if experimental}<span class="label pointer-events-none absolute left-3 top-3 z-10 border border-dashed border-white/20 bg-ink/70 px-2 py-1 text-zinc-400">Experiment</span>{/if}
+      </a>
+      <div bind:this={copy} aria-live="polite" class="pt-5">
+        <h3 data-pv class="display-title text-[clamp(2rem,3vw,3rem)]">
+          <a href={href(active)} onpointerdown={press} class="text-zinc-50 hover:text-white">{active.title}</a>
+        </h3>
         {#if active.format}<p data-pv class="mt-2 font-mono text-[12px] tracking-[0.04em] text-zinc-500">{active.format}</p>{/if}
-        <p data-pv class="mt-2 max-w-xl font-mono text-[13px] leading-relaxed text-zinc-500">{active.line}</p>
-        <p data-pv class="mt-3 max-w-xl font-mono text-[13px] leading-relaxed text-zinc-400">{active.summary}</p>
+        <p data-pv class="mt-2 max-w-xl truncate font-mono text-[13px] leading-relaxed text-zinc-400">{active.line}</p>
         <div data-pv class="mt-5 flex flex-wrap items-center gap-3"><StatusPill status={active.status} statusNote={active.statusNote} /><span class="label text-zinc-600">{active.year}</span></div>
         <div data-pv class="mt-6 flex flex-wrap gap-3"><a href={href(active)} onpointerdown={press} class="button-solid">View Project →</a>
           {#if active.link}<a href={active.link} target="_blank" rel="noopener noreferrer" onpointerdown={press} class="button-outline">{active.linkLabel ?? 'Open app'} ↗</a>{:else}<span class="label flex min-h-11 items-center border border-dashed border-white/12 px-4 text-zinc-500">In development</span>{/if}</div>
@@ -163,11 +181,11 @@
     </div>
   </div>
 {:else}
-  <ul class="border-t border-white/10">{#each items as p, i (p.slug)}
-    <li use:reveal={true} class="border-b border-white/10"><a data-scroll-reveal href={href(p)} onpointerdown={press} class="block py-5 active:bg-white/[0.03]">
+  <ul>{#each items as p, i (p.slug)}
+    <li use:reveal={true}><a data-scroll-reveal href={href(p)} onpointerdown={press} class="block py-[15px] active:bg-white/[0.03]">
       <div class="flex items-center justify-between gap-3"><p class="label text-zinc-500">{String(i+1).padStart(2,'0')} · {p.category}</p><StatusPill status={p.status} statusNote={p.statusNote} /></div>
-      <h3 class="display-title mt-3 text-[clamp(2.1rem,10vw,2.9rem)] text-zinc-50">{p.title} <span class="float-right text-zinc-500">→</span></h3>
-      <p class="mt-2 font-mono text-[12.5px] leading-relaxed text-zinc-400">{p.line}</p>
+      <h3 class="display-title mt-2 text-[clamp(1.58rem,7.5vw,2.18rem)] text-zinc-50">{p.title} <span class="float-right text-zinc-500">→</span></h3>
+      <p class="mt-2 truncate font-mono text-[12.5px] leading-relaxed text-zinc-400">{p.line}</p>
       <div class="relative mt-4">
       <Frame
         src={p.previewImage ?? p.image}

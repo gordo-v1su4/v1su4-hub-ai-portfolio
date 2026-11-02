@@ -4,10 +4,14 @@ export interface ProcessCard {
   tags?: string[];
   accent?: boolean;
   pending?: boolean;
+  /** 1-based phase column; aligns micro-process titles with chevron strip */
+  phaseCol?: number;
 }
 export interface ProcessLane {
   label: string;
   mode?: 'sequence' | 'parallel';
+  /** First card defaults to this phase column (1-based); later cards increment in sequence lanes */
+  startPhaseCol?: number;
   cards: ProcessCard[];
   note?: string;
 }
@@ -113,27 +117,27 @@ export const caseStudies: Record<string, CaseStudy> = {
     },
   },
   'pindeck': {
-    intro: 'Images enter through different sources, pass through approval and enrichment, then branch into variations, boards, storyboards, and pitch decks.',
+    intro: 'Images enter through different sources, pass through approval and enrichment, produce metadata and variations, land on curated boards, then become storyboards or pitch decks.',
     phases: ['Collect', 'Approve & enrich', 'Explore lineage', 'Compose'],
     lanes: [
-      { label: 'Three inputs', mode: 'parallel', cards: [
-        { title: 'Discord', body: 'React to a channel image to queue it. Source message context and sref are retained for later search and variations.', tags: ['Bot', 'Source permalink', 'sref'] },
-        { title: 'Pinterest', body: 'Extract a pin, board, or profile and send new images to the review queue. Imports remain pending until approved.', tags: ['Extractor / polling', 'Pending queue'] },
-        { title: 'Local uploads', body: 'Upload selected files through the same finalization, metadata, and palette pipeline used by imported images.', tags: ['Upload → finalize'] },
+      { label: 'Three inputs', mode: 'parallel', startPhaseCol: 1, cards: [
+        { title: 'Discord', body: 'React to a channel image to queue it. Source message context and sref are retained for later search and variations.', tags: ['Bot', 'Source permalink', 'sref'], phaseCol: 1 },
+        { title: 'Pinterest', body: 'Extract a pin, board, or profile and send new images to the review queue. Imports remain pending until approved.', tags: ['Extractor / polling', 'Pending queue'], phaseCol: 1 },
+        { title: 'Local uploads', body: 'Upload selected files through the same finalization, metadata, and palette pipeline used by imported images.', tags: ['Upload → finalize'], phaseCol: 1 },
       ] },
-      { label: 'Enrichment', cards: [
-        { title: 'Approve & store', body: 'Moderation decides which imported images enter the active library. Durable media and orchestration state are tracked separately.', tags: ['Approve / deny', 'RustFS originals'] },
-        { title: 'Analyze the image', body: 'Vision writes cinematic group, genre, shot, style, and tags. Color extraction produces reusable dominant palettes.', tags: ['Vision model', 'Palette analysis'], accent: true },
+      { label: 'Enrichment', startPhaseCol: 2, cards: [
+        { title: 'Approve & store', body: 'Moderation decides which imported images enter the active library. Durable media and orchestration state are tracked separately.', tags: ['Approve / deny', 'RustFS originals'], phaseCol: 2 },
+        { title: 'Analyze the image', body: 'Vision writes cinematic group, genre, shot, style, and tags. Color extraction produces reusable dominant palettes.', tags: ['Vision model', 'Palette analysis'], accent: true, phaseCol: 2 },
       ] },
       { label: 'Creative branches', mode: 'parallel', cards: [
-        { title: 'Find a direction', body: 'Search and filter the library by metadata, palette, and sref; use gallery and table views to compare references.', tags: ['Library filters', 'Collections'] },
-        { title: 'Generate variations', body: 'Choose a mode and count. Generated children retain parent/root lineage and inherited style-reference context.', tags: ['fal.ai edits', 'Parent → child ↺'] },
-        { title: 'Curate boards', body: 'Save selected images into boards without rebuilding their origins or variation history.', tags: ['Board membership', 'Shared image records'] },
+        { title: 'Find a direction', body: 'Search and filter the library by metadata, palette, and sref; use gallery and table views to compare references.', tags: ['Library filters', 'Collections'], phaseCol: 3 },
+        { title: 'Generate variations', body: 'Choose a mode and count. Generated children retain parent/root lineage and inherited style-reference context.', tags: ['fal.ai edits', 'Parent → child ↺'], phaseCol: 3 },
       ] },
-      { label: 'Composition', mode: 'parallel', cards: [
-        { title: 'Storyboard layouts', body: 'Arrange board images into grid, hero, and strip panels, then save the composition to the project data.', tags: ['Panels', 'Saved layout'] },
-        { title: 'Pitch-deck composer', body: 'Build slides from curated strips with typography, palettes, and effects. Deck and slide changes autosave to Convex.', tags: ['Slides', 'Autosave'], accent: true },
-      ] },
+      { label: 'Compose', mode: 'parallel', startPhaseCol: 4, cards: [
+        { title: 'Curate boards', body: 'Save selected images into boards without rebuilding their origins or variation history.', tags: ['Board membership', 'Shared image records'], accent: true, phaseCol: 4 },
+        { title: 'Storyboard layouts', body: 'Arrange board images into grid, hero, and strip panels, then save the composition to the project data.', tags: ['Panels', 'Saved layout'], phaseCol: 4 },
+        { title: 'Pitch-deck composer', body: 'Build slides from curated strips with typography, palettes, and effects. Deck and slide changes autosave to Convex.', tags: ['Slides', 'Autosave'], phaseCol: 4 },
+      ], note: 'Boards are the hub; storyboards and pitch decks branch from the same curated set.' },
     ],
     architecture: { kind: 'pipeline', label: 'Ingest, enrich, compose', intro: 'An ingestion pipeline feeds a shared image catalog. Generation and composition branch from those same records.', nodes: [
       { id: 'sources', role: 'Source connectors', name: 'Discord bot + Pinterest worker', body: 'Always-on Discord ingestion and Pinterest extraction/polling bring external references into approval.', parts: ['Source context', 'Deduplication', 'Pending imports'] },
@@ -173,17 +177,17 @@ export const caseStudies: Record<string, CaseStudy> = {
     intro: 'A series experience with several ways into the same fictional world: story, working previews, characters, locations, and production artwork.',
     phases: ['Enter the series', 'Explore the world', 'Open the production material'],
     lanes: [
-      { label: 'Series entrance', cards: [
+      { label: 'Series entrance', startPhaseCol: 1, cards: [
         { title: 'Meet Blood Rush', body: 'The series presentation establishes the premise and visual direction before opening the collection and world material.', tags: ['Story', 'Creative direction'] },
       ] },
-      { label: 'Explore freely', mode: 'parallel', cards: [
-        { title: 'The DVD collection', body: 'Drag the looping shelf, focus a holographic sleeve, open its case, and watch available working footage. Unreleased cases remain labeled.', tags: ['Shelf → case → disc', 'Working previews'] },
-        { title: 'Characters & locations', body: 'Open auditions and reference sheets, then explore the environments and location material that define the series.', tags: ['Audition footage', 'Character sheets', 'World material'] },
-        { title: 'Production artwork', body: 'Inspect storyboard sheets and visual-development images in focused lightboxes without leaving the series page.', tags: ['Storyboards', 'Enlarge artwork'] },
+      { label: 'Explore freely', mode: 'parallel', startPhaseCol: 2, cards: [
+        { title: 'The DVD collection', body: 'Drag the looping shelf, focus a holographic sleeve, open its case, and watch available working footage. Unreleased cases remain labeled.', tags: ['Shelf → case → disc', 'Working previews'], phaseCol: 2 },
+        { title: 'Characters & locations', body: 'Open auditions and reference sheets, then explore the environments and location material that define the series.', tags: ['Audition footage', 'Character sheets', 'World material'], phaseCol: 2 },
+        { title: 'Production artwork', body: 'Inspect storyboard sheets and visual-development images in focused lightboxes without leaving the series page.', tags: ['Storyboards', 'Enlarge artwork'], phaseCol: 3 },
       ] },
-      { label: 'Presentation engine', mode: 'parallel', cards: [
-        { title: 'Physical-feeling objects', body: 'Pointer and touch interactions tilt the sleeves; one focused case receives the full foil treatment while visibility controls pause off-screen work.', tags: ['Holographic shader', 'Focus & visibility'] },
-        { title: 'Accessible exploration', body: 'Responsive images, reduced-motion behavior, coarse-pointer handling, shared modals, and a common player support different screens and input styles.', tags: ['Responsive assets', 'Reduced motion'], accent: true },
+      { label: 'Presentation engine', mode: 'parallel', startPhaseCol: 3, cards: [
+        { title: 'Physical-feeling objects', body: 'Pointer and touch interactions tilt the sleeves; one focused case receives the full foil treatment while visibility controls pause off-screen work.', tags: ['Holographic shader', 'Focus & visibility'], phaseCol: 3 },
+        { title: 'Accessible exploration', body: 'Responsive images, reduced-motion behavior, coarse-pointer handling, shared modals, and a common player support different screens and input styles.', tags: ['Responsive assets', 'Reduced motion'], accent: true, phaseCol: 3 },
       ] },
     ],
     architecture: { kind: 'studio', label: 'Content branches + interactive presentation', intro: 'This is a static creative experience, not an upload/versioning backend. Its depth is in content presentation and the rendering/interaction layers.', nodes: [

@@ -1,52 +1,88 @@
 <script lang="ts">
   import type { CaseStudy } from './caseStudies';
+  import { workflowDiagrams } from './diagramData';
   import ProjectDiagram from './ProjectDiagram.svelte';
   let { study, slug }: { study: CaseStudy; slug: string } = $props();
+  const diagramHeight = $derived(workflowDiagrams[slug]?.height ?? 456);
 </script>
 
 <figure class="app-workflow" aria-label="Project workflow">
   <figcaption>{study.intro}</figcaption>
-  <ul class="phase-strip" aria-label="Workflow phases" style="--phase-count: {study.phases.length}">
-    {#each study.phases as phase, i (phase)}
-      <li class:last={i === study.phases.length - 1} class:mid={i === study.phases.length - 2} style="--phase-i: {i}">{phase}</li>
-    {/each}
-  </ul>
-  <ProjectDiagram {slug} />
-  <details class="microprocesses">
-    <summary>Detailed stages &amp; micro-processes</summary>
-  {#each study.lanes as lane (lane.label)}
-    <div class="workflow-lane" class:parallel={lane.mode === 'parallel'}>
-      <span class="lane-label">{lane.label}</span>
-      <div class="lane-content">
-        {#if lane.mode === 'parallel' && lane.cards.length > 1}<p class="branch-label">Parallel paths / shared context</p>{/if}
-        <ul class="cards" style:--columns={Math.min(lane.cards.length, 3)}>
-          {#each lane.cards as card (card.title)}
-            <li class:accent={card.accent} class:pending={card.pending}>
-              <h3>{card.title}</h3><p>{card.body}</p>
-              {#if card.tags?.length}<ul class="tags">{#each card.tags as tag (tag)}<li>{tag}</li>{/each}</ul>{/if}
-            </li>
+  <div class="workflow-visual" style="--diagram-h: {diagramHeight}px">
+    <div class="workflow-scale-shell">
+      <div class="workflow-artboard">
+        <ul class="phase-strip" aria-label="Workflow phases" style="--phase-count: {study.phases.length}">
+          {#each study.phases as phase, i (phase)}
+            <li class:last={i === study.phases.length - 1} class:mid={i === study.phases.length - 2} style="--phase-i: {i}">{phase}</li>
           {/each}
         </ul>
-        {#if lane.note}<p class="lane-note">{lane.note}</p>{/if}
+        <ProjectDiagram {slug} scaled />
       </div>
     </div>
-  {/each}
-  </details>
+  </div>
 </figure>
 
 <style>
-  .app-workflow { margin: 24px 0 0; max-width: 1100px; }
-  .microprocesses { margin-top: 18px; border-top: .5px solid #ffffff24; }
-  summary { padding: 14px 0; cursor: pointer; font: 11px/1.8 var(--font-mono); color: var(--color-zinc-400); }
-  summary::marker { color: var(--project-accent); }
-  summary:focus-visible { outline: 1px solid var(--project-accent); }
+  .app-workflow { margin: 24px 0 0; width: 100%; max-width: 1100px; }
+  .workflow-visual {
+    width: 100%;
+    min-width: 0;
+    max-width: 1100px;
+    container-type: inline-size;
+  }
+  /* One 1100px artboard: chevrons + SVG scale together (no width-only SVG squash). */
+  .workflow-scale-shell {
+    position: relative;
+    width: 100%;
+    height: calc((60px + 18px + var(--diagram-h)) * (100cqw / 1100px));
+    overflow: hidden;
+  }
+  .workflow-artboard {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1100px;
+    transform: scale(calc(100cqw / 1100px));
+    transform-origin: top left;
+    will-change: transform;
+  }
+  .workflow-artboard :global(.diagram-fit) {
+    width: 1100px;
+    max-width: none;
+    margin-top: 18px;
+  }
+  .workflow-artboard :global(.diagram-fit svg) {
+    width: 1100px;
+    max-width: none;
+    height: auto;
+  }
   figcaption { max-width: 90ch; font: 11px/1.8 var(--font-mono); color: var(--color-zinc-400); }
-  .phase-strip { display: flex; gap: 3px; padding: 0; margin: 22px 0 12px; list-style: none; }
+  .phase-strip {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 3px;
+    padding: 0;
+    margin: 22px 0 12px;
+    list-style: none;
+    width: 1100px;
+  }
   .phase-strip li {
-    flex: 1; display: grid; place-items: center; min-height: 28px; padding: 6px 16px;
+    flex: 1 1 0;
+    min-width: 0;
+    display: grid;
+    place-items: center;
+    height: 26px;
+    padding: 0 14px;
     background: color-mix(in srgb, var(--project-accent) calc(8% + (var(--phase-i) / max(1, var(--phase-count) - 1)) * 16%), #272727);
     clip-path: polygon(0 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,0 100%,9px 50%);
-    font: 9px/1.5 var(--font-mono); color: color-mix(in srgb, var(--project-accent) 18%, var(--color-zinc-400)); text-align: center; text-transform: uppercase; letter-spacing: .05em;
+    font: 9px/1.2 var(--font-mono);
+    color: color-mix(in srgb, var(--project-accent) 18%, var(--color-zinc-400));
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .phase-strip li:first-child { clip-path: polygon(0 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,0 100%); background: color-mix(in srgb, var(--project-accent) 6%, #202020); }
   .phase-strip li.mid { background: color-mix(in srgb, var(--project-accent) 24%, #2a2520); color: color-mix(in srgb, var(--project-accent) 45%, var(--color-zinc-300)); }
@@ -54,40 +90,5 @@
     background: color-mix(in srgb, var(--project-accent) 20%, #303030);
     color: color-mix(in srgb, var(--project-accent) 55%, var(--color-zinc-200));
     clip-path: polygon(0 0,100% 0,100% 100%,0 100%,9px 50%);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--project-accent) 50%, transparent);
-  }
-  .workflow-lane { position: relative; display: grid; grid-template-columns: 24px minmax(0,1fr); gap: 14px; padding: 22px 0; }
-  .workflow-lane:not(:last-child)::after { content: '↓'; position: absolute; left: 47px; bottom: -10px; z-index: 1; font: 12px var(--font-mono); color: var(--color-zinc-500); }
-  .lane-label { writing-mode: vertical-rl; transform: rotate(180deg); align-self: center; justify-self: start; font: 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--color-zinc-400); }
-  .lane-content { min-width: 0; }
-  .cards { display: grid; grid-template-columns: repeat(var(--columns), minmax(0,1fr)); gap: 24px; padding: 0; margin: 0; list-style: none; }
-  .cards > li { min-width: 0; position: relative; padding: 12px 14px; border: .5px solid #ffffff24; border-radius: 6px; background: #222222; }
-  .cards > li:not(:first-child)::before { content: '→'; position: absolute; right: calc(100% + 6px); top: 20px; font: 11px var(--font-mono); color: var(--color-zinc-500); }
-  .cards > li:nth-child(3n+1)::before { display: none; }
-  .parallel .cards { position: relative; padding-top: 14px; }
-  .parallel .cards::before { content: ''; position: absolute; top: 0; left: 14px; right: 14px; border-top: .5px solid #ffffff30; }
-  .parallel .cards > li::before { display: block; content: ''; top: -14px; height: 14px; left: 14px; right: auto; border-left: .5px solid #ffffff30; }
-  .cards > li.accent { border-color: color-mix(in srgb,var(--project-accent) 50%,transparent); background: #141414; }
-  .cards > li.pending { border-style: dashed; background: #111; }
-  h3 { font: 500 15px/1.3 var(--font-narrow); letter-spacing: .045em; text-transform: uppercase; color: var(--color-zinc-100); }
-  .accent h3 { color: var(--project-accent); }
-  .cards p { margin-top: 9px; max-width: 65ch; font: 11px/1.8 var(--font-mono); color: var(--color-zinc-400); }
-  .tags { display: flex; flex-wrap: wrap; gap: 4px; padding: 0; margin: 13px 0 0; list-style: none; }
-  .tags li { padding: 3px 6px; border-radius: 3px; background: #ffffff08; color: var(--color-zinc-400); font: 10px/1.5 var(--font-mono); }
-  .branch-label { margin-bottom: 10px; font: 10px/1.5 var(--font-mono); color: var(--color-zinc-400); letter-spacing: .06em; }
-  .lane-note { margin-top: 16px; padding-left: 12px; max-width: 100ch; border-left: 1px dashed #ffffff30; font: 10px/1.8 var(--font-mono); color: var(--color-zinc-400); }
-  @media (max-width: 899px) {
-    .workflow-lane { grid-template-columns: 16px minmax(0,1fr); gap: 8px; }
-    .phase-strip { flex-wrap: wrap; }
-    .phase-strip li { flex-basis: 40%; padding: 7px 10px; font-size: 10px; }
-    .cards { grid-template-columns: 1fr; gap: 20px; }
-    .cards > li { padding: 14px; }
-    .cards > li:not(:first-child)::before { display: block; content: '↓'; left: 14px; right: auto; top: -20px; line-height: 20px; }
-    .parallel .cards { padding: 0 0 0 12px; border-left: .5px solid #ffffff30; }
-    .parallel .cards::before { display: none; }
-    .parallel .cards > li::before { display: block; content: ''; top: 18px; left: -13px; width: 12px; height: 0; border-left: 0; border-top: .5px solid #ffffff30; }
-    .workflow-lane:not(:last-child)::after { left: 32px; }
-    h3 { font-size: 13px; }
-    .cards p { font-size: 11px; line-height: 1.6; }
   }
 </style>

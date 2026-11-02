@@ -42,7 +42,7 @@ export const projects: Project[] = [
     title: "VIDEO HAVEN",
     group: "featured",
     type: "Series Breakdown",
-    tagline: "A series-specific home for the story, characters and production material.",
+    tagline: "Story, characters, and production material for an original series.",
     rationale: "I wanted someone to be able to get to know a fictional world through both its finished imagery and the work taking shape behind it.",
     role: "Creative Direction / Production / Development",
     status: "In Development",
@@ -52,7 +52,7 @@ export const projects: Project[] = [
     cover: "/images/captures/2026-10-19/video-haven-home-v2.webp",
     imageFit: "contain",
     link: "https://www.videohaven.stream/",
-    what: "An interactive home for an original series, bringing its story, characters, locations, and production material together. I’m developing the creative presentation and building the experience, with Blood Rush as the first featured series.",
+    what: "A show-specific series breakdown bringing together the story, characters, locations, storyboards and working footage. Blood Rush is the first series, presented through Video Haven’s interactive collection.",
     flow: [{ label: "SERIES", sub: "Explore the story and visual direction" }, { label: "COLLECTION", sub: "Browse working previews and development tests" }, { label: "WORLD", sub: "Meet the characters and explore locations" }, { label: "PRODUCTION", sub: "Follow storyboards and production development" }],
     media: [
       "/images/captures/2026-10-19/video-haven-dvd-shelf-v2.webp",
@@ -65,7 +65,7 @@ export const projects: Project[] = [
     title: "REVIEW ROOM",
     group: "more",
     type: "Review & Dailies",
-    tagline: "A central media library for take versions, creative metadata, review, and delivery.",
+    tagline: "Central library for takes, metadata, review, and delivery.",
     role: "Design / Development",
     status: "In Production",
     rationale: "Keeping review close to the footage helps me follow a shot from upload through feedback without losing the conversation around it. Review Room also gives my media a central home on my own server. I can upload a file once and reference it across my other apps, keeping everything connected without uploading the same video in three different places.",
@@ -77,7 +77,7 @@ export const projects: Project[] = [
     link: "https://www.linkedin.com/in/gordo-spaniolo/",
     linkLabel: "Request a demo",
     media: ["/images/captures/2026-10-17/review-room-library-retake.jpg","/images/captures/2026-10-17/review-room-list.webp","/images/captures/2026-10-17/review-room-table.webp","/images/captures/2026-10-17/review-room-drawover.webp","/images/captures/2026-10-17/review-room-publishing.webp","/images/captures/2026-10-17/review-room-media-flow.webp","/images/captures/2026-10-17/review-room-metadata-model.webp"],
-    what: "I designed and built Review Room as the central home for my production media. Projects and folders hold stable assets, each with its own take history, creative metadata, and current pick. I can review footage and stills, collect feedback, and explicitly publish selected versions to Trailer Feed while the originals stay in Review Room. Creative Studio Pro connects to the same shot and take identities.",
+    what: "Client and studio logins, projects and folders, daily playlists, per-artist review, hover-scrub previews, comments, ratings and notifications. Used in production with studios and clients.",
     flow: [
       { label: "UPLOAD", sub: "Shots into projects" },
       { label: "PLAYLIST", sub: "Dailies per artist" },
@@ -109,7 +109,7 @@ export const projects: Project[] = [
     ],
     imageFit: "contain",
     link: "https://www.pindeck.dev",
-    what: "Pindeck grew out of needing a better way to work with a growing collection of AI images. I designed and built a workspace that keeps references, variations, and their origins together, then carries selected images into collections and storyboards for pitch decks.",
+    what: "One workspace for image curation. Images come in from Discord, Pinterest or upload, get tagged and color-analyzed automatically, branch into AI variations with full lineage, and end up on curated boards, storyboards and pitch decks.",
     rationale: "I wanted a collection to help me develop a direction, beyond simply saving images for later.",
     flow: [
       { label: "INGEST", sub: "Discord · Pinterest · upload" },
@@ -142,7 +142,7 @@ export const projects: Project[] = [
       "/images/captures/2026-10-18/beatsmaxxer-help-v2.webp",
     ],
     link: "https://www.beatsmaxxing.com",
-    what: "A video effects rack for making loaded footage move with music. I designed and built the app, combining audio analysis, beat-synced cuts, and real-time effects in a performance interface.",
+    what: "Eight clip slots, a program monitor that cuts on the beat, and 19 WebGPU shader effects. Song sections land on a timeline; ramps, stutters and jump cuts lock to the beat grid. Runs in the browser, on phones, and as a Windows app.",
     rationale: "I’m exploring how much of the timing can happen automatically while leaving room to choose the clips, shape the look, and perform.",
     flow: [
       { label: "ANALYSIS", sub: "Beats · sections · tempo" },
@@ -173,7 +173,7 @@ export const projects: Project[] = [
     media: ["/images/frame-lab-playback.png"],
     link: "https://frame-lab-gamma.vercel.app/benchmark",
     linkLabel: "Open benchmark",
-    what: "When I started building beat-synced video tools, I needed to know which browser playback approaches could keep up. I built Frame Lab to compare them under cuts, seeks, stutters, and speed changes.",
+    what: "A public benchmark comparing HTML video pools, Mediabunny / WebCodecs frame caches and preloaded WebGPU textures under musical cuts, seeks, stutters and speed ramps. libmedia is included as an experimental capability probe; FFmpeg prepares fixture media and demo recordings. Built to choose the playback engine for beat-synced editing.",
     flow: [
       { label: "CLIPS", sub: "FFmpeg-prepared multi-clip workload" },
       { label: "STRATEGIES", sub: "HTML video · Mediabunny / WebCodecs · GPU textures; libmedia capability probe" },
@@ -186,7 +186,7 @@ export const projects: Project[] = [
     title: "TRAILER FEED",
     group: "more",
     type: "Video Portfolio",
-    tagline: "Finished AI video projects, with every version, prompt and model kept together.",
+    tagline: "Finished AI videos with versions, prompts, and models in one place.",
     role: "Design / Development",
     status: "Live",
     year: "2026",
@@ -197,7 +197,7 @@ export const projects: Project[] = [
     media: ["/images/captures/2026-10-20/trailer-feed-main.webp","/images/captures/2026-10-20/trailer-feed-comparison.webp","/images/captures/2026-10-20/trailer-feed-prompts.webp","/images/captures/2026-10-20/trailer-feed-details.webp"],
     imageFit: "contain",
     link: "https://trailerfeed.video",
-    what: "A home for finished AI video projects and the versions, prompts, and model details behind them. I designed and built it so I could watch the work, compare variations, and return to how a particular result was made.",
+    what: "A video portfolio for importing anything from first-draft ideas to finished projects, watching versions, comparing takes, and keeping prompts and model metadata alongside the videos. Prompts and sources are kept as a reference library.",
     rationale: "Keeping the creative output and its production history together gives me something I can return to and learn from.",
     flow: [
       { label: "IMPORT", sub: "Finished videos in" },
@@ -222,7 +222,7 @@ export const projects: Project[] = [
     cover: "/images/project-stack-workspace.png",
     imageFit: "contain",
     link: "https://project-stack-structure.vercel.app",
-    what: "A music-video tool built around a song and footage you already have. I designed and built the workflow to analyze the music, find useful moments in the clips, and assemble a beat-aligned rough cut, with AI generation available for missing coverage.",
+    what: "Real footage drives the edit. The song is analyzed for beats and sections, clips are scene-detected and captioned, moments are matched to the story, and AI generation fills only the gaps, using cloud models or local ComfyUI.",
     rationale: "I’m exploring how software can help organize an edit while keeping the supplied footage central to the result.",
     flow: [
       { label: "INGEST", sub: "Analyze the song, detect scenes, and caption footage." },
@@ -267,7 +267,7 @@ export const projects: Project[] = [
     cover: "/images/gods-gatekeepers-hero-16x10.webp",
     imageFit: "contain",
     previewImage: "/images/gods-gatekeepers-hero.jpg",
-    what: "A personal concept series exploring a visual format for immersive concerts, built around mythology, impossible scale, and unexpected reveals. I’m developing the visual direction, worldbuilding, and sequences through 3D, AI, and VFX exploration.",
+    what: "Immersive concert concepts where DJ stages become evolving illusions. Monumental deities awaken, colossal guardians emerge from flat screens, and celestial gateways reveal dimensions hidden inside the architecture—each world expandable for different cities and performances through a hybrid 3D, AI, and VFX workflow.",
     flow: [
       {
         label: "Worldbuilding",
