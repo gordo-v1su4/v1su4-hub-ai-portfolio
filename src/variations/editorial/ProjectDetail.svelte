@@ -7,7 +7,9 @@
   import ProjectStackFlow from './ProjectStackFlow.svelte';
   import ProjectStackBuild from './ProjectStackBuild.svelte';
   import AppWorkflow from './AppWorkflow.svelte';
-  import AppArchitecture from './ProjectStackArchitecture.svelte';
+  import IsometricStack from './IsometricStack.svelte';
+  import { architectureToStackLayers } from './stackLayers';
+  import StatusPill from './StatusPill.svelte';
   import { caseStudies } from './caseStudies';
   let { slug }: {slug: string} = $props();
   const p = $derived(all.find(p=>p.slug === slug));
@@ -30,7 +32,7 @@
     <p data-scroll-reveal class={`max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-400 sm:text-[15px] ${p.format ? 'mt-3' : ''}`}>{p.line}</p>
     <div class="mt-5 grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-16">
       <p data-scroll-reveal class="max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-300 sm:text-[15px]">{p.summary}</p>
-      <div data-scroll-reveal class="space-y-4"><div class="flex flex-wrap items-center gap-3"><span class="status-pill">{p.status}</span><span class="label text-zinc-600">{p.year}</span></div>
+      <div data-scroll-reveal class="space-y-4"><div class="flex flex-wrap items-center gap-3"><StatusPill status={p.status} statusNote={p.statusNote} /><span class="label text-zinc-600">{p.year}</span></div>
         {#if p.experimental}<p class="font-mono text-[12.5px] leading-relaxed text-zinc-500">Experimental project in development. Features and workflows may change.</p>{/if}
         <div class="flex flex-wrap gap-3">{#if p.link}<a href={p.link} target="_blank" rel="noopener noreferrer" onpointerdown={press} class="button-solid">{p.linkLabel ?? 'Open app'} ↗</a>{/if}<a href={p.experimental ? '#/lab' : '#/'} onpointerdown={press} class="button-outline">All projects ←</a></div>
         {#if !p.link}<p class="max-w-md border border-dashed border-white/12 p-3 font-mono text-[12px] leading-relaxed text-zinc-500">{p.experimental ? 'A public demo is not available yet. Follow this page for the project overview.' : 'No public application is available yet.'}</p>{/if}
@@ -51,7 +53,7 @@
       <p class="label mt-3 text-zinc-500">{p.title} — {p.year}</p>
     {/if}
   </div>
-  <section class="mt-8 grid gap-5 border-t border-white/8 pt-8 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] lg:gap-10"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Why it exists</h2><div data-scroll-reveal><p class="max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-300 sm:text-[15px]">{p.rationale}</p><dl class="mt-6 grid grid-cols-2 gap-6"><div><dt class="label text-zinc-600">Role</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.role}</dd></div><div><dt class="label text-zinc-600">Status</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.status}</dd></div></dl></div></section>
+  <section class="mt-8 grid gap-5 border-t border-white/8 pt-8 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] lg:gap-10"><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Why it exists</h2><div data-scroll-reveal><p class="max-w-2xl font-mono text-[14px] leading-relaxed text-zinc-300 sm:text-[15px]">{p.rationale}</p><dl class="mt-6 grid grid-cols-2 gap-6"><div><dt class="label text-zinc-600">Role</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.role}</dd></div><div><dt class="label text-zinc-600">Status</dt><dd class="mt-2 font-narrow text-[17px] text-zinc-100">{p.status}{#if p.statusNote}<span class="mt-1 block font-mono text-[12px] text-zinc-500">{p.statusNote}</span>{/if}</dd></div></dl></div></section>
 
   {#if p.worlds?.length}<section class={`mt-12 pt-8 lg:mt-16 lg:pt-10 ${p.slug === 'gods-gatekeepers' ? '' : 'border-t border-white/8'}`}><h2 data-scroll-reveal class="font-narrow text-[26px] font-semibold text-zinc-100 sm:text-[32px]">Visual worlds</h2><ol class="mt-6 grid gap-6 md:grid-cols-3">{#each p.worlds as world (world.title)}<li data-scroll-reveal class={p.slug === 'gods-gatekeepers' ? 'py-2' : 'border border-white/8 bg-white/[0.015] p-5'}><h3 class="font-narrow text-[19px] font-semibold text-zinc-100">{world.title}</h3><p class="mt-3 font-mono text-[13px] leading-relaxed text-zinc-400">{world.description}</p></li>{/each}</ol></section>{/if}
   {#if p.slug === 'gods-gatekeepers'}
@@ -79,7 +81,16 @@
       {#if p.slug === 'project-stack-structure'}
         <div data-scroll-reveal class="technical-figure"><span class="side-label">Stack &amp; production</span><div><ProjectStackBuild /></div></div>
       {:else if caseStudies[p.slug]}
-        <div data-scroll-reveal><AppArchitecture architecture={caseStudies[p.slug].architecture} /></div>
+        {@const arch = caseStudies[p.slug].architecture}
+        <div data-scroll-reveal>
+          <IsometricStack
+            stackId={`${p.slug}-stack`}
+            title={arch.label}
+            description={arch.intro}
+            layers={architectureToStackLayers(arch.nodes)}
+            connections={arch.connections}
+          />
+        </div>
       {/if}
     </section>
   {/if}

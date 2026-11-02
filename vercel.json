@@ -3,5 +3,6 @@
   "framework": "vite",
   "installCommand": "bun install --frozen-lockfile",
   "buildCommand": "bun run build",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "rewrites": [{ "source": "/glitch", "destination": "/glitch.html" }]
 }

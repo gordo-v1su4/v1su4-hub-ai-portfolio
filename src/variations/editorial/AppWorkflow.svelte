@@ -6,8 +6,10 @@
 
 <figure class="app-workflow" aria-label="Project workflow">
   <figcaption>{study.intro}</figcaption>
-  <ul class="phase-strip" aria-label="Workflow phases">
-    {#each study.phases as phase (phase)}<li>{phase}</li>{/each}
+  <ul class="phase-strip" aria-label="Workflow phases" style="--phase-count: {study.phases.length}">
+    {#each study.phases as phase, i (phase)}
+      <li class:last={i === study.phases.length - 1} class:mid={i === study.phases.length - 2} style="--phase-i: {i}">{phase}</li>
+    {/each}
   </ul>
   <ProjectDiagram {slug} />
   <details class="microprocesses">
@@ -40,7 +42,20 @@
   summary:focus-visible { outline: 1px solid var(--project-accent); }
   figcaption { max-width: 90ch; font: 11px/1.8 var(--font-mono); color: var(--color-zinc-400); }
   .phase-strip { display: flex; gap: 3px; padding: 0; margin: 22px 0 12px; list-style: none; }
-  .phase-strip li { flex: 1; display: grid; place-items: center; padding: 6px 16px; background: #272727; clip-path: polygon(0 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,0 100%,9px 50%); font: 10px/1.5 var(--font-mono); color: var(--color-zinc-400); text-align: center; text-transform: uppercase; letter-spacing: .05em; }
+  .phase-strip li {
+    flex: 1; display: grid; place-items: center; min-height: 28px; padding: 6px 16px;
+    background: color-mix(in srgb, var(--project-accent) calc(8% + (var(--phase-i) / max(1, var(--phase-count) - 1)) * 16%), #272727);
+    clip-path: polygon(0 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,0 100%,9px 50%);
+    font: 9px/1.5 var(--font-mono); color: color-mix(in srgb, var(--project-accent) 18%, var(--color-zinc-400)); text-align: center; text-transform: uppercase; letter-spacing: .05em;
+  }
+  .phase-strip li:first-child { clip-path: polygon(0 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,0 100%); background: color-mix(in srgb, var(--project-accent) 6%, #202020); }
+  .phase-strip li.mid { background: color-mix(in srgb, var(--project-accent) 24%, #2a2520); color: color-mix(in srgb, var(--project-accent) 45%, var(--color-zinc-300)); }
+  .phase-strip li.last {
+    background: color-mix(in srgb, var(--project-accent) 20%, #303030);
+    color: color-mix(in srgb, var(--project-accent) 55%, var(--color-zinc-200));
+    clip-path: polygon(0 0,100% 0,100% 100%,0 100%,9px 50%);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--project-accent) 50%, transparent);
+  }
   .workflow-lane { position: relative; display: grid; grid-template-columns: 24px minmax(0,1fr); gap: 14px; padding: 22px 0; }
   .workflow-lane:not(:last-child)::after { content: '↓'; position: absolute; left: 47px; bottom: -10px; z-index: 1; font: 12px var(--font-mono); color: var(--color-zinc-500); }
   .lane-label { writing-mode: vertical-rl; transform: rotate(180deg); align-self: center; justify-self: start; font: 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--color-zinc-400); }

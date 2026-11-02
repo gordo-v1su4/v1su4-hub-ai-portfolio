@@ -3,6 +3,7 @@
   import { MediaQuery } from 'svelte/reactivity';
   import { href, type Entry } from './data';
   import Frame from './Frame.svelte';
+  import StatusPill from './StatusPill.svelte';
   import { gsap, D, EASE_IO, reduced, press, reveal } from './motion';
 
   let { items, experimental = false }: { items: Entry[]; experimental?: boolean } = $props();
@@ -155,7 +156,7 @@
         {#if active.format}<p data-pv class="mt-2 font-mono text-[12px] tracking-[0.04em] text-zinc-500">{active.format}</p>{/if}
         <p data-pv class="mt-2 max-w-xl font-mono text-[13px] leading-relaxed text-zinc-500">{active.line}</p>
         <p data-pv class="mt-3 max-w-xl font-mono text-[13px] leading-relaxed text-zinc-400">{active.summary}</p>
-        <div data-pv class="mt-5 flex flex-wrap items-center gap-3"><span class="status-pill">{active.status}</span><span class="label text-zinc-600">{active.year}</span></div>
+        <div data-pv class="mt-5 flex flex-wrap items-center gap-3"><StatusPill status={active.status} statusNote={active.statusNote} /><span class="label text-zinc-600">{active.year}</span></div>
         <div data-pv class="mt-6 flex flex-wrap gap-3"><a href={href(active)} onpointerdown={press} class="button-solid">View Project →</a>
           {#if active.link}<a href={active.link} target="_blank" rel="noopener noreferrer" onpointerdown={press} class="button-outline">{active.linkLabel ?? 'Open app'} ↗</a>{:else}<span class="label flex min-h-11 items-center border border-dashed border-white/12 px-4 text-zinc-500">In development</span>{/if}</div>
       </div>
@@ -164,7 +165,7 @@
 {:else}
   <ul class="border-t border-white/10">{#each items as p, i (p.slug)}
     <li use:reveal={true} class="border-b border-white/10"><a data-scroll-reveal href={href(p)} onpointerdown={press} class="block py-5 active:bg-white/[0.03]">
-      <div class="flex items-center justify-between gap-3"><p class="label text-zinc-500">{String(i+1).padStart(2,'0')} · {p.category}</p><span class="status-pill shrink-0">{p.status}</span></div>
+      <div class="flex items-center justify-between gap-3"><p class="label text-zinc-500">{String(i+1).padStart(2,'0')} · {p.category}</p><StatusPill status={p.status} statusNote={p.statusNote} /></div>
       <h3 class="display-title mt-3 text-[clamp(2.1rem,10vw,2.9rem)] text-zinc-50">{p.title} <span class="float-right text-zinc-500">→</span></h3>
       <p class="mt-2 font-mono text-[12.5px] leading-relaxed text-zinc-400">{p.line}</p>
       <div class="relative mt-4">

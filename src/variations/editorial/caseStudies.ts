@@ -137,7 +137,7 @@ export const caseStudies: Record<string, CaseStudy> = {
     ],
     architecture: { kind: 'pipeline', label: 'Ingest, enrich, compose', intro: 'An ingestion pipeline feeds a shared image catalog. Generation and composition branch from those same records.', nodes: [
       { id: 'sources', role: 'Source connectors', name: 'Discord bot + Pinterest worker', body: 'Always-on Discord ingestion and Pinterest extraction/polling bring external references into approval.', parts: ['Source context', 'Deduplication', 'Pending imports'] },
-      { id: 'jobs', role: 'Orchestration', name: 'Trigger.dev', body: 'Coordinates upload finalization, import ingestion, analysis, and variation work.', parts: ['Durable jobs', 'Status & leases'] },
+      { id: 'jobs', role: 'Orchestration', name: 'Trigger.dev', body: 'Coordinates upload finalization, import ingestion, analysis, and variation work.', parts: ['Durable jobs', 'Status & leases'], accent: true },
       { id: 'catalog', role: 'Shared records & access', name: 'Self-hosted Convex', body: 'Keeps image metadata, lineage, user access, boards, storyboard layouts, decks, and preferences.', parts: ['Realtime data', 'Auth', 'Image relationships'], accent: true },
       { id: 'intelligence', role: 'Analysis & generation', name: 'Vision + palette extraction + fal.ai', body: 'Vision enriches metadata; palette analysis supports color search; image editing creates linked variants.', parts: ['OpenRouter-compatible vision', 'Nano Banana Pro edits', 'sref context'] },
       { id: 'storage', role: 'Media', name: 'RustFS + media gateway', body: 'Durable original and generated images stay separate from the database records that describe them.', parts: ['Originals', 'Generated children', 'Media URLs'] },

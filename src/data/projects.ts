@@ -12,6 +12,8 @@ export interface Project {
   rationale: string;
   role: string;
   status: ProjectStatus;
+  /** Optional second line under the status label (e.g. Beta + ongoing build). */
+  statusNote?: string;
   year: string;
   stack: string[];
   stackGroups?: { title: string; items: string[] }[];
@@ -213,6 +215,7 @@ export const projects: Project[] = [
     tagline: "Upload a song and your clips, get a beat-aligned cut.",
     role: "Design / Development",
     status: "Beta",
+    statusNote: "In active development",
     year: "2026",
     stack: ["Next.js", "Trigger.dev", "Essentia", "ComfyUI"],
     stackGroups: [{ title: "Front end", items: ["Next.js"] }, { title: "Back end", items: ["Trigger.dev", "Essentia"] }, { title: "Production tasks", items: ["Scene detection and shot matching", "ComfyUI · AI gap generation", "Beat-aligned preview and export"] }],
@@ -246,7 +249,7 @@ export const projects: Project[] = [
     role: "Creative Direction / Worldbuilding / 3D / AI / VFX / Previsualization",
     status: "In Development",
     year: "2026",
-    stack: ["Maya", "Houdini", "ComfyUI", "Nuke", "After Effects"],
+    stack: ["Maya", "Houdini", "Unreal Engine", "ComfyUI", "Nuke", "After Effects"],
     stackGroups: [
       {
         title: "Concept",

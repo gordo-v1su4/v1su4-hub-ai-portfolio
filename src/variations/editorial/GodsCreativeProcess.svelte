@@ -20,6 +20,7 @@
   .diagram-scroll :global(.gg-primary) { font-family: var(--font-narrow); font-weight: 500; font-size: 16px; letter-spacing: .02em; }
   .diagram-scroll :global(.gg-body) { font-family: var(--font-mono); font-size: 11px; }
   .diagram-scroll :global(.gg-meta) { font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em; }
+  .diagram-scroll :global(.gg-meta-red) { font-family: var(--font-mono); font-size: 10px; letter-spacing: .055em; fill: var(--project-accent, #f3263e); }
   .diagram-scroll { max-width: 100%; min-width: 0; overflow-x: auto; }
   .diagram-scroll :global(svg) { display: block; width: 100%; min-width: 1280px; max-width: 1280px; }
 </style>

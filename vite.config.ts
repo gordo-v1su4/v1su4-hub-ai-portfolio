@@ -4,4 +4,9 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [svelte(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      input: { main: "index.html", glitch: "glitch.html" },
+    },
+  },
 });
