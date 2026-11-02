@@ -357,7 +357,7 @@ export const softwareGroups = [
 
 export const skillGroups = [
   { title: "Visual storytelling", items: ["Concepts, worlds, and sequences developed through 3D, VFX, and AI filmmaking."] },
-  { title: "Immersive & interactive experiences", items: ["Experiences that let people explore an idea or shape what happens."] },
+  { title: "Immersive experiences", items: ["Experiences that let people explore an idea or shape what happens."] },
   { title: "Creative tools", items: ["Apps for gathering references, developing stories, working with footage, and reviewing results."] },
   { title: "Production systems", items: ["The workflows and technical foundations that carry creative work from exploration through delivery."] },
 ];
