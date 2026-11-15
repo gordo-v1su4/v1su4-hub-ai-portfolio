@@ -93,7 +93,7 @@
     } else return;
     e.preventDefault();
     void select(next);
-    list?.querySelectorAll('[role="option"]')[next]?.focus();
+    list?.querySelectorAll<HTMLElement>('[role="option"]')[next]?.focus();
   }
 
   onDestroy(() => {
@@ -113,7 +113,7 @@
         <p class="label text-zinc-500">{experimental ? 'Experiment' : 'Project'} · {String(items.length).padStart(2,'0')}</p>
         <p class="label text-zinc-600">↑↓ browse · ↵ open</p>
       </div>
-      <ul bind:this={list} role="listbox" aria-label="Projects" class="flex flex-1 flex-col justify-between">
+      <ul bind:this={list} role="listbox" aria-label="Projects" class="flex flex-col gap-2">
         {#each items as p, i (p.slug)}
           <li role="presentation">
             <div
@@ -176,7 +176,7 @@
         <p data-pv class="mt-2 max-w-xl truncate font-mono text-[13px] leading-relaxed text-zinc-400">{active.line}</p>
         <div data-pv class="mt-5 flex flex-wrap items-center gap-3"><StatusPill status={active.status} statusNote={active.statusNote} /><span class="label text-zinc-600">{active.year}</span></div>
         <div data-pv class="mt-6 flex flex-wrap gap-3"><a href={href(active)} onpointerdown={press} class="button-solid">View Project →</a>
-          {#if active.link}<a href={active.link} target="_blank" rel="noopener noreferrer" onpointerdown={press} class="button-outline">{active.linkLabel ?? 'Open app'} ↗</a>{:else}<span class="label flex min-h-11 items-center border border-dashed border-white/12 px-4 text-zinc-500">In development</span>{/if}</div>
+          {#if active.link}<a href={active.link} target="_blank" rel="noopener noreferrer" onpointerdown={press} class="button-outline">{active.linkLabel ?? 'Open app'} ↗</a>{:else}<span class="label flex min-h-8 items-center border border-dashed border-white/12 px-4 text-zinc-500">In development</span>{/if}</div>
       </div>
     </div>
   </div>

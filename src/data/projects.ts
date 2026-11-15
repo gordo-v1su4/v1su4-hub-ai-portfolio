@@ -371,8 +371,8 @@ export const site = {
   description: "Gordo’s visual stories, immersive experiences, and creative tools across film, television, commercials, and interactive work.",
   about: [
     "I’m Gordo, a creative technologist and visual artist. I like figuring out what an idea could become, then working through the details that make it feel right.",
-    "My background is in VFX for film, television, and commercials, with Houdini still a big part of how I work. These days, I’m making AI films, commercials, and original series, developing immersive experiences, and building apps that support the creative process—from exploring an idea to bringing it through production. Sometimes the work is an image or a sequence; sometimes it’s a tool that makes the next project easier to make. I care about the creative choices and the technical work needed to carry them through to a polished result.",
-    "I grew up performing as a singer and dancer, including two and a half years in a Broadway show. There’s a whole earlier chapter there, if you ever want to ask.",
+    "My background is in VFX for film, television, and commercials, and Houdini is still a big part of how I work. These days, that curiosity takes me into AI filmmaking, original series, immersive experiences, and building apps. Sometimes I’m making a shot or a sequence; sometimes I’m building a tool because there’s something I want to make and need a better way to get there.",
+    "I grew up performing as a singer and dancer, including two and a half years in a Broadway show. That experience still shapes how I think about timing, movement, and telling a story. There’s a whole earlier chapter there, if you ever want to ask.",
   ],
   archives: "My film and television background includes FX work at ILM, DNEG, MPC, and The Mill. Explore the reel and credits for that part of my work.",
   lab: "A place for ideas I’m still working out: prototypes, creative workflows, and tools taking shape through use.",
