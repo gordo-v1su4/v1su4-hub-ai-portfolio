@@ -4,5 +4,11 @@
   "installCommand": "bun install --frozen-lockfile",
   "buildCommand": "bun run build",
   "outputDirectory": "dist",
-  "rewrites": [{ "source": "/glitch", "destination": "/glitch.html" }]
+  "rewrites": [
+    { "source": "/glitch", "destination": "/glitch.html" },
+    { "source": "/scope", "destination": "/scope.html" },
+    { "source": "/sim", "destination": "/sim.html" },
+    { "source": "/slit", "destination": "/slit.html" },
+    { "source": "/redesign", "destination": "/redesign.html" }
+  ]
 }

@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [svelte(), tailwindcss()],
   build: {
     rollupOptions: {
-      input: { main: "index.html", glitch: "glitch.html" },
+      input: { main: "index.html", glitch: "glitch.html", scope: "scope.html", sim: "sim.html", slit: "slit.html", redesign: "redesign.html" },
     },
   },
 });

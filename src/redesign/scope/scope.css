@@ -1,0 +1,190 @@
+/* SCOPE. Layout: black bars above and below one 2.39:1 frame; titles sit in the frame, the contact strip in the lower bar. */
+.scope {
+  --bone: #e9e4d8;
+  --dim: #98958d;
+  --flare: #6fbcff;
+  --hair: rgba(233, 228, 216, 0.16);
+  --pad: clamp(16px, 3.4vw, 52px);
+  position: fixed;
+  inset: var(--hub-h, 0px) 0 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
+  background: #000;
+  color: var(--bone);
+  font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+.scope button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.scope a { color: inherit; }
+.scope :focus-visible { outline: 2px solid var(--flare); outline-offset: 3px; }
+
+/* top bar */
+.sc-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(14px, env(safe-area-inset-top, 0px)) var(--pad) 14px;
+}
+.scope .sc-mark { font-stretch: 125%; font-weight: 800; font-size: 20px; letter-spacing: 0.01em; }
+.sc-nav { display: flex; gap: clamp(18px, 3vw, 36px); font-weight: 500; }
+.sc-nav a { text-decoration: none; }
+.sc-nav button, .sc-nav a { color: var(--dim); transition: color 0.2s; }
+.sc-nav button:hover, .sc-nav a:hover { color: var(--bone); }
+
+/* frame */
+.sc-stage { display: grid; place-items: center; min-height: 0; }
+.sc-frame {
+  position: relative;
+  width: min(100%, calc((100svh - 190px) * 2.39));
+  aspect-ratio: 2.39 / 1;
+  overflow: hidden;
+  background: #000 center / cover no-repeat;
+  clip-path: inset(0);
+  transition: clip-path 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.scope[data-state="loading"] .sc-frame { clip-path: inset(49.7% 0); background-color: var(--flare); transition: none; }
+.sc-gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.sc-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0) 62%),
+    linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0) 58%);
+}
+.sc-card {
+  position: absolute;
+  left: var(--pad);
+  right: var(--pad);
+  bottom: clamp(16px, 3vw, 44px);
+  max-width: 1000px;
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+.sc-title {
+  margin: 0;
+  font-size: clamp(30px, 5.4vw, 88px);
+  font-weight: 800;
+  font-stretch: 125%;
+  line-height: 0.9;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+  transform-origin: 0 100%;
+  transition: font-stretch 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s, letter-spacing 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sc-line { margin: 4px 0 0; max-width: 54ch; font-size: clamp(15px, 1.25vw, 19px); text-wrap: pretty; }
+.sc-meta { margin: 0; color: var(--dim); }
+.sc-line, .sc-meta, .sc-actions { transition: opacity 0.5s 0.12s, transform 0.7s 0.12s cubic-bezier(0.16, 1, 0.3, 1); }
+/* The squeeze: titles leave and arrive at 62% width, the way scope footage looks before the de-squeeze. */
+.sc-card.is-out .sc-title { font-stretch: 62%; letter-spacing: -0.03em; opacity: 0; transition-duration: 0.28s; }
+.sc-card.is-out .sc-line, .sc-card.is-out .sc-meta, .sc-card.is-out .sc-actions { opacity: 0; transform: translateY(8px); transition-duration: 0.2s; transition-delay: 0s; }
+.sc-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.scope .sc-open, .sc-ext, .scope .d-link {
+  display: inline-block;
+  padding: 11px 18px;
+  border: 1px solid var(--bone);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.scope .sc-open { background: var(--bone); color: #000; }
+.scope .sc-open:hover { background: var(--flare); border-color: var(--flare); }
+.sc-ext { border-color: var(--hair); }
+.scope [hidden] { display: none !important; }
+.sc-ext:hover, .scope .d-link:hover { background: var(--bone); color: #000; border-color: var(--bone); }
+
+/* lower bar: contact strip and readout */
+.sc-deck {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 14px var(--pad) max(16px, env(safe-area-inset-bottom, 0px));
+}
+.sc-strip { display: flex; gap: 6px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; padding: 6px 0; }
+.sc-strip::-webkit-scrollbar { display: none; }
+.scope .sc-thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(64px, 6.4vw, 98px);
+  aspect-ratio: 2.39 / 1;
+  background-size: cover;
+  opacity: 0.38;
+  filter: saturate(0.6);
+  transition: opacity 0.3s, filter 0.3s;
+}
+.sc-thumb:hover { opacity: 0.8; }
+.sc-thumb.is-on { opacity: 1; filter: none; }
+.sc-thumb i { position: absolute; left: 0; right: 0; top: -6px; height: 2px; background: var(--hair); opacity: 0; }
+.sc-thumb.is-on i { opacity: 1; }
+.sc-thumb i::after { content: ""; position: absolute; inset: 0; background: var(--flare); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+.scope:not(.is-playing) .sc-thumb.is-on i::after { transform: none; }
+.sc-readout { display: flex; align-items: center; gap: 18px; color: var(--dim); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.scope .sc-play { color: var(--bone); font-weight: 500; }
+.sc-play:hover { color: var(--flare); }
+
+/* project sheet */
+.sc-sheet {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: rgba(4, 5, 7, 0.82);
+  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.4s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.scope.is-sheet .sc-sheet { opacity: 1; transform: none; }
+.scope.is-sheet .sc-card, .scope.is-sheet .sc-deck { opacity: 0; transition: opacity 0.3s; }
+.scope .sc-close {
+  position: sticky;
+  top: max(14px, env(safe-area-inset-top, 0px));
+  float: right;
+  margin: 14px var(--pad) 0 0;
+  padding: 9px 16px;
+  border: 1px solid var(--hair);
+  background: #000;
+  font-weight: 600;
+  z-index: 2;
+}
+.sc-close:hover { border-color: var(--bone); }
+.sc-sheet-in { max-width: 1320px; margin: 0 auto; padding: clamp(56px, 9vh, 110px) var(--pad) 80px; }
+.scope .d-title { margin: 0; font-size: clamp(34px, 6vw, 96px); font-weight: 800; font-stretch: 125%; line-height: 0.9; letter-spacing: -0.012em; text-wrap: balance; }
+.scope .d-line { margin: 18px 0 0; font-size: clamp(17px, 1.6vw, 22px); max-width: 48ch; color: var(--bone); }
+.scope .d-body { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 5vw, 72px); margin-top: clamp(32px, 6vh, 64px); align-items: start; }
+.scope .d-copy { display: grid; gap: 22px; justify-items: start; position: sticky; top: 24px; }
+.scope .d-what { margin: 0; font-size: 17px; line-height: 1.55; max-width: 60ch; }
+.scope .d-why { margin: 0; padding-left: 16px; border-left: 2px solid var(--flare); color: var(--dim); max-width: 56ch; }
+.scope .d-facts { margin: 0; display: grid; gap: 0; width: 100%; border-top: 1px solid var(--hair); }
+.scope .d-facts > div { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--hair); }
+.scope .d-facts dt { color: var(--dim); }
+.scope .d-facts dd { margin: 0; }
+.scope .d-media { display: grid; gap: 14px; min-width: 0; }
+.scope .d-media img { display: block; width: 100%; height: auto; background: #0b0c0e; }
+.scope .d-links { display: grid; gap: 20px; justify-items: start; }
+.scope .d-contact { margin: 0; font-size: 17px; max-width: 40ch; }
+.scope .d-links ul { list-style: none; margin: 8px 0 0; padding: 0; width: 100%; border-top: 1px solid var(--hair); }
+.scope .d-links li a { display: block; padding: 14px 0; border-bottom: 1px solid var(--hair); font-size: clamp(22px, 2.6vw, 38px); font-weight: 700; font-stretch: 125%; text-decoration: none; transition: color 0.2s, padding 0.3s; }
+.scope .d-links li a:hover { color: var(--flare); padding-left: 10px; }
+
+/* portrait phones: the frame grows to fill the stage, the strip scrolls */
+@media (max-aspect-ratio: 1/1) {
+  .sc-frame { width: 100%; height: 100%; aspect-ratio: auto; }
+  .sc-title { font-size: clamp(34px, 11vw, 64px); }
+  .sc-deck { flex-direction: column-reverse; align-items: stretch; gap: 8px; }
+  .sc-readout { justify-content: space-between; }
+  .scope .sc-thumb { width: 78px; }
+  .scope .d-body { grid-template-columns: minmax(0, 1fr); }
+  .scope .d-copy { position: static; }
+  .sc-sheet { background: #040507; -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scope *, .sc-frame { transition-duration: 0.01s !important; }
+}

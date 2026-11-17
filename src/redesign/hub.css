@@ -1,0 +1,27 @@
+html, body { margin: 0; background: #000; }
+.hub-bar {
+  position: fixed;
+  z-index: 100;
+  top: max(10px, env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(20, 20, 22, 0.78);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font: 500 12px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.hub-bar a { padding: 7px 12px; border-radius: 999px; color: #b9b7b1; text-decoration: none; }
+.hub-bar a:hover { color: #fff; }
+.hub-bar a[aria-current] { background: #e9e4d8; color: #000; }
+.hub-bar a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+/* On phones the switcher gets its own strip so it never sits on a direction's navigation. */
+@media (max-width: 700px) {
+  :root { --hub-h: calc(max(6px, env(safe-area-inset-top, 0px)) + 40px); }
+  body { padding-top: var(--hub-h); }
+  .hub-bar { top: max(6px, env(safe-area-inset-top, 0px)); }
+}

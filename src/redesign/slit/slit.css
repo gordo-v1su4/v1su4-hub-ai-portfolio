@@ -1,0 +1,205 @@
+/* SLIT. Layout: a statement, then one band of eleven slits side by side (stacked rows on phones); the open slit shows the whole frame. */
+.slit {
+  --pitch: #0b0b0c;
+  --coal: #18181a;
+  --paper: #ece6da;
+  --smoke: #9c978d;
+  --tile: #63cdb8;
+  --hair: rgba(236, 230, 218, 0.16);
+  --pad: clamp(16px, 3.2vw, 48px);
+  --band-h: clamp(380px, 60svh, 640px);
+  --open-w: 56vw;
+  --smear: 18;
+  min-height: calc(100svh - var(--hub-h, 0px));
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-columns: minmax(0, 1fr);
+  background: var(--pitch);
+  color: var(--paper);
+  font-family: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.slit, .slit *, .slit *::before, .slit *::after { box-sizing: border-box; }
+.slit button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: inherit; }
+.slit a { color: inherit; }
+.slit :focus-visible { outline: 2px solid var(--tile); outline-offset: 3px; }
+.slit [hidden] { display: none !important; }
+
+.sl-top { display: flex; align-items: center; justify-content: space-between; padding: max(14px, env(safe-area-inset-top, 0px)) var(--pad) 0; }
+.sl-mark { font-family: "Bodoni Moda", "Didot", Georgia, serif; font-style: italic; font-weight: 700; font-size: 24px; letter-spacing: 0.01em; }
+.sl-nav { display: flex; gap: clamp(18px, 3vw, 32px); }
+.sl-nav a { text-decoration: none; }
+.sl-nav button, .sl-nav a { color: var(--smoke); transition: color 0.2s; }
+.sl-nav button:hover, .sl-nav a:hover { color: var(--paper); }
+
+.sl-lede {
+  margin: 0;
+  padding: clamp(18px, 4vh, 44px) var(--pad) clamp(18px, 3.4vh, 36px);
+  max-width: 34em;
+  font-family: "Bodoni Moda", "Didot", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(21px, 2.35vw, 36px);
+  line-height: 1.16;
+  text-wrap: balance;
+}
+
+/* the band */
+.sl-row { list-style: none; margin: 0; padding: 0; display: flex; height: var(--band-h); align-self: center; overflow: hidden; }
+.sl-slit {
+  position: relative;
+  flex: 0 0 auto;
+  width: calc((100% - var(--open-w)) / (var(--n) - 1));
+  overflow: hidden;
+  background: var(--coal);
+  transition: width 0.85s cubic-bezier(0.22, 1, 0.3, 1);
+}
+.slit[data-state="loading"] .sl-slit, .slit:not(:has(.is-open)) .sl-slit { width: calc(100% / var(--n)); }
+.sl-slit.is-open { width: var(--open-w); }
+.sl-slit + .sl-slit { box-shadow: -1px 0 0 rgba(0, 0, 0, 0.55); }
+
+/* The plate is laid out at the open size, centred on the slit, then stretched until only a column of it shows. */
+.sl-pan {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: var(--open-w);
+  margin-left: calc(var(--open-w) / -2);
+  transform: scaleX(var(--smear));
+  transition: transform 0.95s cubic-bezier(0.22, 1, 0.3, 1), filter 0.6s;
+  will-change: transform;
+  filter: saturate(0.85) brightness(0.8);
+}
+.sl-pan img {
+  display: block;
+  width: 112%;
+  max-width: none;
+  height: 100%;
+  margin-left: -6%;
+  object-fit: cover;
+  object-position: var(--fx) var(--fy);
+  animation: sl-drift 24s ease-in-out var(--d) infinite alternate;
+}
+@keyframes sl-drift { from { transform: translateX(-4.5%); } to { transform: translateX(4.5%); } }
+.sl-slit.is-open .sl-pan { transform: none; filter: none; }
+.sl-slit:not(.is-open):hover .sl-pan { filter: saturate(1) brightness(1); }
+
+/* spine: the title of a shut slit, set up the column */
+.slit .sl-spine { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding: 20px 0; }
+.sl-spine span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: "Bodoni Moda", "Didot", Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(17px, 1.5vw, 23px);
+  white-space: nowrap;
+  text-shadow: 0 0 14px rgba(0, 0, 0, 0.9), 0 0 3px rgba(0, 0, 0, 0.8);
+  transition: opacity 0.3s;
+}
+.sl-slit.is-open .sl-spine span { opacity: 0; }
+
+.sl-card {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: var(--open-w);
+  padding: 90px clamp(18px, 2.4vw, 36px) clamp(18px, 2.2vw, 30px);
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  background: linear-gradient(to top, rgba(8, 8, 9, 0.9), rgba(8, 8, 9, 0.55) 55%, rgba(8, 8, 9, 0));
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.25s, transform 0.4s, visibility 0s 0.25s;
+}
+.sl-slit.is-open .sl-card { opacity: 1; visibility: visible; pointer-events: auto; transform: none; transition: opacity 0.6s 0.3s, transform 0.8s 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s; }
+.sl-title {
+  margin: 0;
+  font-family: "Bodoni Moda", "Didot", Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(40px, 5.2vw, 88px);
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.sl-line { margin: 6px 0 0; max-width: 46ch; font-size: clamp(15px, 1.2vw, 18px); text-wrap: pretty; }
+.sl-meta { margin: 0; color: var(--smoke); }
+.sl-actions { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 8px; align-items: center; }
+.slit .sl-open, .sl-ext, .slit .d-link {
+  display: inline-block;
+  padding: 2px 0 4px;
+  border-bottom: 1px solid var(--paper);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+.sl-ext { border-color: var(--hair); color: var(--smoke); }
+.slit .sl-open:hover, .sl-ext:hover, .slit .d-link:hover { color: var(--tile); border-color: var(--tile); }
+
+.sl-foot { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; padding: clamp(16px, 3vh, 30px) var(--pad) max(18px, env(safe-area-inset-bottom, 0px)); color: var(--smoke); }
+.sl-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px clamp(16px, 2.4vw, 34px); }
+.sl-links a { font-family: "Bodoni Moda", "Didot", Georgia, serif; font-style: italic; font-size: clamp(18px, 1.5vw, 22px); color: var(--paper); text-decoration: none; transition: color 0.2s; }
+.sl-links a:hover { color: var(--tile); }
+.sl-base { white-space: nowrap; }
+
+/* case study */
+.sl-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--pitch);
+  transform: translateY(100%);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.3, 1);
+}
+.slit.is-sheet .sl-sheet { transform: none; }
+.slit .sl-close { position: sticky; top: max(14px, env(safe-area-inset-top, 0px)); float: right; margin: 14px var(--pad) 0 0; padding: 2px 0 4px; border-bottom: 1px solid var(--paper); background: var(--pitch); z-index: 2; }
+.sl-close:hover { color: var(--tile); border-color: var(--tile); }
+.sl-sheet-in { max-width: 1280px; margin: 0 auto; padding: clamp(60px, 10vh, 120px) var(--pad) 90px; }
+.slit .d-title { margin: 0; font-family: "Bodoni Moda", "Didot", Georgia, serif; font-style: italic; font-weight: 600; font-size: clamp(44px, 7.4vw, 124px); line-height: 0.92; letter-spacing: -0.02em; text-wrap: balance; }
+.slit .d-line { margin: 18px 0 0; font-family: "Bodoni Moda", "Didot", Georgia, serif; font-style: italic; font-size: clamp(20px, 2vw, 28px); line-height: 1.2; max-width: 30em; }
+.slit .d-body { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 5vw, 80px); margin-top: clamp(36px, 7vh, 72px); align-items: start; }
+.slit .d-copy { display: grid; gap: 22px; justify-items: start; position: sticky; top: 28px; }
+.slit .d-what { margin: 0; font-size: 17px; line-height: 1.6; max-width: 58ch; }
+.slit .d-why { margin: 0; font-family: "Bodoni Moda", "Didot", Georgia, serif; font-style: italic; font-size: 19px; line-height: 1.35; color: var(--smoke); max-width: 34em; }
+.slit .d-facts { margin: 0; width: 100%; display: grid; border-top: 1px solid var(--hair); }
+.slit .d-facts > div { display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--hair); }
+.slit .d-facts dt { color: var(--smoke); }
+.slit .d-facts dd { margin: 0; }
+.slit .d-media { display: grid; gap: 16px; min-width: 0; }
+.slit .d-media img { display: block; width: 100%; height: auto; background: var(--coal); }
+.slit .d-links { display: grid; gap: 20px; justify-items: start; }
+.slit .d-contact { margin: 0; font-size: 17px; max-width: 40ch; }
+.slit .d-links ul { list-style: none; margin: 6px 0 0; padding: 0; width: 100%; border-top: 1px solid var(--hair); }
+.slit .d-links li a { display: block; padding: 12px 0; border-bottom: 1px solid var(--hair); font-family: "Bodoni Moda", "Didot", Georgia, serif; font-style: italic; font-size: clamp(26px, 3vw, 44px); text-decoration: none; transition: color 0.2s; }
+.slit .d-links li a:hover { color: var(--tile); }
+
+/* phones and narrow windows: the slits lie down and stack; tap one to open it */
+@media (max-width: 820px) {
+  .slit { --open-h: clamp(300px, 46svh, 420px); --shut-h: 50px; grid-template-rows: auto auto auto auto; }
+  .sl-row { flex-direction: column; height: auto; align-self: start; }
+  .sl-slit, .slit[data-state="loading"] .sl-slit, .slit:not(:has(.is-open)) .sl-slit { width: 100%; height: var(--shut-h); transition: height 0.8s cubic-bezier(0.22, 1, 0.3, 1); }
+  .sl-slit.is-open { width: 100%; height: var(--open-h); }
+  .sl-slit + .sl-slit { box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.55); }
+  .sl-pan { left: 0; width: 100%; margin-left: 0; top: 50%; bottom: auto; height: var(--open-h); margin-top: calc(var(--open-h) / -2); transform: scaleY(var(--smear)); }
+  .sl-pan img { width: 100%; margin-left: 0; height: 112%; margin-top: -6%; }
+  @keyframes sl-drift { from { transform: translateY(-4.5%); } to { transform: translateY(4.5%); } }
+  .slit .sl-spine { align-items: center; justify-content: flex-start; padding: 0 var(--pad); }
+  .sl-spine span { writing-mode: horizontal-tb; transform: none; font-size: 21px; }
+  .sl-card { width: 100%; padding: 70px var(--pad) 18px; }
+  .sl-title { font-size: clamp(38px, 11vw, 60px); }
+  .sl-foot { flex-direction: column; }
+  .slit .d-body { grid-template-columns: minmax(0, 1fr); }
+  .slit .d-copy { position: static; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slit *, .sl-slit { transition-duration: 0.01s !important; }
+  .sl-pan img { animation: none; }
+}
