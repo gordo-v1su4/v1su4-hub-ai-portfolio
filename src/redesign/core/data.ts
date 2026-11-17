@@ -31,6 +31,8 @@ export interface Shot {
   plate: string;
   depth: string;
   thumb: string;
+  /** Optional looping teaser (muted). When set, directions that support video play it instead of the still. */
+  video?: string;
   /** Point of interest in the plate, 0–1 from the top left. Cover crops stay centred on it. */
   focus: [number, number];
   entry?: Entry;
@@ -51,7 +53,14 @@ const FOCUS: Record<string, [number, number]> = {
   about: [0.5, 0.6],
 };
 
+/**
+ * Teaser clips, keyed by project slug. Drop a short muted MP4 (H.264, ~1080p, a few MB)
+ * into public/video/ and list it here, e.g. "video-haven": "/video/video-haven.mp4".
+ */
+const VIDEOS: Record<string, string> = {};
+
 const plate = (slug: string) => ({
+  video: VIDEOS[slug] ? asset(VIDEOS[slug]) : undefined,
   plate: asset(`/images/redesign/${slug}.webp`),
   depth: asset(`/images/redesign/${slug}-depth.jpg`),
   thumb: asset(`/images/redesign/${slug}-thumb.webp`),

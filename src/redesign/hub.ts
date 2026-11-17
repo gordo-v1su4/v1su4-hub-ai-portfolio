@@ -4,8 +4,8 @@ import "./hub.css";
 
 type Mount = (root: HTMLElement) => () => void;
 const DIRECTIONS: Record<string, { label: string; load: () => Promise<{ mount: Mount }> }> = {
-  scope: { label: "Scope", load: () => import("./scope/index") },
   sim: { label: "Sim", load: () => import("./sim/index") },
+  scope: { label: "Scope", load: () => import("./scope/index") },
   slit: { label: "Slit", load: () => import("./slit/index") },
 };
 
